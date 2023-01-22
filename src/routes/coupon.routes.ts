@@ -4,7 +4,7 @@ import CreateCouponController from '../modules/coupons/useCases/CreateCoupon/Cre
 import InvalidCouponController from '../modules/coupons/useCases/InvalidCoupon/InvalidCouponController';
 import ListCouponController from '../modules/coupons/useCases/ListCoupon/ListCouponController';
 import ValidCouponController from '../modules/coupons/useCases/ValidCoupon/ValidCouponController';
-import couponValidade from '../modules/coupons/validations/coupon.validation';
+import couponCreateValidade from '../modules/coupons/validations/couponCreate.validation';
 
 const couponRoutes = Router();
 const createController = new CreateCouponController();
@@ -14,7 +14,7 @@ const invalidController = new InvalidCouponController();
 
 couponRoutes.post(
   '/',
-  couponValidade,
+  couponCreateValidade,
   (request: Request, response: Response) => {
     createController.handler(request, response);
   }

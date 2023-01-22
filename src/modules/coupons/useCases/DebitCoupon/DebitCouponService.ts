@@ -1,5 +1,6 @@
 import { container, inject, injectable } from 'tsyringe';
 
+import AppError from '../../../errors/AppError';
 import Coupon from '../../entities/Coupon';
 import ICouponRepository from '../../repositories/ICouponRepository';
 import ValidCouponService from '../ValidCoupon/ValidCouponService';
@@ -13,13 +14,10 @@ class DebitCouponService {
   }
 
   async execute(code: string) {
-    // const couponIsValidService = container.resolve(ValidCouponService);
-
-    // const coupon = await couponIsValidService.execute(code);
     const coupon = (await this.repository.getCoupon(code)) as Coupon;
 
     if (!coupon.valid || coupon.expire_at < new Date() || coupon.amount <= 0)
-      throw new Error('Esse cupom não é mais valido');
+      throw new AppError('Esse cupom não é mais valido');
 
     if (coupon.amount > 0) coupon.amount -= 1;
 

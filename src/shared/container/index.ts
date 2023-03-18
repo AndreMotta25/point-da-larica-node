@@ -1,7 +1,7 @@
 import { container } from 'tsyringe';
 
-import CodeGenerator from '../../modules/coupons/entities/CodeGenerator';
-import ICodeGenerator from '../../modules/coupons/interfaces/ICodeGenerator';
+import ICodeGenerator from '../../modules/coupons/providers/interfaces/ICodeGenerator';
+import CodeGenerator from '../../modules/coupons/providers/implementations/CodeGenerator';
 import ICouponRepository from '../../modules/coupons/repositories/ICouponRepository';
 import CouponRepository from '../../modules/coupons/repositories/implementations/CouponRepository';
 

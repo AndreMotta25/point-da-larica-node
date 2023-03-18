@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
-import ICodeGenerator from '../../interfaces/ICodeGenerator';
+import ICodeGenerator from '../../providers/interfaces/ICodeGenerator';
 import ICouponRepository from '../../repositories/ICouponRepository';
 
 interface ICouponRequest {

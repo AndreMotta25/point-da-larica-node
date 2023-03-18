@@ -4,8 +4,8 @@ import 'express-async-errors';
 
 import './shared/container';
 
-import AppError from './modules/errors/AppError';
-import ErrorField from './modules/errors/ErrorField';
+import AppError from './errors/AppError';
+import ErrorField from './errors/ErrorField';
 import router from './routes';
 
 const app = express();

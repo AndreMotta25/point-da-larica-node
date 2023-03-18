@@ -4,6 +4,7 @@ import 'express-async-errors';
 
 import './shared/container';
 
+import AppError from './modules/errors/AppError';
 import ErrorField from './modules/errors/ErrorField';
 import router from './routes';
 
@@ -18,6 +19,9 @@ app.use(
       return response.status(err.statusCode).json({
         errors: [{ value: err.value, msg: err.msg, param: err.param }],
       });
+    }
+    if (err instanceof AppError) {
+      return response.status(err.statusCode).json({ msg: err.message });
     }
 
     return response.status(500).json({ message: err.message });

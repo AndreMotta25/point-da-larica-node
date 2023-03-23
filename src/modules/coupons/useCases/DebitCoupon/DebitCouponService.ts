@@ -1,9 +1,9 @@
-import { container, inject, injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
-import AppError from '../../../errors/AppError';
-import Coupon from '../../entities/Coupon';
+import AppError from '@errors/AppError';
+import Coupon from '@modules/coupons/entities/Coupon';
+
 import ICouponRepository from '../../repositories/ICouponRepository';
-import ValidCouponService from '../ValidCoupon/ValidCouponService';
 
 @injectable()
 class DebitCouponService {

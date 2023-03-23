@@ -1,7 +1,8 @@
 import { inject, injectable } from 'tsyringe';
 
-import ErrorField from '../../../errors/ErrorField';
-import Coupon from '../../entities/Coupon';
+import ErrorField from '@errors/ErrorField';
+import Coupon from '@modules/coupons/entities/Coupon';
+
 import ICouponRepository from '../../repositories/ICouponRepository';
 
 @injectable()

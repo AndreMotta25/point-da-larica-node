@@ -9,10 +9,10 @@ class OrderList {
   @PrimaryColumn()
   id: string;
 
-  @ManyToOne(() => Order, (order) => order.orderList)
+  @ManyToOne(() => Order, (order) => order.orderList, { nullable: false })
   order: Order;
 
-  @ManyToOne(() => Order, (order) => order.orderList)
+  @ManyToOne(() => Product, (product) => product.orderList, { nullable: false })
   product: Product;
 
   @Column('decimal', { precision: 18, scale: 2 })

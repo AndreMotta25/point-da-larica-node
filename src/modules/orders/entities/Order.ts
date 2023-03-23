@@ -18,16 +18,16 @@ class Order {
   id: string;
 
   @Column('decimal', { precision: 18, scale: 2 })
-  full_value: string;
+  full_value: number;
 
   @Column('decimal', { precision: 18, scale: 2 })
-  discount_value: string;
+  discount_value: number;
 
   @CreateDateColumn()
   data_of_sale: Date;
 
-  @Column()
-  status: string;
+  @Column({ default: false })
+  canceled: boolean;
 
   @Column()
   code: string;

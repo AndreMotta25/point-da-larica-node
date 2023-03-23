@@ -33,8 +33,4 @@ couponRoutes.put('/:id/invalid', (request: Request, response: Response) => {
   invalidController.handle(request, response);
 });
 
-couponRoutes.get('/teste', async (request: Request, response: Response) => {
-  throw new Error('sadsadsad');
-});
-
 export default couponRoutes;

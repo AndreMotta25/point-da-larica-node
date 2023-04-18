@@ -11,6 +11,15 @@ class DeliveryRepository implements IDeliveryRepository {
   constructor() {
     this.repository = database.getRepository(Delivery);
   }
+  async getOrderDelivery(id: string): Promise<Delivery | null> {
+    const orderDelivery = await this.repository.findOne({
+      where: {
+        orderId: id,
+      },
+    });
+
+    return orderDelivery;
+  }
 
   async create({ adress, order }: IDeliveryDTO): Promise<void> {
     const delivery = this.repository.create({ adress, order });

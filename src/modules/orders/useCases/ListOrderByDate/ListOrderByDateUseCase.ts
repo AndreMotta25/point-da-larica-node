@@ -16,7 +16,7 @@ class ListOrderByDateUseCase {
     this.repository = repository;
   }
   async execute({ date, minDate, maxDate }: IListOrderDTO) {
-    const orders = await this.repository.getDate();
+    const orders = await this.repository.getOrders();
 
     const ordersByDates = orders.filter(
       (order) =>

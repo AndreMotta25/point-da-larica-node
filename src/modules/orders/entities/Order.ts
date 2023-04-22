@@ -5,10 +5,12 @@ import {
   JoinTable,
   ManyToMany,
   OneToMany,
+  OneToOne,
   PrimaryColumn,
 } from 'typeorm';
 import { v4 as uuidV4 } from 'uuid';
 
+import { Delivery } from './Delivery';
 import { OrderList } from './OrderList';
 import { Product } from './Product';
 
@@ -23,7 +25,10 @@ class Order {
   @Column('decimal', { precision: 18, scale: 2 })
   discount_value: number;
 
-  @CreateDateColumn()
+  @Column('decimal', { precision: 18, scale: 2 })
+  discounted_value: number;
+
+  @CreateDateColumn({ type: 'timestamp with time zone' })
   data_of_sale: Date;
 
   @Column({ default: false })
@@ -41,6 +46,12 @@ class Order {
 
   @OneToMany(() => OrderList, (orderList) => orderList.order)
   orderList: OrderList[];
+
+  @OneToOne(() => Delivery, (delivery) => delivery.order)
+  delivery: Delivery;
+
+  @Column({ default: false })
+  isDelivery: boolean;
 
   constructor() {
     this.id = uuidV4();

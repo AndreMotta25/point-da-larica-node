@@ -11,6 +11,18 @@ class OrderRepository implements IOrderRepository {
   constructor() {
     this.repository = database.getRepository(Order);
   }
+  async getOrder(id: string): Promise<Order | null> {
+    const order = await this.repository.findOne({
+      relations: {
+        orderList: true,
+        delivery: true,
+      },
+      where: {
+        id,
+      },
+    });
+    return order;
+  }
 
   async create(order: IRequestOrder): Promise<Order> {
     const newOrder = this.repository.create({ ...order });

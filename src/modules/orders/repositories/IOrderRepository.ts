@@ -6,11 +6,12 @@ export interface IRequestOrder {
   discounted_value: number;
   coupon_code?: string;
   code: string;
-  delivery: boolean;
+  isDelivery: boolean;
 }
 interface IOrderRepository {
   create({ full_value }: IRequestOrder): Promise<Order>;
   getOrders(): Promise<Order[]>;
+  getOrder(id: string): Promise<Order | null>;
 }
 
 export { IOrderRepository };

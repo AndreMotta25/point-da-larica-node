@@ -8,6 +8,9 @@ class Delivery {
   @PrimaryColumn()
   id: string;
 
+  @Column({ nullable: false })
+  orderId: string;
+
   @OneToOne(() => Order, { onDelete: 'CASCADE', nullable: false })
   @JoinColumn()
   order: Order;

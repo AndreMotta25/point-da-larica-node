@@ -9,8 +9,14 @@ class OrderList {
   @PrimaryColumn()
   id: string;
 
-  @ManyToOne(() => Order, (order) => order.orderList, { nullable: false })
+  @ManyToOne(() => Order, (order) => order.orderList, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
   order: Order;
+
+  @Column()
+  productId: string;
 
   @ManyToOne(() => Product, (product) => product.orderList, { nullable: false })
   product: Product;

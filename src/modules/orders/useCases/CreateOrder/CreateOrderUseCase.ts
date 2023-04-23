@@ -30,7 +30,7 @@ class CreateOrderUseCase {
     this.repositoryDelivery = repositoryDelivery;
   }
 
-  async execute({ coupon_code, itens, delivery, adress }: IOrderRequestDTO) {
+  async execute({ coupon_code, itens, isDelivery, adress }: IOrderRequestDTO) {
     const valuesPromise = itens.map(async (product) => {
       // deixar isso pro express-validator depois
       if (!product.id) throw new AppError('Produto não informado', 400);
@@ -76,10 +76,10 @@ class CreateOrderUseCase {
       discounted_value: discount,
       coupon_code,
       code: 'asdsadsad',
-      delivery,
+      isDelivery,
     });
 
-    if (delivery) {
+    if (isDelivery) {
       if (!adress) throw new AppError('Faltou o endereço de entrega', 400);
 
       await this.repositoryDelivery.create({ adress, order });

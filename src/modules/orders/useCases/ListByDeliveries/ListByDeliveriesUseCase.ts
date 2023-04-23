@@ -31,7 +31,7 @@ class ListByDeliveriesUseCase {
       orders
         .filter(
           (order) =>
-            order.delivery === true &&
+            order.isDelivery === true &&
             ((date &&
               new Date(order.data_of_sale).toLocaleDateString() ===
                 new Date(`${date}T00:00`).toLocaleDateString()) ||

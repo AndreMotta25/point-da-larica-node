@@ -6,7 +6,7 @@ interface IProductList {
 interface IOrderRequestDTO {
   coupon_code?: string;
   itens: IProductList[];
-  delivery: boolean;
+  isDelivery: boolean;
   adress: string;
 }
 

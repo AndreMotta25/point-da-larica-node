@@ -1,3 +1,4 @@
+import { pagination } from 'src/utils/pagination';
 import { inject, injectable } from 'tsyringe';
 
 import { IOrderRepository } from '@modules/orders/repositories/IOrderRepository';
@@ -8,6 +9,8 @@ interface IListOrderDTO {
   date: string;
   minDate: string;
   maxDate: string;
+  limit: number;
+  page: number;
 }
 
 @injectable()
@@ -18,7 +21,7 @@ class ListOrderByDateUseCase {
     this.repository = repository;
   }
 
-  async execute({ date, minDate, maxDate }: IListOrderDTO) {
+  async execute({ date, minDate, maxDate, limit, page }: IListOrderDTO) {
     const orders = await this.repository.getOrders();
 
     const ordersByDates = orders
@@ -45,6 +48,8 @@ class ListOrderByDateUseCase {
         };
         return orderDTO;
       });
+    if (limit && page)
+      return pagination<IOrderResponseDTO>(ordersByDates, limit)[page - 1];
 
     return ordersByDates;
   }

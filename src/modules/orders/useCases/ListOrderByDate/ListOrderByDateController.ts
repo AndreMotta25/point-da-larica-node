@@ -5,11 +5,13 @@ import { ListOrderByDateUseCase } from './ListOrderByDateUseCase';
 
 class ListOrderByDateController {
   async handler(request: Request, response: Response) {
-    const { date, minDate, maxDate } = request.query;
+    const { date, minDate, maxDate, limit, page } = request.query;
     const dates = {
       specificDate: date as string,
       minDate: minDate as string,
       maxDate: maxDate as string,
+      limit: Number(limit),
+      page: Number(page),
     };
 
     const listByDateUseCase = container.resolve(ListOrderByDateUseCase);
@@ -18,6 +20,8 @@ class ListOrderByDateController {
       date: dates.specificDate,
       minDate: dates.minDate,
       maxDate: dates.maxDate,
+      limit: dates.limit,
+      page: dates.page,
     });
 
     return response.status(200).json(orders);

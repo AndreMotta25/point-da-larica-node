@@ -11,6 +11,10 @@ class DeliveryRepository implements IDeliveryRepository {
   constructor() {
     this.repository = database.getRepository(Delivery);
   }
+  async save(delivery: Delivery): Promise<Delivery> {
+    const deliveryUpdate = await this.repository.save(delivery);
+    return deliveryUpdate;
+  }
   async getOrderDelivery(id: string): Promise<Delivery | null> {
     const orderDelivery = await this.repository.findOne({
       where: {

@@ -1,4 +1,3 @@
-import { pagination } from 'src/utils/pagination';
 import { inject, injectable } from 'tsyringe';
 
 import { IOrderRepository } from '@modules/orders/repositories/IOrderRepository';
@@ -22,15 +21,24 @@ class ListOrderByDateUseCase {
   }
 
   async execute({ date, minDate, maxDate, limit, page }: IListOrderDTO) {
-    const orders = this.repository.getOrderByDate({
+    const orders = await this.repository.getOrderByDate({
       date,
       minDate,
       maxDate,
       limit,
       page,
     });
-
-    return orders;
+    const ordersDTO = orders.map((order) => {
+      const orderDTO: IOrderResponseDTO = {
+        id: order.id,
+        date_of_sale: order.data_of_sale,
+        full_value: Number(order.full_value),
+        situation: order.canceled ? 'cancelado' : 'ativo',
+        discounted_value: Number(order.discounted_value),
+      };
+      return orderDTO;
+    });
+    return ordersDTO;
   }
 }
 

@@ -1,4 +1,5 @@
 import { Order } from '../entities/Order';
+import { IListOrderDTO } from '../useCases/ListOrderByDate/ListOrderByDateUseCase';
 
 export interface IRequestOrder {
   full_value: number;
@@ -12,6 +13,13 @@ interface IOrderRepository {
   create({ full_value }: IRequestOrder): Promise<Order>;
   getOrders(): Promise<Order[]>;
   getOrder(id: string): Promise<Order | null>;
+  getOrderByDate({
+    minDate,
+    maxDate,
+    date,
+    limit,
+    page,
+  }: IListOrderDTO): Promise<Order[]>;
 }
 
 export { IOrderRepository };

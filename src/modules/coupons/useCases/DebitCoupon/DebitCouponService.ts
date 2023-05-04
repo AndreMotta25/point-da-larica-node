@@ -23,7 +23,7 @@ class DebitCouponService {
 
     if (coupon.amount <= 0) coupon.valid = false;
 
-    await this.repository.save(coupon);
+    await this.repository.create(coupon); // update
   }
 }
 

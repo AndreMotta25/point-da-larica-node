@@ -1,5 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 
+import AppError from '@errors/AppError';
+
 import ICouponRepository from '../../repositories/ICouponRepository';
 
 @injectable()
@@ -14,10 +16,10 @@ class InvalidCouponService {
     const coupon = await this.repository.findById(id);
 
     if (!coupon) {
-      throw new Error('Cupom invalido');
+      throw new AppError('Cupom invalido', 404);
     }
     coupon.valid = false;
-    await this.repository.save(coupon);
+    await this.repository.create(coupon); // update
   }
 }
 

@@ -4,4 +4,6 @@ export default interface ICouponDTO {
   expire_at: Date;
   code: string;
   minimumValue: number;
+  id?: string;
+  valid?: boolean;
 }

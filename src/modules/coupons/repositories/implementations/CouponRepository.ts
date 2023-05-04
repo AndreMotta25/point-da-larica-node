@@ -15,9 +15,6 @@ class CouponRepository implements ICouponRepository {
     const coupon = await this.repository.findOneBy({ id });
     return coupon;
   }
-  async save(coupon: Coupon): Promise<void> {
-    await this.repository.save(coupon);
-  }
 
   async getCoupon(code: string): Promise<Coupon | null> {
     const coupon = await this.repository.findOneBy({ code });
@@ -30,15 +27,19 @@ class CouponRepository implements ICouponRepository {
     expire_at,
     code,
     minimumValue,
+    id,
+    valid,
   }: ICouponDTO): Promise<void> {
     const coupon = this.repository.create({
       code,
       value,
       amount,
       expire_at: new Date(expire_at),
-      valid: true,
+      valid,
       minimumValue,
+      id,
     });
+
     await this.repository.save(coupon);
   }
 

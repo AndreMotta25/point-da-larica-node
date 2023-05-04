@@ -29,6 +29,7 @@ class Coupon {
 
   constructor() {
     this.id = uuidv4();
+    this.valid = true;
   }
 }
 export default Coupon;

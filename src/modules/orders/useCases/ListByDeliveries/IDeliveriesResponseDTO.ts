@@ -5,6 +5,8 @@ interface IDeliveriesResponseDTO {
   situation: 'ativo' | 'cancelado';
   deliveryInformationId: string;
   discounted_value: number;
+  send: boolean;
+  address: string;
 }
 
 export { IDeliveriesResponseDTO };

@@ -9,7 +9,7 @@ import { IOrderListRepository } from '@modules/orders/repositories/IOrderListRep
 import { IOrderRepository } from '@modules/orders/repositories/IOrderRepository';
 import { IProductRepository } from '@modules/orders/repositories/IProductRepository';
 
-import { IOrderRequestDTO } from './IOrderRequestDTO';
+import { IOrderRequestDTO, IProductList } from './IOrderRequestDTO';
 
 @injectable()
 class CreateOrderUseCase {
@@ -86,7 +86,7 @@ class CreateOrderUseCase {
     }
 
     // cadastrando os pedidos itens
-    itens.forEach(async (item) => {
+    this.clearRepeatedItens(itens).forEach(async (item) => {
       const product = (await this.repositoryProduct.findById(
         item.id
       )) as Product;
@@ -104,6 +104,22 @@ class CreateOrderUseCase {
       await Promise.all(values)
     ).reduce((prev: number, current: number) => prev + current, 0);
     return value;
+  }
+  clearRepeatedItens(itens: IProductList[]) {
+    const itensfiltered = itens.reduce(
+      (acc: IProductList[], product: IProductList) => {
+        const elem = acc?.find(
+          (productAcc: IProductList) => productAcc.id === product.id
+        );
+        if (!elem) {
+          return [...acc, { id: product.id, amount: product.amount }];
+        }
+        elem.amount += product.amount;
+        return acc;
+      },
+      []
+    );
+    return itensfiltered;
   }
 }
 

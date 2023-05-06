@@ -4,7 +4,11 @@ import { Order } from '@modules/orders/entities/Order';
 import { IListOrderDTO } from '@modules/orders/useCases/ListOrderByDate/ListOrderByDateUseCase';
 
 import database from '../../../../database';
-import { IOrderRepository, IRequestOrder } from '../IOrderRepository';
+import {
+  IOrderRepository,
+  IRequestOrder,
+  IRequestOrderDelivery,
+} from '../IOrderRepository';
 
 class OrderRepository implements IOrderRepository {
   private readonly repository: Repository<Order>;
@@ -35,6 +39,28 @@ class OrderRepository implements IOrderRepository {
   async getOrders() {
     const orders = await this.repository.find();
     return orders;
+  }
+
+  async getOrderToDelivery({ date, page, limit }: IRequestOrderDelivery) {
+    const orders = this.repository
+      .createQueryBuilder('orders')
+      .leftJoinAndSelect('orders.delivery', 'delivery')
+      .where('orders.isDelivery = :delivery', { delivery: true });
+
+    if (date) {
+      orders.andWhere("DATE_TRUNC('day', data_of_sale) = :date", {
+        date: new Date(date),
+      });
+    } else {
+      orders.andWhere("DATE_TRUNC('day', data_of_sale) = :date", {
+        date: new Date().toLocaleDateString().split('-').reverse().join('-'),
+      });
+    }
+
+    return orders
+      .skip(limit * (page - 1))
+      .take(limit)
+      .getMany();
   }
 
   async getOrderByDate({ minDate, maxDate, date, limit, page }: IListOrderDTO) {

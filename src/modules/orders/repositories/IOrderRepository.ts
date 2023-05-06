@@ -9,6 +9,11 @@ export interface IRequestOrder {
   code: string;
   isDelivery: boolean;
 }
+export interface IRequestOrderDelivery {
+  date?: string;
+  page: number;
+  limit: number;
+}
 interface IOrderRepository {
   create({ full_value }: IRequestOrder): Promise<Order>;
   getOrders(): Promise<Order[]>;
@@ -20,6 +25,11 @@ interface IOrderRepository {
     limit,
     page,
   }: IListOrderDTO): Promise<Order[]>;
+  getOrderToDelivery({
+    date,
+    limit,
+    page,
+  }: IRequestOrderDelivery): Promise<Order[]>;
 }
 
 export { IOrderRepository };

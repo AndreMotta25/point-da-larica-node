@@ -17,6 +17,9 @@ class Product {
   @Column('text')
   description: string;
 
+  @Column('varchar', { nullable: true })
+  image: string;
+
   @OneToMany(() => OrderList, (orderList) => orderList.order)
   orderList: OrderList[];
 

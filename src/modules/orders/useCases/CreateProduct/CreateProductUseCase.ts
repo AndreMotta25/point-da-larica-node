@@ -13,13 +13,13 @@ class CreateProductUseCase {
     this.repository = repository;
   }
 
-  async execute({ name, value, description }: IProductRequestDTO) {
+  async execute({ name, value, description, image }: IProductRequestDTO) {
     const productAlreadyExists = await this.repository.findByName(name);
 
     if (productAlreadyExists)
       throw new ErrorField(name, 'Nome indisponivel', 'name', 400);
 
-    await this.repository.create({ name, value, description });
+    await this.repository.create({ name, value, description, image });
   }
 }
 

@@ -22,6 +22,7 @@ couponRoutes.post(
 couponRoutes.get('/', (request: Request, response: Response) => {
   listController.handler(request, response);
 });
+// Tenho que colocar o valor da compra aqui para validar também
 couponRoutes.get(
   '/:code/isValid',
   async (request: Request, response: Response) => {

@@ -17,6 +17,7 @@ interface IRoleRepository {
   }: IRoleRequestDTO): Promise<Role>;
   findByName(name: string): Promise<Role | null>;
   findByIds(ids: string[]): Promise<Role[]>;
+  findById(id: string): Promise<Role | null>;
 }
 
 export { IRoleRepository };

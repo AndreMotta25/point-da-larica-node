@@ -11,6 +11,14 @@ class RoleRepository implements IRoleRepository {
   constructor() {
     this.repository = database.getRepository(Role);
   }
+  async findById(id: string): Promise<Role | null> {
+    const role = await this.repository.findOne({
+      where: { id },
+      relations: { permissions: true },
+    });
+    return role;
+  }
+
   async findByIds(ids: string[]): Promise<Role[]> {
     const roles = await this.repository.find({ where: { id: In(ids) } });
     return roles;

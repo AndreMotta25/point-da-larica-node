@@ -20,10 +20,10 @@ class EmployerRepository implements IEmployerRepository {
     return user;
   }
 
-  async findByUsername(username: string): Promise<Employer | null> {
+  async findByEmail(email: string): Promise<Employer | null> {
     const user = await this.repository.findOne({
       where: {
-        username,
+        email,
       },
       relations: { roles: true },
     });

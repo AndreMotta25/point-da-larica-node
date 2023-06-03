@@ -12,7 +12,7 @@ export interface IEmployerRequestDTO {
 
 interface IEmployerRepository {
   create(data: IEmployerRequestDTO): Promise<Employer>;
-  findByUsername(username: string): Promise<Employer | null>;
+  findByEmail(username: string): Promise<Employer | null>;
   findById(username: string): Promise<Employer | null>;
 }
 

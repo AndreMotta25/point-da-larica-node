@@ -19,9 +19,6 @@ class Employer {
   name: string;
 
   @Column({ nullable: false })
-  username: string;
-
-  @Column({ nullable: false })
   password: string;
 
   @CreateDateColumn()

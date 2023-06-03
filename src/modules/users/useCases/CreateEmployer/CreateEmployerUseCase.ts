@@ -16,26 +16,18 @@ class CreateEmployerUseCase {
     private roleRepository: IRoleRepository
   ) {}
 
-  async execute({
-    username,
-    cpf,
-    email,
-    password,
-    roles,
-    name,
-  }: IEmployerRequestDTO) {
-    const usernameAlreadyExists = await this.employerRepository.findByUsername(
-      username
-    );
-    if (usernameAlreadyExists)
-      throw new ErrorField(username, 'Username já existe', 'username', 400);
+  async execute({ cpf, email, password, roles, name }: IEmployerRequestDTO) {
+    // const usernameAlreadyExists = await this.employerRepository.findByUsername(
+    //   username
+    // );
+    // if (usernameAlreadyExists)
+    //   throw new ErrorField(username, 'Username já existe', 'username', 400);
 
     const hashPass = await hash(password, 8);
 
     const rolesExists = await this.roleRepository.findByIds(roles);
 
     const user = await this.employerRepository.create({
-      username,
       email,
       name,
       cpf,

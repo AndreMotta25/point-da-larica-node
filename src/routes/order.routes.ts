@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import { hasPermission } from 'src/middleware/hasPermission';
+import { isAuthenticated } from 'src/middleware/isAuthenticated';
 
 import { CancelOrderController } from '@modules/orders/useCases/CancelOrder/CancelOrderController';
 import { CreateOrderController } from '@modules/orders/useCases/CreateOrder/CreateOrderController';
@@ -16,11 +18,42 @@ const getOrderController = new GetOrderController();
 const sendOrderController = new SendOrderController();
 const cancelOrderController = new CancelOrderController();
 
-orderRoutes.post('/', createOrderController.handler);
-orderRoutes.get('/date', listByDate.handler);
-orderRoutes.get('/deliveries', listByDeliveries.handler);
-orderRoutes.get('/:id', getOrderController.handler);
-orderRoutes.patch('/send/:id', sendOrderController.handle);
-orderRoutes.patch('/cancel/:id', cancelOrderController.handle);
+orderRoutes.post(
+  '/',
+  isAuthenticated,
+  hasPermission('register_order'),
+  createOrderController.handler
+);
+orderRoutes.get(
+  '/date',
+  isAuthenticated,
+  hasPermission('get_order'),
+  listByDate.handler
+);
+orderRoutes.get(
+  '/deliveries',
+  isAuthenticated,
+  hasPermission('get_order'),
+  listByDeliveries.handler
+);
+orderRoutes.get(
+  '/:id',
+  isAuthenticated,
+  hasPermission('get_order'),
+  getOrderController.handler
+);
+
+orderRoutes.patch(
+  '/send/:id',
+  isAuthenticated,
+  hasPermission('send_order'),
+  sendOrderController.handle
+);
+orderRoutes.patch(
+  '/cancel/:id',
+  isAuthenticated,
+  hasPermission('cancel_order'),
+  cancelOrderController.handle
+);
 
 export { orderRoutes };

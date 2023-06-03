@@ -14,7 +14,7 @@ class AdminRoleToEmployerSeeder implements Seeder {
     const roleRepository = dataSource.getRepository(Role);
 
     const admin = await employerRepository.findOne({
-      where: { email: 'admin@gmail.com', username: 'admin' },
+      where: { email: 'admin@gmail.com' },
     });
 
     const role = await roleRepository.findOne({ where: { name: 'admin' } });

@@ -20,7 +20,6 @@ class AdminSeeder implements Seeder {
       const adm = employerRepository.create({
         name: 'admin',
         password: await hash('admin', 8),
-        username: 'admin',
         cpf: 'xxx.xxx.xxx-xx',
         email: 'admin@gmail.com',
       });

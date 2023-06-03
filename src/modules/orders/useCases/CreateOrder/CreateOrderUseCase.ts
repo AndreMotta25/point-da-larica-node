@@ -49,7 +49,7 @@ class CreateOrderUseCase {
     if (total <= 0)
       throw new AppError('O total não deve ser menor do que zero', 400);
 
-    let discount = 0;
+    let discount_price = 0;
     let coupon_value = 0;
 
     // verifica  se o cupom existe
@@ -64,7 +64,7 @@ class CreateOrderUseCase {
           422
         );
 
-      discount = total - coupon.value;
+      discount_price = total - coupon.value;
       coupon_value = coupon.value;
 
       await debitCouponUseCase.execute(coupon.code);
@@ -72,8 +72,8 @@ class CreateOrderUseCase {
 
     const order = await this.repository.create({
       full_value: total,
-      discount_value: coupon_value,
-      discounted_value: discount,
+      discount: coupon_value,
+      discount_price,
       coupon_code,
       code: 'asdsadsad',
       isDelivery,

@@ -23,10 +23,10 @@ class Order {
   full_value: number;
 
   @Column('decimal', { precision: 18, scale: 2 })
-  discount_value: number;
+  discount: number;
 
   @Column('decimal', { precision: 18, scale: 2 })
-  discounted_value: number;
+  discount_price: number;
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
   data_of_sale: Date;

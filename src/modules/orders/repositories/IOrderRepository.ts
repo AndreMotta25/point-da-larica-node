@@ -3,8 +3,8 @@ import { IListOrderDTO } from '../useCases/ListOrderByDate/ListOrderByDateUseCas
 
 export interface IRequestOrder {
   full_value: number;
-  discount_value: number;
-  discounted_value: number;
+  discount: number;
+  discount_price: number;
   coupon_code?: string;
   code: string;
   isDelivery: boolean;

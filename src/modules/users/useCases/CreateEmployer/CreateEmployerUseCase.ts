@@ -17,11 +17,11 @@ class CreateEmployerUseCase {
   ) {}
 
   async execute({ cpf, email, password, roles, name }: IEmployerRequestDTO) {
-    // const usernameAlreadyExists = await this.employerRepository.findByUsername(
-    //   username
-    // );
-    // if (usernameAlreadyExists)
-    //   throw new ErrorField(username, 'Username já existe', 'username', 400);
+    const employerAlreadyExists = await this.employerRepository.findByEmail(
+      email
+    );
+    if (employerAlreadyExists)
+      throw new ErrorField(email, 'Email indisponivel', 'email', 400);
 
     const hashPass = await hash(password, 8);
 

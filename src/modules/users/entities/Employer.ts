@@ -30,6 +30,9 @@ class Employer {
   @Column({ nullable: false })
   email: string;
 
+  @Column({ default: v4() })
+  hashToken: string;
+
   @ManyToMany(() => Role)
   @JoinTable({
     name: 'users_roles',

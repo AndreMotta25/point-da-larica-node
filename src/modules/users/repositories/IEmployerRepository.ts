@@ -4,6 +4,7 @@ import { Role } from '../entities/Role';
 export interface IEmployerRequestDTO {
   name: string;
   password: string;
+  hashToken: string;
   cpf: string;
   email: string;
   roles: Role[];

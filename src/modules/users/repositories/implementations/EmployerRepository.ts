@@ -14,6 +14,16 @@ class EmployerRepository implements IEmployerRepository {
   constructor() {
     this.repository = database.getRepository(Employer);
   }
+  async findByCpf(cpf: string): Promise<Employer | null> {
+    const user = await this.repository.findOne({
+      where: {
+        cpf,
+      },
+      relations: { roles: true },
+    });
+    return user;
+  }
+
   async create(data: IEmployerRequestDTO): Promise<Employer> {
     const user = this.repository.create({ ...data });
     await this.repository.save(user);

@@ -15,6 +15,7 @@ interface IEmployerRepository {
   create(data: IEmployerRequestDTO): Promise<Employer>;
   findByEmail(username: string): Promise<Employer | null>;
   findById(username: string): Promise<Employer | null>;
+  findByCpf(cpf: string): Promise<Employer | null>;
 }
 
 export { IEmployerRepository };

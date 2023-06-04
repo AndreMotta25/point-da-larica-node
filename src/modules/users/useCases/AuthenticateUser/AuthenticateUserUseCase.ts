@@ -6,7 +6,7 @@ import AppError from '@errors/AppError';
 import { IEmployerRepository } from '@modules/users/repositories/IEmployerRepository';
 
 interface IEmployerRequest {
-  username: string;
+  email: string;
   password: string;
 }
 
@@ -17,9 +17,8 @@ class AuthenticateUserUseCase {
     private employerRepository: IEmployerRepository
   ) {}
 
-  async execute({ username, password }: IEmployerRequest) {
-    const user = await this.employerRepository.findByUsername(username);
-
+  async execute({ email, password }: IEmployerRequest) {
+    const user = await this.employerRepository.findByEmail(email);
     if (!user) throw new AppError('Usuario ou Senha Incorretos', 401);
 
     const passwordMatch = await compare(password, user.password);
@@ -30,7 +29,7 @@ class AuthenticateUserUseCase {
         subject: user.id,
         roles: user.roles.map((r) => r.name),
       },
-      'b5b037a78522671b89a2c1b21d9b80c6',
+      user.hashToken,
       {
         expiresIn: '1d',
       }

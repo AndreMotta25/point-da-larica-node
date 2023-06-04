@@ -1,7 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
 import AppError from '@errors/AppError';
-import { IOrderListRepository } from '@modules/orders/repositories/IOrderListRepository';
 import { IOrderRepository } from '@modules/orders/repositories/IOrderRepository';
 import { IProductRepository } from '@modules/orders/repositories/IProductRepository';
 
@@ -19,9 +18,9 @@ interface IDelivery {
 interface IOrderResponseDTO {
   id: string;
   full_value: number;
-  discounted_value: number;
+  discount_price: number;
   date_of_sale: Date;
-  discount_value: number;
+  discount: number;
   situation: 'ativo' | 'cancelado';
   coupon_code: string;
   delivery?: IDelivery;
@@ -67,8 +66,8 @@ class GetOrderUseCase {
       date_of_sale: order.data_of_sale,
       isDelivery: order.isDelivery,
       delivery: order.isDelivery ? delivery : undefined,
-      discount_value: order.discount_value,
-      discounted_value: order.discounted_value,
+      discount: order.discount,
+      discount_price: order.discount_price,
       situation: order.canceled ? 'cancelado' : 'ativo',
       itens,
     };

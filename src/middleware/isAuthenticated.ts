@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { verify } from 'jsonwebtoken';
+import jwtDecode from 'jwt-decode';
 
 import AppError from '@errors/AppError';
 import { EmployerRepository } from '@modules/users/repositories/implementations/EmployerRepository';
@@ -15,19 +16,18 @@ const isAuthenticated = async (
 ) => {
   const { authorization } = request.headers;
 
-  if (!authorization) throw new AppError('Falta o token', 401);
+  if (!authorization) throw new AppError('Falta o token', 400);
 
   const [, token] = authorization.split(' ');
-  try {
-    const { subject } = verify(
-      token,
-      'b5b037a78522671b89a2c1b21d9b80c6'
-    ) as IJwt;
 
+  try {
+    const { subject } = jwtDecode(token) as IJwt;
     const employerRepository = new EmployerRepository();
     const employer = await employerRepository.findById(subject);
 
     if (!employer) throw new AppError('Usuario não achado', 401);
+
+    verify(token, employer.hashToken);
 
     request.user = {
       id: employer.id,

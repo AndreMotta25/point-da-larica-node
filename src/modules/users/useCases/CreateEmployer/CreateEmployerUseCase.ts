@@ -1,5 +1,6 @@
 import { hash } from 'bcryptjs';
 import { inject, injectable } from 'tsyringe';
+import { v4 } from 'uuid';
 
 import ErrorField from '@errors/ErrorField';
 import { IEmployerRepository } from '@modules/users/repositories/IEmployerRepository';
@@ -24,6 +25,7 @@ class CreateEmployerUseCase {
       throw new ErrorField(email, 'Email indisponivel', 'email', 400);
 
     const hashPass = await hash(password, 8);
+    const hashToken = await hash(v4(), 8);
 
     const rolesExists = await this.roleRepository.findByIds(roles);
 
@@ -33,6 +35,7 @@ class CreateEmployerUseCase {
       cpf,
       password: hashPass,
       roles: rolesExists,
+      hashToken,
     });
 
     return user;

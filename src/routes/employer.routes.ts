@@ -18,7 +18,12 @@ employerRoutes.post(
   hasPermission('create_user'),
   createController.handle
 );
-employerRoutes.post('/:id/assign_roles', isAuthenticated, assignRoles.handle);
+employerRoutes.post(
+  '/:id/assign_roles',
+  isAuthenticated,
+  hasPermission('assign_role'),
+  assignRoles.handle
+);
 
 employerRoutes.post('/session', authenticateController.handle);
 

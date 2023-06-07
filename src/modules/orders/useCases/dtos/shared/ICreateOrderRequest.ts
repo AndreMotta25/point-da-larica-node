@@ -2,12 +2,9 @@ export interface IProductList {
   id: string;
   amount: number;
 }
-
-interface IOrderRequestDTO {
+export interface ICreateOrderRequest {
   coupon_code?: string;
   itens: IProductList[];
   isDelivery: boolean;
   adress: string;
 }
-
-export { IOrderRequestDTO };

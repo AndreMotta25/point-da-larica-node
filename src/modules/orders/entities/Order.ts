@@ -53,8 +53,16 @@ class Order {
   @Column({ default: false })
   isDelivery: boolean;
 
+  @Column({ default: false })
+  schedule: boolean;
+
+  @Column({ type: 'timestamp without time zone' })
+  schedule_date: Date;
+
   constructor() {
     this.id = uuidV4();
+    this.schedule = false;
+    this.schedule_date = new Date();
   }
 }
 

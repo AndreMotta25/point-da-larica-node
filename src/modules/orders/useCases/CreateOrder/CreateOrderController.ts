@@ -20,6 +20,7 @@ class CreateOrderController {
       coupon_code,
       isDelivery,
       adress,
+      schedule: false,
     });
 
     return response.status(201).send();

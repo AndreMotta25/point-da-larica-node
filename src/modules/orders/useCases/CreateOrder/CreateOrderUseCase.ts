@@ -9,7 +9,15 @@ import { IOrderListRepository } from '@modules/orders/repositories/IOrderListRep
 import { IOrderRepository } from '@modules/orders/repositories/IOrderRepository';
 import { IProductRepository } from '@modules/orders/repositories/IProductRepository';
 
-import { IOrderRequestDTO, IProductList } from './IOrderRequestDTO';
+import {
+  ICreateOrderRequest,
+  IProductList,
+} from '../dtos/shared/ICreateOrderRequest';
+
+interface IOrderRequestDTO extends ICreateOrderRequest {
+  schedule: boolean;
+  schedule_date?: Date;
+}
 
 @injectable()
 class CreateOrderUseCase {
@@ -30,7 +38,14 @@ class CreateOrderUseCase {
     this.repositoryDelivery = repositoryDelivery;
   }
 
-  async execute({ coupon_code, itens, isDelivery, adress }: IOrderRequestDTO) {
+  async execute({
+    coupon_code,
+    itens,
+    isDelivery,
+    adress,
+    schedule,
+    schedule_date,
+  }: IOrderRequestDTO) {
     const valuesPromise = itens.map(async (product) => {
       // deixar isso pro express-validator depois
       if (!product.id) throw new AppError('Produto não informado', 400);
@@ -77,6 +92,8 @@ class CreateOrderUseCase {
       coupon_code,
       code: 'asdsadsad',
       isDelivery,
+      schedule,
+      schedule_date,
     });
 
     if (isDelivery) {

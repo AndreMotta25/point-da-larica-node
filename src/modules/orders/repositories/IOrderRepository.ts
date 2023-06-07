@@ -8,6 +8,8 @@ export interface IRequestOrder {
   coupon_code?: string;
   code: string;
   isDelivery: boolean;
+  schedule: boolean;
+  schedule_date?: Date;
 }
 export interface IRequestOrderDelivery {
   date?: string;

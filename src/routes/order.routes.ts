@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { hasPermission } from 'src/middleware/hasPermission';
+import { invalidToken } from 'src/middleware/invalidToken';
 import { isAuthenticated } from 'src/middleware/isAuthenticated';
 
 import { CancelOrderController } from '@modules/orders/useCases/CancelOrder/CancelOrderController';
@@ -7,6 +8,7 @@ import { CreateOrderController } from '@modules/orders/useCases/CreateOrder/Crea
 import { GetOrderController } from '@modules/orders/useCases/GetOrder/GetOrderController';
 import { ListByDeliveriesController } from '@modules/orders/useCases/ListByDeliveries/ListByDeliveriesController';
 import { ListOrderByDateController } from '@modules/orders/useCases/ListOrderByDate/ListOrderByDateController';
+import { ScheduleOrderController } from '@modules/orders/useCases/ScheduleOrder/ScheduleOrderController';
 import { SendOrderController } from '@modules/orders/useCases/SendOrder/SendOrderController';
 
 const orderRoutes = Router();
@@ -17,6 +19,7 @@ const listByDeliveries = new ListByDeliveriesController();
 const getOrderController = new GetOrderController();
 const sendOrderController = new SendOrderController();
 const cancelOrderController = new CancelOrderController();
+const scheduleOrderController = new ScheduleOrderController();
 
 orderRoutes.post(
   '/',
@@ -24,8 +27,11 @@ orderRoutes.post(
   hasPermission('register_order'),
   createOrderController.handler
 );
+
+orderRoutes.post('/schedule', scheduleOrderController.handler);
+
 orderRoutes.get(
-  '/date',
+  '/',
   isAuthenticated,
   hasPermission('get_order'),
   listByDate.handler
@@ -53,7 +59,8 @@ orderRoutes.patch(
   '/cancel/:id',
   isAuthenticated,
   hasPermission('cancel_order'),
-  cancelOrderController.handle
+  cancelOrderController.handle,
+  invalidToken
 );
 
 export { orderRoutes };

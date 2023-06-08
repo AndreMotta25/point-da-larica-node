@@ -34,7 +34,7 @@ class ListOrderByDateUseCase {
         date_of_sale: order.data_of_sale,
         full_value: Number(order.full_value),
         situation: order.canceled ? 'cancelado' : 'ativo',
-        discounted_value: Number(order.discounted_value),
+        discount_price: Number(order.discount_price),
       };
       return orderDTO;
     });

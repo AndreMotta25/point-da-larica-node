@@ -1,8 +1,9 @@
 import 'reflect-metadata';
-import express, { NextFunction, Request, Response } from 'express';
 import 'express-async-errors';
-
 import './shared/container';
+import 'dotenv/config';
+
+import express, { NextFunction, Request, Response } from 'express';
 
 import AppError from './errors/AppError';
 import ErrorField from './errors/ErrorField';
@@ -15,6 +16,7 @@ app.use(router);
 
 app.use(
   (err: Error, request: Request, response: Response, next: NextFunction) => {
+    console.log(err);
     if (err instanceof ErrorField) {
       return response.status(err.statusCode).json({
         errors: [{ value: err.value, msg: err.msg, param: err.param }],

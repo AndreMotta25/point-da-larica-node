@@ -1,0 +1,52 @@
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Boas vindas</title>
+    <style>
+      @font-face {
+        font-family: 'Agency';
+        src: url('../font/agency_fb.ttf');
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; } 
+
+      section {
+        background-color:#222222; 
+        padding: 50px 33px;   
+      } 
+      #logo { 
+        width: 100%; 
+      } 
+      #logo img 
+      { 
+        display: block; 
+        margin: 0 auto;
+      }
+      #welcome  {
+        font-family: "Agency";
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .credentials span{
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <section >
+            <div id="logo">
+                <img src="cid:logo" alt="point da larica" />
+            </div>
+            <div id="welcome">
+                <p class="message">
+                    Bem vindo ao point da larica {{name}}, abaixo estão suas credencias:
+                </p>
+                <p class="credentials">
+                    <span id="email">Email: {{email}}</span>
+                    <span id="password">Senha: {{password}}</span>
+                </p>
+            </div>
+    </section>
+  </body>
+</html>

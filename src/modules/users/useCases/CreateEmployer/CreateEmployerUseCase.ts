@@ -1,9 +1,11 @@
 import { hash } from 'bcryptjs';
+import { ISendMail } from 'src/emailProvider/ISendMail';
 import { inject, injectable } from 'tsyringe';
 import { v4 } from 'uuid';
 
 import AppError from '@errors/AppError';
 import ErrorField from '@errors/ErrorField';
+import ICodeGenerator from '@modules/coupons/providers/interfaces/ICodeGenerator';
 import { IEmployerRepository } from '@modules/users/repositories/IEmployerRepository';
 import { IRoleRepository } from '@modules/users/repositories/IRoleRepository';
 
@@ -15,10 +17,14 @@ class CreateEmployerUseCase {
     @inject('EmployerRepository')
     private employerRepository: IEmployerRepository,
     @inject('RoleRepository')
-    private roleRepository: IRoleRepository
+    private roleRepository: IRoleRepository,
+    @inject('SendMail')
+    private emailProvider: ISendMail,
+    @inject('CodeGenerator')
+    private codeGenerator: ICodeGenerator
   ) {}
 
-  async execute({ cpf, email, password, roles, name }: IEmployerRequestDTO) {
+  async execute({ cpf, email, roles, name }: IEmployerRequestDTO) {
     const cpfEmployerAlreadyExists = await this.employerRepository.findByCpf(
       cpf
     );
@@ -38,7 +44,9 @@ class CreateEmployerUseCase {
         'Um empregado não pode começar na organização, sem um papel'
       );
 
-    const hashPass = await hash(password, 8);
+    const passGenerated = this.codeGenerator.generateCode(5);
+
+    const hashPass = await hash(passGenerated, 8);
     const hashToken = await hash(v4(), 8);
 
     const rolesExists = await this.roleRepository.findByIds(roles);
@@ -50,6 +58,17 @@ class CreateEmployerUseCase {
       password: hashPass,
       roles: rolesExists,
       hashToken,
+    });
+
+    await this.emailProvider.sendEmail({
+      to: email,
+      subject: 'Bem vindo ao Point da larica ',
+      template: 'email',
+      context: {
+        name: user.name,
+        email: user.email,
+        password: passGenerated,
+      },
     });
 
     return user;

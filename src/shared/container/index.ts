@@ -1,3 +1,5 @@
+import { SendMail } from 'src/emailProvider/implements/SendMail';
+import { ISendMail } from 'src/emailProvider/ISendMail';
 import { container } from 'tsyringe';
 
 import { IDeliveryRepository } from '@modules/orders/repositories/IDeliveryRepository';
@@ -21,6 +23,8 @@ import ICouponRepository from '../../modules/coupons/repositories/ICouponReposit
 import CouponRepository from '../../modules/coupons/repositories/implementations/CouponRepository';
 
 container.register<ICodeGenerator>('CodeGenerator', CodeGenerator);
+container.registerSingleton<ISendMail>('SendMail', SendMail);
+
 container.registerSingleton<ICouponRepository>(
   'CouponRepository',
   CouponRepository

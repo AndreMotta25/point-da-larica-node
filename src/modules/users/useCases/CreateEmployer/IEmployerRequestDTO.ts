@@ -1,6 +1,5 @@
 interface IEmployerRequestDTO {
   name: string;
-  password: string;
   cpf: string;
   email: string;
   roles: string[];

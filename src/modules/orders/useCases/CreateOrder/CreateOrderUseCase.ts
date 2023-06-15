@@ -1,3 +1,4 @@
+import { ITransaction } from 'src/database/transactions/Transaction/ITransaction';
 import { container, inject, injectable } from 'tsyringe';
 
 import AppError from '@errors/AppError';
@@ -27,6 +28,7 @@ class CreateOrderUseCase {
   private readonly repositoryDelivery: IDeliveryRepository;
 
   constructor(
+    @inject('Transaction') private transaction: ITransaction,
     @inject('ProductRepository') repositoryProduct: IProductRepository,
     @inject('OrderListRepository') repositoryOrderList: IOrderListRepository,
     @inject('OrderRepository') repository: IOrderRepository,
@@ -67,54 +69,60 @@ class CreateOrderUseCase {
     let discount_price = 0;
     let coupon_value = 0;
 
-    // verifica  se o cupom existe
-    if (coupon_code) {
-      const validCouponUseCase = container.resolve(ValidCouponService);
-      const debitCouponUseCase = container.resolve(DebitCouponService);
-      const coupon = await validCouponUseCase.execute(coupon_code);
+    await this.transaction.startTransaction();
+    try {
+      // verifica  se o cupom existe
+      if (coupon_code) {
+        const validCouponUseCase = container.resolve(ValidCouponService);
+        const debitCouponUseCase = container.resolve(DebitCouponService);
+        const coupon = await validCouponUseCase.execute(coupon_code);
 
-      if (!(total >= coupon.minimumValue))
-        throw new AppError(
-          'A compra não alcançou o valor minimo para usar o cupom',
-          422
-        );
+        if (!(total >= coupon.minimumValue))
+          throw new AppError(
+            'A compra não alcançou o valor minimo para usar o cupom',
+            422
+          );
 
-      discount_price = total - coupon.value;
-      coupon_value = coupon.value;
+        discount_price = total - coupon.value;
+        coupon_value = coupon.value;
 
-      await debitCouponUseCase.execute(coupon.code);
-    }
+        await debitCouponUseCase.execute(coupon.code);
+      }
 
-    const order = await this.repository.create({
-      full_value: total,
-      discount: coupon_value,
-      discount_price,
-      coupon_code,
-      code: 'asdsadsad',
-      isDelivery,
-      schedule,
-      schedule_date,
-    });
-
-    if (isDelivery) {
-      if (!adress) throw new AppError('Faltou o endereço de entrega', 400);
-
-      await this.repositoryDelivery.create({ adress, order });
-    }
-
-    // cadastrando os pedidos itens
-    this.clearRepeatedItens(itens).forEach(async (item) => {
-      const product = (await this.repositoryProduct.findById(
-        item.id
-      )) as Product;
-
-      await this.repositoryOrderList.create({
-        order,
-        product,
-        amount: item.amount,
-        total: product.value * item.amount,
+      const order = await this.repository.create({
+        full_value: total,
+        discount: coupon_value,
+        discount_price,
+        coupon_code,
+        code: 'asdsadsad',
+        isDelivery,
+        schedule,
+        schedule_date,
       });
-    });
+
+      if (isDelivery) {
+        if (!adress) throw new AppError('Faltou o endereço de entrega', 400);
+
+        await this.repositoryDelivery.create({ adress, order });
+      }
+      this.clearRepeatedItens(itens).forEach(async (item) => {
+        const product = (await this.repositoryProduct.findById(
+          item.id
+        )) as Product;
+
+        await this.repositoryOrderList.create({
+          order,
+          product,
+          amount: item.amount,
+          total: product.value * item.amount,
+        });
+      });
+
+      await this.transaction.commitTransaction();
+    } catch (error: any) {
+      await this.transaction.rollBackTransaction();
+      if (error instanceof AppError) throw error;
+    }
   }
   async calculateTotal(values: Promise<number>[]) {
     const value = await (

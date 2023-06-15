@@ -1,3 +1,5 @@
+import { IQueryRunner } from 'src/database/transactions/QueryRunner/IQueryRunner';
+import { inject, injectable } from 'tsyringe';
 import { Repository } from 'typeorm';
 
 import database from '../../../../database';
@@ -5,12 +7,14 @@ import ICouponDTO from '../../dtos/ICouponDTO';
 import Coupon from '../../entities/Coupon';
 import ICouponRepository from '../ICouponRepository';
 
+@injectable()
 class CouponRepository implements ICouponRepository {
   private repository: Repository<Coupon>;
 
-  constructor() {
+  constructor(@inject('QueryRunner') private runner: IQueryRunner) {
     this.repository = database.getRepository(Coupon);
   }
+
   async findById(id: string): Promise<Coupon | null> {
     const coupon = await this.repository.findOneBy({ id });
     return coupon;
@@ -30,7 +34,8 @@ class CouponRepository implements ICouponRepository {
     id,
     valid,
   }: ICouponDTO): Promise<void> {
-    const coupon = this.repository.create({
+    const runnerRepository = this.runner.getRepository(Coupon);
+    const coupon = runnerRepository.create({
       code,
       value,
       amount,
@@ -40,7 +45,7 @@ class CouponRepository implements ICouponRepository {
       id,
     });
 
-    await this.repository.save(coupon);
+    await runnerRepository.save(coupon);
   }
 
   async getAll(): Promise<Coupon[]> {

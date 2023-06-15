@@ -1,3 +1,5 @@
+import { IQueryRunner } from 'src/database/transactions/QueryRunner/IQueryRunner';
+import { inject, injectable } from 'tsyringe';
 import { Raw, Repository } from 'typeorm';
 
 import { Order } from '@modules/orders/entities/Order';
@@ -10,12 +12,16 @@ import {
   IRequestOrderDelivery,
 } from '../IOrderRepository';
 
+@injectable()
 class OrderRepository implements IOrderRepository {
   private readonly repository: Repository<Order>;
+  private queryRunner: IQueryRunner;
 
-  constructor() {
-    this.repository = database.getRepository(Order);
+  constructor(@inject('QueryRunner') runner: IQueryRunner) {
+    this.repository = database.getRepository(Order); // pode ser um queryRunner eu acho
+    this.queryRunner = runner;
   }
+
   async getOrder(id: string): Promise<Order | null> {
     const order = await this.repository.findOne({
       relations: {
@@ -30,9 +36,11 @@ class OrderRepository implements IOrderRepository {
   }
 
   async create(order: IRequestOrder): Promise<Order> {
-    const newOrder = this.repository.create({ ...order });
-    await this.repository.save(newOrder);
+    const runnerRepository = this.queryRunner.getRepository(Order);
 
+    const newOrder = runnerRepository.create({ ...order });
+
+    await runnerRepository.save(newOrder);
     return newOrder;
   }
 
@@ -100,9 +108,20 @@ class OrderRepository implements IOrderRepository {
       return orders;
     }
 
-    const [orders] = await this.repository.findAndCount({
-      skip: limitItens * (pageNumber - 1),
-      take: limitItens,
+    // retorna os pedidos do dia
+    const datePoint = new Date();
+
+    const dateNow = `${datePoint.getFullYear()}-${
+      datePoint.getMonth() + 1
+    }-${datePoint.getDate()}`;
+
+    const orders = await this.repository.find({
+      where: {
+        data_of_sale: Raw(
+          (alias) =>
+            `DATE_TRUNC('day', ${alias} AT TIME ZONE '${process.env.TZ}') = '${dateNow}'`
+        ),
+      },
     });
 
     return orders;

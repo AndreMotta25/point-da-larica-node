@@ -2,6 +2,7 @@ import { ITransaction } from 'src/database/transactions/Transaction/ITransaction
 import { container, inject, injectable } from 'tsyringe';
 
 import AppError from '@errors/AppError';
+import ICodeGenerator from '@modules/coupons/providers/interfaces/ICodeGenerator';
 import DebitCouponService from '@modules/coupons/useCases/DebitCoupon/DebitCouponService';
 import ValidCouponService from '@modules/coupons/useCases/ValidCoupon/ValidCouponService';
 import { Product } from '@modules/orders/entities/Product';
@@ -26,18 +27,21 @@ class CreateOrderUseCase {
   private readonly repository: IOrderRepository;
   private readonly repositoryOrderList: IOrderListRepository;
   private readonly repositoryDelivery: IDeliveryRepository;
+  private readonly codeGenerator: ICodeGenerator;
 
   constructor(
     @inject('Transaction') private transaction: ITransaction,
     @inject('ProductRepository') repositoryProduct: IProductRepository,
     @inject('OrderListRepository') repositoryOrderList: IOrderListRepository,
     @inject('OrderRepository') repository: IOrderRepository,
-    @inject('DeliveryRepository') repositoryDelivery: IDeliveryRepository
+    @inject('DeliveryRepository') repositoryDelivery: IDeliveryRepository,
+    @inject('CodeGenerator') codeGenerator: ICodeGenerator
   ) {
     this.repositoryProduct = repositoryProduct;
     this.repository = repository;
     this.repositoryOrderList = repositoryOrderList;
     this.repositoryDelivery = repositoryDelivery;
+    this.codeGenerator = codeGenerator;
   }
 
   async execute({
@@ -47,7 +51,7 @@ class CreateOrderUseCase {
     adress,
     schedule,
     schedule_date,
-  }: IOrderRequestDTO) {
+  }: IOrderRequestDTO): Promise<string | undefined> {
     const valuesPromise = itens.map(async (product) => {
       // deixar isso pro express-validator depois
       if (!product.id) throw new AppError('Produto não informado', 400);
@@ -94,7 +98,7 @@ class CreateOrderUseCase {
         discount: coupon_value,
         discount_price,
         coupon_code,
-        code: 'asdsadsad',
+        code: this.codeGenerator.generateCode(4),
         isDelivery,
         schedule,
         schedule_date,
@@ -119,9 +123,12 @@ class CreateOrderUseCase {
       });
 
       await this.transaction.commitTransaction();
-    } catch (error: any) {
+      return order.code;
+    } catch (error) {
       await this.transaction.rollBackTransaction();
       if (error instanceof AppError) throw error;
+      console.log(error);
+      return undefined;
     }
   }
   async calculateTotal(values: Promise<number>[]) {

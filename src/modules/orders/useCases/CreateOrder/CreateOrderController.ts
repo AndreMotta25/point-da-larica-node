@@ -15,7 +15,7 @@ class CreateOrderController {
 
     const createOrderService = container.resolve(CreateOrderUseCase);
 
-    await createOrderService.execute({
+    const orderCode = await createOrderService.execute({
       itens,
       coupon_code,
       isDelivery,
@@ -23,7 +23,7 @@ class CreateOrderController {
       schedule: false,
     });
 
-    return response.status(201).send();
+    return response.status(201).send(orderCode);
   }
 }
 

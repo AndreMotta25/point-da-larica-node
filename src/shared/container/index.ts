@@ -17,6 +17,10 @@ import { RoleRepository } from '@modules/users/repositories/implementations/Role
 import { IPermissionRepository } from '@modules/users/repositories/IPermissionRepository';
 import { IRoleRepository } from '@modules/users/repositories/IRoleRepository';
 
+import { IQueryRunner } from '../../database/transactions/QueryRunner/IQueryRunner';
+import { QRunner } from '../../database/transactions/QueryRunner/QueryRunner';
+import { ITransaction } from '../../database/transactions/Transaction/ITransaction';
+import { Transaction } from '../../database/transactions/Transaction/Transaction';
 import CodeGenerator from '../../modules/coupons/providers/implementations/CodeGenerator';
 import ICodeGenerator from '../../modules/coupons/providers/interfaces/ICodeGenerator';
 import ICouponRepository from '../../modules/coupons/repositories/ICouponRepository';
@@ -24,6 +28,9 @@ import CouponRepository from '../../modules/coupons/repositories/implementations
 
 container.register<ICodeGenerator>('CodeGenerator', CodeGenerator);
 container.registerSingleton<ISendMail>('SendMail', SendMail);
+
+container.registerSingleton<ITransaction>('Transaction', Transaction);
+container.registerSingleton<IQueryRunner>('QueryRunner', QRunner);
 
 container.registerSingleton<ICouponRepository>(
   'CouponRepository',

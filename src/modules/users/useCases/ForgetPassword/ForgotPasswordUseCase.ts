@@ -1,5 +1,6 @@
 import { sign } from 'jsonwebtoken';
 import { ISendMail } from 'src/emailProvider/ISendMail';
+import { convertTime } from 'src/utils/convertTime';
 import { inject, injectable } from 'tsyringe';
 
 import AppError from '@errors/AppError';
@@ -20,7 +21,7 @@ class ForgotPasswordUseCase {
     if (!employer) throw new AppError('Usuario não achado', 404);
 
     const token = sign({ subject: employer.id }, employer.hashToken, {
-      expiresIn: '1d',
+      expiresIn: convertTime.toHour(1),
     });
 
     this.SendMail.sendEmail({

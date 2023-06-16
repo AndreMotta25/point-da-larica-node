@@ -18,7 +18,7 @@ class AssignRolesUseCase {
 
   async execute({ employer_id, roles }: IRequest) {
     const employer = await this.employerRepository.findById(employer_id);
-    if (!employer) throw new AppError('Employer não encontrado.');
+    if (!employer) throw new AppError('Employer não encontrado.', 404);
 
     const rolesExists = await this.roleRepository.findByIds(roles);
     employer.roles = [...rolesExists, ...employer.roles];

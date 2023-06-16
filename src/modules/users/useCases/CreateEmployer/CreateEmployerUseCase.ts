@@ -63,7 +63,7 @@ class CreateEmployerUseCase {
     await this.emailProvider.sendEmail({
       to: email,
       subject: 'Bem vindo ao Point da larica ',
-      template: 'email',
+      template: 'welcome',
       context: {
         name: user.name,
         email: user.email,

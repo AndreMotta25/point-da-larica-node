@@ -9,7 +9,7 @@ interface IRequestRemoveRoles {
 }
 
 @injectable()
-class RemoveRolesUseCase {
+class RemoveRolesFromEmployerUseCase {
   constructor(
     @inject('EmployerRepository')
     private employerRepository: IEmployerRepository
@@ -30,4 +30,4 @@ class RemoveRolesUseCase {
   }
 }
 
-export { RemoveRolesUseCase };
+export { RemoveRolesFromEmployerUseCase };

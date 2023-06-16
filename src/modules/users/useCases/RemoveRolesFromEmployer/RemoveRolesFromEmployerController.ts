@@ -1,14 +1,16 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import { RemoveRolesUseCase } from './RemoveRolesUseCase';
+import { RemoveRolesFromEmployerUseCase } from './RemoveRolesFromEmployerUseCase';
 
-class RemoveRolesController {
+class RemoveRolesFromEmployerController {
   async handle(request: Request, response: Response) {
     const { id } = request.params;
     const { roles_ids } = request.body;
 
-    const removeRolesUseCase = container.resolve(RemoveRolesUseCase);
+    const removeRolesUseCase = container.resolve(
+      RemoveRolesFromEmployerUseCase
+    );
 
     const employer = await removeRolesUseCase.execute({
       employer_id: id,
@@ -18,4 +20,4 @@ class RemoveRolesController {
   }
 }
 
-export { RemoveRolesController };
+export { RemoveRolesFromEmployerController };

@@ -1,3 +1,5 @@
+import { IQueryRunner } from 'src/database/transactions/QueryRunner/IQueryRunner';
+import { inject, injectable } from 'tsyringe';
 import { Repository } from 'typeorm';
 
 import { OrderList } from '@modules/orders/entities/OrderList';
@@ -5,10 +7,11 @@ import { OrderList } from '@modules/orders/entities/OrderList';
 import database from '../../../../database';
 import { IOrderListDTO, IOrderListRepository } from '../IOrderListRepository';
 
+@injectable()
 class OrderListRepository implements IOrderListRepository {
   private readonly repository: Repository<OrderList>;
 
-  constructor() {
+  constructor(@inject('QueryRunner') private runner: IQueryRunner) {
     this.repository = database.getRepository(OrderList);
   }
   async create({
@@ -17,13 +20,14 @@ class OrderListRepository implements IOrderListRepository {
     product,
     total,
   }: IOrderListDTO): Promise<void> {
-    const orderList = this.repository.create({
+    const runnerRepository = this.runner.getRepository(OrderList);
+    const orderList = runnerRepository.create({
       order,
       product,
       amount,
       total,
     });
-    await this.repository.save(orderList);
+    await runnerRepository.save(orderList);
   }
 }
 

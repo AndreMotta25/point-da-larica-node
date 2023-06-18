@@ -16,6 +16,7 @@ interface IRoleRepository {
   findByName(name: string): Promise<Role | null>;
   findByIds(ids: string[]): Promise<Role[]>;
   findById(id: string): Promise<Role | null>;
+  findAll(): Promise<Role[]>;
 }
 
 export { IRoleRepository };

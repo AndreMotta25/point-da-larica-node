@@ -1,12 +1,10 @@
 import { Permission } from '../entities/Permission';
 import { Role } from '../entities/Role';
+import { IRoleRequest } from '../useCases/Dtos/Request/IRoleRequest';
 
-export interface IRoleRequestDTO {
-  id?: string;
-  name: string;
-  description: string;
+export type IRoleRequestRepo = Omit<IRoleRequest, 'permissions'> & {
   permissions: Permission[];
-}
+};
 
 interface IRoleRepository {
   create({
@@ -14,7 +12,7 @@ interface IRoleRepository {
     id,
     description,
     permissions,
-  }: IRoleRequestDTO): Promise<Role>;
+  }: IRoleRequestRepo): Promise<Role>;
   findByName(name: string): Promise<Role | null>;
   findByIds(ids: string[]): Promise<Role[]>;
   findById(id: string): Promise<Role | null>;

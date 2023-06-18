@@ -3,10 +3,7 @@ import { inject, injectable } from 'tsyringe';
 import AppError from '@errors/AppError';
 import { IEmployerRepository } from '@modules/users/repositories/IEmployerRepository';
 
-interface IRequestRemoveRoles {
-  employer_id: string;
-  roles_ids: string[];
-}
+import { IRequestRemoveRolesFromEmployer } from '../Dtos/Request/IRequestRemoveRolesFromEmployer';
 
 @injectable()
 class RemoveRolesFromEmployerUseCase {
@@ -15,7 +12,7 @@ class RemoveRolesFromEmployerUseCase {
     private employerRepository: IEmployerRepository
   ) {}
 
-  async execute({ employer_id, roles_ids }: IRequestRemoveRoles) {
+  async execute({ employer_id, roles_ids }: IRequestRemoveRolesFromEmployer) {
     const employer = await this.employerRepository.findById(employer_id);
 
     if (!employer) throw new AppError('Usuario não achado', 404);

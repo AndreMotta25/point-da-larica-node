@@ -3,10 +3,7 @@ import { Repository } from 'typeorm';
 
 import { Employer } from '@modules/users/entities/Employer';
 
-import {
-  IEmployerRepository,
-  IEmployerRequestDTO,
-} from '../IEmployerRepository';
+import { IEmployerRepository, IRequest } from '../IEmployerRepository';
 
 class EmployerRepository implements IEmployerRepository {
   private repository: Repository<Employer>;
@@ -24,7 +21,7 @@ class EmployerRepository implements IEmployerRepository {
     return user;
   }
 
-  async create(data: IEmployerRequestDTO): Promise<Employer> {
+  async create(data: IRequest): Promise<Employer> {
     const user = this.repository.create({ ...data });
     await this.repository.save(user);
     return user;

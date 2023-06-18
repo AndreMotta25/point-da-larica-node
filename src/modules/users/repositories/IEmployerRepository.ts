@@ -1,18 +1,15 @@
 import { Employer } from '../entities/Employer';
 import { Role } from '../entities/Role';
+import { IEmployerRequest } from '../useCases/Dtos/Request/IEmployerRequest';
 
-export interface IEmployerRequestDTO {
-  name: string;
+export type IRequest = Omit<IEmployerRequest, 'roles'> & {
   password: string;
   hashToken: string;
-  cpf: string;
-  email: string;
   roles: Role[];
-  id?: string;
-}
+};
 
 interface IEmployerRepository {
-  create(data: IEmployerRequestDTO): Promise<Employer>;
+  create(data: IRequest): Promise<Employer>;
   findByEmail(username: string): Promise<Employer | null>;
   findById(username: string): Promise<Employer | null>;
   findByCpf(cpf: string): Promise<Employer | null>;

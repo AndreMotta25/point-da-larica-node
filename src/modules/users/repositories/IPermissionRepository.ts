@@ -1,8 +1,8 @@
 import { Permission } from '../entities/Permission';
-import { IPermissionRequestDTO } from '../useCases/CreatePermission/IPermissionRequestDTO';
+import { IPermissionRequest } from '../useCases/Dtos/Request/IPermissionRequest';
 
 interface IPermissionRepository {
-  create({ name, id }: IPermissionRequestDTO): Promise<Permission>;
+  create({ name, id }: IPermissionRequest): Promise<Permission>;
   findByName(name: string): Promise<Permission | null>;
   findByIds(ids: string[]): Promise<Permission[]>;
 }

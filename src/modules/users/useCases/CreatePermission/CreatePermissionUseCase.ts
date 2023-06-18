@@ -3,7 +3,7 @@ import { inject, injectable } from 'tsyringe';
 import AppError from '@errors/AppError';
 import { IPermissionRepository } from '@modules/users/repositories/IPermissionRepository';
 
-import { IPermissionRequestDTO } from './IPermissionRequestDTO';
+import { IPermissionRequest } from '../Dtos/Request/IPermissionRequest';
 
 @injectable()
 class CreatePermissionUseCase {
@@ -12,7 +12,7 @@ class CreatePermissionUseCase {
     private permissionRepository: IPermissionRepository
   ) {}
 
-  async execute({ name, description }: IPermissionRequestDTO) {
+  async execute({ name, description }: IPermissionRequest) {
     const permissionExist = await this.permissionRepository.findByName(name);
 
     if (permissionExist) throw new AppError('Permissão já existe', 400);

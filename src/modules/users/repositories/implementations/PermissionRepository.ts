@@ -2,7 +2,7 @@ import database from 'src/database';
 import { In, Repository } from 'typeorm';
 
 import { Permission } from '@modules/users/entities/Permission';
-import { IPermissionRequestDTO } from '@modules/users/useCases/CreatePermission/IPermissionRequestDTO';
+import { IPermissionRequest } from '@modules/users/useCases/Dtos/Request/IPermissionRequest';
 
 import { IPermissionRepository } from '../IPermissionRepository';
 
@@ -16,7 +16,7 @@ class PermissionRepository implements IPermissionRepository {
     name,
     id,
     description,
-  }: IPermissionRequestDTO): Promise<Permission> {
+  }: IPermissionRequest): Promise<Permission> {
     const permission = this.repository.create({ name, description, id });
     await this.repository.save(permission);
 

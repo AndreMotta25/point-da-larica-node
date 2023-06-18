@@ -4,7 +4,7 @@ import AppError from '@errors/AppError';
 import { IPermissionRepository } from '@modules/users/repositories/IPermissionRepository';
 import { IRoleRepository } from '@modules/users/repositories/IRoleRepository';
 
-import { IRoleRequestDTO } from './IRoleRequestDTO';
+import { IRoleRequest } from '../Dtos/Request/IRoleRequest';
 
 @injectable()
 class CreateRoleUseCase {
@@ -14,7 +14,7 @@ class CreateRoleUseCase {
     private permissionRepository: IPermissionRepository
   ) {}
 
-  async execute({ name, description, permissions }: IRoleRequestDTO) {
+  async execute({ name, description, permissions }: IRoleRequest) {
     const roleExists = await this.roleRepository.findByName(name);
 
     if (roleExists) throw new AppError('Função já existe');

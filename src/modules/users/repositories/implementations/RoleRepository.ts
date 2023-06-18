@@ -3,7 +3,7 @@ import { In, Repository } from 'typeorm';
 
 import { Role } from '@modules/users/entities/Role';
 
-import { IRoleRepository, IRoleRequestDTO } from '../IRoleRepository';
+import { IRoleRepository, IRoleRequestRepo } from '../IRoleRepository';
 
 class RoleRepository implements IRoleRepository {
   private repository: Repository<Role>;
@@ -33,7 +33,7 @@ class RoleRepository implements IRoleRepository {
     description,
     permissions,
     id,
-  }: IRoleRequestDTO): Promise<Role> {
+  }: IRoleRequestRepo): Promise<Role> {
     const role = this.repository.create({ name, description, permissions, id });
 
     await this.repository.save(role);

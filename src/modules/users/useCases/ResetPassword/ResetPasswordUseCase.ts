@@ -6,13 +6,10 @@ import { v4 } from 'uuid';
 import AppError from '@errors/AppError';
 import { IEmployerRepository } from '@modules/users/repositories/IEmployerRepository';
 
+import { IResetPasswordRequest } from '../Dtos/Request/IResetPasswordRequest';
+
 interface IJwt {
   subject: string;
-}
-
-interface IResetPasswordDTO {
-  token: string;
-  new_password: string;
 }
 
 @injectable()
@@ -22,7 +19,7 @@ class ResetPasswordUseCase {
     private employerRepository: IEmployerRepository
   ) {}
 
-  async execute({ token, new_password }: IResetPasswordDTO) {
+  async execute({ token, new_password }: IResetPasswordRequest) {
     const { subject } = decode(token) as IJwt;
 
     const employer = await this.employerRepository.findById(subject);

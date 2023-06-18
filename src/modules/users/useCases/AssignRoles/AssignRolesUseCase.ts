@@ -4,10 +4,8 @@ import AppError from '@errors/AppError';
 import { IEmployerRepository } from '@modules/users/repositories/IEmployerRepository';
 import { IRoleRepository } from '@modules/users/repositories/IRoleRepository';
 
-interface IRequest {
-  employer_id: string;
-  roles: string[];
-}
+import { IAssignRolesRequest } from '../Dtos/Request/IAssignRolesRequest';
+
 @injectable()
 class AssignRolesUseCase {
   constructor(
@@ -16,7 +14,7 @@ class AssignRolesUseCase {
     private employerRepository: IEmployerRepository
   ) {}
 
-  async execute({ employer_id, roles }: IRequest) {
+  async execute({ employer_id, roles }: IAssignRolesRequest) {
     const employer = await this.employerRepository.findById(employer_id);
     if (!employer) throw new AppError('Employer não encontrado.', 404);
 

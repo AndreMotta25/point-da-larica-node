@@ -5,10 +5,7 @@ import { inject, injectable } from 'tsyringe';
 import AppError from '@errors/AppError';
 import { IEmployerRepository } from '@modules/users/repositories/IEmployerRepository';
 
-interface IEmployerRequest {
-  email: string;
-  password: string;
-}
+import { IAuthenticateRequest } from '../Dtos/Request/IAuthenticateRequest';
 
 @injectable()
 class AuthenticateUserUseCase {
@@ -17,7 +14,7 @@ class AuthenticateUserUseCase {
     private employerRepository: IEmployerRepository
   ) {}
 
-  async execute({ email, password }: IEmployerRequest) {
+  async execute({ email, password }: IAuthenticateRequest) {
     const user = await this.employerRepository.findByEmail(email);
     if (!user) throw new AppError('Usuario ou Senha Incorretos', 401);
 

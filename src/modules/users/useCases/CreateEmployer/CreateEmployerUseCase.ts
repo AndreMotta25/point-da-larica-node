@@ -9,7 +9,7 @@ import ICodeGenerator from '@modules/coupons/providers/interfaces/ICodeGenerator
 import { IEmployerRepository } from '@modules/users/repositories/IEmployerRepository';
 import { IRoleRepository } from '@modules/users/repositories/IRoleRepository';
 
-import { IEmployerRequestDTO } from './IEmployerRequestDTO';
+import { IEmployerRequest } from '../Dtos/Request/IEmployerRequest';
 
 @injectable()
 class CreateEmployerUseCase {
@@ -24,7 +24,7 @@ class CreateEmployerUseCase {
     private codeGenerator: ICodeGenerator
   ) {}
 
-  async execute({ cpf, email, roles, name }: IEmployerRequestDTO) {
+  async execute({ cpf, email, roles, name }: IEmployerRequest) {
     const cpfEmployerAlreadyExists = await this.employerRepository.findByCpf(
       cpf
     );

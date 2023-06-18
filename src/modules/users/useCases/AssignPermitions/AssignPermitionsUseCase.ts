@@ -4,10 +4,7 @@ import AppError from '@errors/AppError';
 import { IPermissionRepository } from '@modules/users/repositories/IPermissionRepository';
 import { IRoleRepository } from '@modules/users/repositories/IRoleRepository';
 
-interface IAssignPermitionsRequest {
-  role_id: string;
-  permissions: string[];
-}
+import { IAssignPermitionsRequest } from '../Dtos/Request/IAssignPermitionsRequest';
 
 @injectable()
 class AssignPermitionsUseCase {

@@ -5,6 +5,7 @@ import { IEmployerRepository } from '@modules/users/repositories/IEmployerReposi
 import { IRoleRepository } from '@modules/users/repositories/IRoleRepository';
 
 import { IAssignRolesRequest } from '../Dtos/Request/IAssignRolesRequest';
+import { IEmployerResponse } from '../Dtos/Response/IEmployerResponse';
 
 @injectable()
 class AssignRolesUseCase {
@@ -14,7 +15,10 @@ class AssignRolesUseCase {
     private employerRepository: IEmployerRepository
   ) {}
 
-  async execute({ employer_id, roles }: IAssignRolesRequest) {
+  async execute({
+    employer_id,
+    roles,
+  }: IAssignRolesRequest): Promise<IEmployerResponse> {
     const employer = await this.employerRepository.findById(employer_id);
     if (!employer) throw new AppError('Employer não encontrado.', 404);
 
@@ -22,7 +26,12 @@ class AssignRolesUseCase {
     employer.roles = [...rolesExists, ...employer.roles];
 
     const employerWithRoles = await this.employerRepository.create(employer);
-    return employerWithRoles;
+    return {
+      id: employerWithRoles.id,
+      email: employerWithRoles.email,
+      name: employerWithRoles.name,
+      roles: employerWithRoles.roles.map((r) => r.name),
+    };
   }
 }
 

@@ -5,6 +5,7 @@ import { IPermissionRepository } from '@modules/users/repositories/IPermissionRe
 import { IRoleRepository } from '@modules/users/repositories/IRoleRepository';
 
 import { IAssignPermitionsRequest } from '../Dtos/Request/IAssignPermitionsRequest';
+import { IAssignPermitionsResponse } from '../Dtos/Response/IAssignPermitionsResponse';
 
 @injectable()
 class AssignPermitionsUseCase {
@@ -14,7 +15,10 @@ class AssignPermitionsUseCase {
     private permissionRepository: IPermissionRepository
   ) {}
 
-  async execute({ role_id, permissions }: IAssignPermitionsRequest) {
+  async execute({
+    role_id,
+    permissions,
+  }: IAssignPermitionsRequest): Promise<IAssignPermitionsResponse> {
     const role = await this.roleRepository.findById(role_id);
 
     if (!role) throw new AppError('Role não achada', 404);
@@ -27,7 +31,13 @@ class AssignPermitionsUseCase {
     role.permissions = [...permissionsExits, ...rolePermissions];
 
     const roleSaved = await this.roleRepository.create(role);
-    return roleSaved;
+
+    return {
+      id: roleSaved.id,
+      name: roleSaved.name,
+      description: roleSaved.description,
+      permissions: roleSaved.permissions.map((p) => p.name),
+    };
   }
 }
 

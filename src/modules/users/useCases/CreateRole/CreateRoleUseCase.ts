@@ -5,6 +5,7 @@ import { IPermissionRepository } from '@modules/users/repositories/IPermissionRe
 import { IRoleRepository } from '@modules/users/repositories/IRoleRepository';
 
 import { IRoleRequest } from '../Dtos/Request/IRoleRequest';
+import { IRoleCreateResponse } from '../Dtos/Response/IRoleCreateResponse';
 
 @injectable()
 class CreateRoleUseCase {
@@ -14,7 +15,11 @@ class CreateRoleUseCase {
     private permissionRepository: IPermissionRepository
   ) {}
 
-  async execute({ name, description, permissions }: IRoleRequest) {
+  async execute({
+    name,
+    description,
+    permissions,
+  }: IRoleRequest): Promise<IRoleCreateResponse> {
     const roleExists = await this.roleRepository.findByName(name);
 
     if (roleExists) throw new AppError('Função já existe');
@@ -29,7 +34,12 @@ class CreateRoleUseCase {
       permissions: permissionsExists,
     });
 
-    return role;
+    return {
+      id: role.id,
+      name: role.name,
+      description: role.description,
+      permissions: role.permissions.map((p) => p.name),
+    };
   }
 }
 

@@ -6,6 +6,7 @@ import AppError from '@errors/AppError';
 import { IEmployerRepository } from '@modules/users/repositories/IEmployerRepository';
 
 import { IAuthenticateRequest } from '../Dtos/Request/IAuthenticateRequest';
+import { IAuthenticateEmployerResponse } from '../Dtos/Response/IAuthenticateEmployerResponse';
 
 @injectable()
 class AuthenticateUserUseCase {
@@ -14,7 +15,10 @@ class AuthenticateUserUseCase {
     private employerRepository: IEmployerRepository
   ) {}
 
-  async execute({ email, password }: IAuthenticateRequest) {
+  async execute({
+    email,
+    password,
+  }: IAuthenticateRequest): Promise<IAuthenticateEmployerResponse> {
     const user = await this.employerRepository.findByEmail(email);
     if (!user) throw new AppError('Usuario ou Senha Incorretos', 401);
 

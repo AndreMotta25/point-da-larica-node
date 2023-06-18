@@ -10,6 +10,7 @@ import { IEmployerRepository } from '@modules/users/repositories/IEmployerReposi
 import { IRoleRepository } from '@modules/users/repositories/IRoleRepository';
 
 import { IEmployerRequest } from '../Dtos/Request/IEmployerRequest';
+import { IEmployerCreateResponse } from '../Dtos/Response/IEmployerCreateResponse';
 
 @injectable()
 class CreateEmployerUseCase {
@@ -24,7 +25,12 @@ class CreateEmployerUseCase {
     private codeGenerator: ICodeGenerator
   ) {}
 
-  async execute({ cpf, email, roles, name }: IEmployerRequest) {
+  async execute({
+    cpf,
+    email,
+    roles,
+    name,
+  }: IEmployerRequest): Promise<IEmployerCreateResponse> {
     const cpfEmployerAlreadyExists = await this.employerRepository.findByCpf(
       cpf
     );
@@ -71,7 +77,12 @@ class CreateEmployerUseCase {
       },
     });
 
-    return user;
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      roles: user.roles.map((r) => r.name),
+    };
   }
 }
 

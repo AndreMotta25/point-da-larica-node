@@ -11,7 +11,7 @@ class CreateOrderController {
     if (!errors.isEmpty())
       return response.status(400).json({ errors: errors.array() });
 
-    const { itens, coupon_code, isDelivery, adress } = request.body;
+    const { itens, coupon_code, isDelivery, adress, code } = request.body;
 
     const createOrderService = container.resolve(CreateOrderUseCase);
 
@@ -21,6 +21,7 @@ class CreateOrderController {
       isDelivery,
       adress,
       schedule: false,
+      code,
     });
 
     return response.status(201).send(orderCode);

@@ -5,20 +5,26 @@ import AppError from '@errors/AppError';
 import ICodeGenerator from '@modules/coupons/providers/interfaces/ICodeGenerator';
 import DebitCouponService from '@modules/coupons/useCases/DebitCoupon/DebitCouponService';
 import ValidCouponService from '@modules/coupons/useCases/ValidCoupon/ValidCouponService';
+import { CourtesyCard } from '@modules/courtesy/entities/CourtesyCard';
+import { ICourtesyCardRepository } from '@modules/courtesy/repositories/ICourtesyCardRepository';
+import { useCourtesyCardUseCase } from '@modules/courtesy/useCases/UseCourtesyCard/useCourtesyCardUseCase';
 import { Product } from '@modules/orders/entities/Product';
 import { IDeliveryRepository } from '@modules/orders/repositories/IDeliveryRepository';
 import { IOrderListRepository } from '@modules/orders/repositories/IOrderListRepository';
 import { IOrderRepository } from '@modules/orders/repositories/IOrderRepository';
 import { IProductRepository } from '@modules/orders/repositories/IProductRepository';
 
+import { ICreateOrderResponse } from '../dtos/Response/ICreateOrderResponse';
 import {
   ICreateOrderRequest,
   IProductList,
 } from '../dtos/shared/ICreateOrderRequest';
+import { GetTotalUseCase } from '../GetTotal/GetTotalUseCase';
 
-interface IOrderRequestDTO extends ICreateOrderRequest {
+export interface IOrderRequestDTO extends ICreateOrderRequest {
   schedule: boolean;
   schedule_date?: Date;
+  code?: string;
 }
 
 @injectable()
@@ -35,7 +41,9 @@ class CreateOrderUseCase {
     @inject('OrderListRepository') repositoryOrderList: IOrderListRepository,
     @inject('OrderRepository') repository: IOrderRepository,
     @inject('DeliveryRepository') repositoryDelivery: IDeliveryRepository,
-    @inject('CodeGenerator') codeGenerator: ICodeGenerator
+    @inject('CodeGenerator') codeGenerator: ICodeGenerator,
+    @inject('CourtesyCardRepository')
+    private courtesyCardRepository: ICourtesyCardRepository
   ) {
     this.repositoryProduct = repositoryProduct;
     this.repository = repository;
@@ -51,29 +59,20 @@ class CreateOrderUseCase {
     adress,
     schedule,
     schedule_date,
-  }: IOrderRequestDTO): Promise<string | undefined> {
-    const valuesPromise = itens.map(async (product) => {
-      // deixar isso pro express-validator depois
-      if (!product.id) throw new AppError('Produto não informado', 400);
-      if (product.amount <= 0)
-        throw new AppError(
-          'A quantidade de itens não pode ser menor ou igual a zero',
-          400
-        );
+    code,
+  }: IOrderRequestDTO): Promise<ICreateOrderResponse | undefined> {
+    const getTotalUseCase = container.resolve(GetTotalUseCase);
 
-      const productExist = await this.repositoryProduct.findById(product.id);
-      if (!productExist) throw new AppError('Produto não existe', 404);
-      return productExist.value * product.amount;
-    });
-    const total = await this.calculateTotal(valuesPromise);
+    let total = await getTotalUseCase.execute(itens);
 
     if (total <= 0)
       throw new AppError('O total não deve ser menor do que zero', 400);
 
     let discount_price = 0;
     let coupon_value = 0;
-
+    let additionalPayment = 0;
     await this.transaction.startTransaction();
+
     try {
       // verifica  se o cupom existe
       if (coupon_code) {
@@ -92,6 +91,23 @@ class CreateOrderUseCase {
 
         await debitCouponUseCase.execute(coupon.code);
       }
+      // verifica se o comprador tem credito na loja
+      let cortesy: CourtesyCard | null = null;
+
+      if (code) {
+        const courtesyCardUseCase = container.resolve(useCourtesyCardUseCase);
+        cortesy = await courtesyCardUseCase.execute(code);
+
+        if (cortesy.value < total) {
+          additionalPayment = total - cortesy.value;
+          total = cortesy.value;
+          cortesy.value = 0;
+        } else {
+          cortesy.value = total - cortesy.value;
+        }
+        // salvar as modificaçoes feitas no courtesy
+        await this.courtesyCardRepository.create(cortesy);
+      }
 
       const order = await this.repository.create({
         full_value: total,
@@ -102,13 +118,20 @@ class CreateOrderUseCase {
         isDelivery,
         schedule,
         schedule_date,
+        additionalPayment: 0,
       });
+
+      if (cortesy) {
+        order.courtesy = cortesy;
+        await this.repository.create(order);
+      }
 
       if (isDelivery) {
         if (!adress) throw new AppError('Faltou o endereço de entrega', 400);
 
         await this.repositoryDelivery.create({ adress, order });
       }
+
       this.clearRepeatedItens(itens).forEach(async (item) => {
         const product = (await this.repositoryProduct.findById(
           item.id
@@ -123,20 +146,21 @@ class CreateOrderUseCase {
       });
 
       await this.transaction.commitTransaction();
-      return order.code;
+
+      return {
+        remaining_balance: additionalPayment > 0 ? additionalPayment : 0,
+        finalized: !(additionalPayment > 0),
+        id_order: order.id,
+      };
     } catch (error) {
       await this.transaction.rollBackTransaction();
+
       if (error instanceof AppError) throw error;
       console.log(error);
       return undefined;
     }
   }
-  async calculateTotal(values: Promise<number>[]) {
-    const value = await (
-      await Promise.all(values)
-    ).reduce((prev: number, current: number) => prev + current, 0);
-    return value;
-  }
+
   clearRepeatedItens(itens: IProductList[]) {
     const itensfiltered = itens.reduce(
       (acc: IProductList[], product: IProductList) => {

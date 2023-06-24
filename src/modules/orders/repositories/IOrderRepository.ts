@@ -10,6 +10,8 @@ export interface IRequestOrder {
   isDelivery: boolean;
   schedule: boolean;
   schedule_date?: Date;
+  additionalPayment: number;
+  id?: string;
 }
 export interface IRequestOrderDelivery {
   date?: string;

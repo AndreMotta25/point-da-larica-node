@@ -4,11 +4,14 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryColumn,
 } from 'typeorm';
 import { v4 as uuidV4 } from 'uuid';
+
+import { CourtesyCard } from '@modules/courtesy/entities/CourtesyCard';
 
 import { Delivery } from './Delivery';
 import { OrderList } from './OrderList';
@@ -56,13 +59,21 @@ class Order {
   @Column({ default: false })
   schedule: boolean;
 
-  @Column({ type: 'timestamp without time zone' })
+  @Column({
+    type: 'timestamp without time zone',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
   schedule_date: Date;
+
+  @Column('decimal', { precision: 18, scale: 2, default: 0 })
+  additionalPayment: number;
+
+  @ManyToOne(() => CourtesyCard)
+  courtesy: CourtesyCard;
 
   constructor() {
     this.id = uuidV4();
     this.schedule = false;
-    this.schedule_date = new Date();
   }
 }
 

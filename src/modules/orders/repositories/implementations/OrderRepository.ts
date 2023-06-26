@@ -47,7 +47,7 @@ class OrderRepository implements IOrderRepository {
     const pageNumber = page || 1;
 
     const orders = await this.repository.find({
-      order: { data_of_sale: 'DESC' },
+      order: { date_of_sale: 'DESC' },
       take: limitItens,
       skip: limitItens * (pageNumber - 1),
     });
@@ -62,14 +62,14 @@ class OrderRepository implements IOrderRepository {
 
     if (date) {
       orders.andWhere(
-        `DATE_TRUNC('day', data_of_sale AT TIME ZONE '${process.env.TZ}' ) = :date`,
+        `DATE_TRUNC('day', date_of_sale AT TIME ZONE '${process.env.TZ}' ) = :date`,
         {
           date: new Date(date),
         }
       );
     } else {
       orders.andWhere(
-        `DATE_TRUNC('day', data_of_sale AT TIME ZONE '${process.env.TZ}' ) = :date`,
+        `DATE_TRUNC('day', date_of_sale AT TIME ZONE '${process.env.TZ}' ) = :date`,
         {
           date: new Date().toLocaleDateString().split('-').reverse().join('-'),
         }
@@ -95,7 +95,7 @@ class OrderRepository implements IOrderRepository {
     if (date) {
       const orders = await this.repository.find({
         where: {
-          data_of_sale: Raw(
+          date_of_sale: Raw(
             (alias) =>
               `DATE_TRUNC('day', ${alias} AT TIME ZONE '${process.env.TZ}') = :date`,
             { date }
@@ -110,7 +110,7 @@ class OrderRepository implements IOrderRepository {
     if (minDate && maxDate) {
       const orders = await this.repository.find({
         where: {
-          data_of_sale: Raw(
+          date_of_sale: Raw(
             (alias) =>
               `${alias} AT TIME ZONE '${process.env.TZ}' BETWEEN '${minDate}T00:00' AND '${maxDate}T23:59'`
           ),
@@ -128,7 +128,7 @@ class OrderRepository implements IOrderRepository {
 
     const orders = await this.repository.find({
       where: {
-        data_of_sale: Raw(
+        date_of_sale: Raw(
           (alias) =>
             `DATE_TRUNC('day', ${alias} AT TIME ZONE '${process.env.TZ}') = '${dateNow}'`
         ),

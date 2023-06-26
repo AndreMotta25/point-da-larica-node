@@ -14,7 +14,10 @@ class CourtesyCardRepository implements ICourtesyCardRepository {
     this.repository = database.getRepository(CourtesyCard);
   }
   async getCourtesyCardByCode(code: string): Promise<CourtesyCard | null> {
-    const courtesy = await this.repository.findOne({ where: { code } });
+    const courtesy = await this.repository.findOne({
+      where: { code },
+      relations: { employer: { roles: true } },
+    });
     return courtesy;
   }
 

@@ -21,7 +21,7 @@ class GetAllOrderUseCase {
       const orderDTO: IGetAllOrdersResponse = {
         id: order.id,
         code: order.code,
-        date_of_sale: order.data_of_sale,
+        date_of_sale: order.date_of_sale,
         full_value: order.full_value,
         final_value: order.final_value,
         isDelivery: order.isDelivery,

@@ -30,7 +30,7 @@ class ListOrderByDateUseCase {
     const ordersDTO = orders.map((order) => {
       const orderDTO: IListOrderByDateResponse = {
         id: order.id,
-        date_of_sale: order.data_of_sale,
+        date_of_sale: order.date_of_sale,
         full_value: Number(order.full_value),
         situation: order.canceled ? 'cancelado' : 'ativo',
         final_value: Number(order.final_value),

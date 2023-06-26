@@ -45,7 +45,7 @@ class GetOrderUseCase {
       code: order.code,
       full_value: order.full_value,
       coupon_code: order.coupon_code,
-      date_of_sale: order.data_of_sale,
+      date_of_sale: order.date_of_sale,
       isDelivery: order.isDelivery,
       delivery: order.isDelivery ? delivery : undefined,
       discount: order.discount,

@@ -28,7 +28,7 @@ class ListByDeliveriesUseCase {
     const ordersDTOs = ordersFiltered.map((order) => {
       const orderDTO: IDeliveryResponse = {
         id: order.id,
-        date_of_sale: order.data_of_sale,
+        date_of_sale: order.date_of_sale,
         full_value: Number(order.full_value),
         situation: order.canceled ? 'cancelado' : 'ativo',
         deliveryInformationId: order.delivery.id,

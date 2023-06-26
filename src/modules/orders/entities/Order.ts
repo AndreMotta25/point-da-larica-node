@@ -32,7 +32,7 @@ class Order {
   final_value: number;
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
-  data_of_sale: Date;
+  date_of_sale: Date;
 
   @Column({ default: false })
   canceled: boolean;

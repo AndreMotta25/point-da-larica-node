@@ -145,6 +145,7 @@ class CreateOrderUseCase {
         remaining_balance: additionalPayment > 0 ? additionalPayment : 0,
         finalized: !(additionalPayment > 0),
         id_order: order.id,
+        code: order.code,
       };
     } catch (error) {
       await this.transaction.rollBackTransaction();

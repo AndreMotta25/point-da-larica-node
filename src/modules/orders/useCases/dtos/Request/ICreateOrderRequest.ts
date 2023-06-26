@@ -7,4 +7,8 @@ export interface ICreateOrderRequest {
   itens: IProductList[];
   isDelivery: boolean;
   adress: string;
+  id?: string;
+  courtesy_code?: string;
+  schedule: boolean;
+  schedule_date?: Date;
 }

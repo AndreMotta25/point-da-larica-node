@@ -14,18 +14,12 @@ import { IOrderListRepository } from '@modules/orders/repositories/IOrderListRep
 import { IOrderRepository } from '@modules/orders/repositories/IOrderRepository';
 import { IProductRepository } from '@modules/orders/repositories/IProductRepository';
 
-import { ICreateOrderResponse } from '../dtos/Response/ICreateOrderResponse';
 import {
   ICreateOrderRequest,
   IProductList,
-} from '../dtos/shared/ICreateOrderRequest';
+} from '../dtos/Request/ICreateOrderRequest';
+import { ICreateOrderResponse } from '../dtos/Response/ICreateOrderResponse';
 import { GetTotalUseCase } from '../GetTotal/GetTotalUseCase';
-
-export interface IOrderRequestDTO extends ICreateOrderRequest {
-  schedule: boolean;
-  schedule_date?: Date;
-  code?: string;
-}
 
 @injectable()
 class CreateOrderUseCase {
@@ -59,8 +53,8 @@ class CreateOrderUseCase {
     adress,
     schedule,
     schedule_date,
-    code,
-  }: IOrderRequestDTO): Promise<ICreateOrderResponse | undefined> {
+    courtesy_code,
+  }: ICreateOrderRequest): Promise<ICreateOrderResponse | undefined> {
     const getTotalUseCase = container.resolve(GetTotalUseCase);
 
     let total = await getTotalUseCase.execute(itens);
@@ -94,9 +88,9 @@ class CreateOrderUseCase {
       // verifica se o comprador tem credito na loja
       let cortesy: CourtesyCard | null = null;
 
-      if (code) {
+      if (courtesy_code) {
         const courtesyCardUseCase = container.resolve(useCourtesyCardUseCase);
-        cortesy = await courtesyCardUseCase.execute(code);
+        cortesy = await courtesyCardUseCase.execute(courtesy_code);
 
         if (cortesy.value < total) {
           additionalPayment = total - cortesy.value;

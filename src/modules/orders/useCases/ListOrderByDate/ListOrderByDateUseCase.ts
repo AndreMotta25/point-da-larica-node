@@ -2,15 +2,8 @@ import { inject, injectable } from 'tsyringe';
 
 import { IOrderRepository } from '@modules/orders/repositories/IOrderRepository';
 
-import { IOrderResponseDTO } from './IOrderResponseDTO';
-
-export interface IListOrderDTO {
-  date?: string;
-  minDate?: string;
-  maxDate?: string;
-  limit: number;
-  page: number;
-}
+import { IListOrderByDateRequest } from '../dtos/Request/IListOrderByDateRequest';
+import { IListOrderByDateResponse } from '../dtos/Response/IListOrderByDateResponse';
 
 @injectable()
 class ListOrderByDateUseCase {
@@ -20,7 +13,13 @@ class ListOrderByDateUseCase {
     this.repository = repository;
   }
 
-  async execute({ date, minDate, maxDate, limit, page }: IListOrderDTO) {
+  async execute({
+    date,
+    minDate,
+    maxDate,
+    limit,
+    page,
+  }: IListOrderByDateRequest) {
     const orders = await this.repository.getOrderByDate({
       date,
       minDate,
@@ -29,12 +28,14 @@ class ListOrderByDateUseCase {
       page,
     });
     const ordersDTO = orders.map((order) => {
-      const orderDTO: IOrderResponseDTO = {
+      const orderDTO: IListOrderByDateResponse = {
         id: order.id,
         date_of_sale: order.data_of_sale,
         full_value: Number(order.full_value),
         situation: order.canceled ? 'cancelado' : 'ativo',
         discount_price: Number(order.discount_price),
+        isDelivery: order.isDelivery,
+        code: order.code,
       };
       return orderDTO;
     });

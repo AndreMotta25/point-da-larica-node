@@ -1,13 +1,7 @@
 import { container, injectable } from 'tsyringe';
 
-import ErrorField from '@errors/ErrorField';
-
 import { CreateOrderUseCase } from '../CreateOrder/CreateOrderUseCase';
-import { ICreateOrderRequest } from '../dtos/shared/ICreateOrderRequest';
-
-interface IOrderRequestDTO extends ICreateOrderRequest {
-  schedule_date: string;
-}
+import { ICreateOrderRequest } from '../dtos/Request/ICreateOrderRequest';
 
 @injectable()
 class ScheduleOrderUseCase {
@@ -22,24 +16,17 @@ class ScheduleOrderUseCase {
     isDelivery,
     adress,
     schedule_date,
-  }: IOrderRequestDTO) {
-    // isso talvez vá para o express;
-    if (!schedule_date)
-      throw new ErrorField(
-        schedule_date,
-        'A data do agendamento não pode ficar vazia',
-        'schedule_date',
-        400
-      );
-
-    await this.createOrderUseCase.execute({
+  }: ICreateOrderRequest) {
+    const order = await this.createOrderUseCase.execute({
       schedule: true,
       coupon_code,
       itens,
       isDelivery,
       adress,
-      schedule_date: new Date(schedule_date),
+      schedule_date,
     });
+
+    return order;
   }
 }
 

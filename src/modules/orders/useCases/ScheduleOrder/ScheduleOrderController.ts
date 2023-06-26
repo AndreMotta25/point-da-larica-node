@@ -16,7 +16,7 @@ class ScheduleOrderController {
 
     const scheduleOrderUseCase = container.resolve(ScheduleOrderUseCase);
 
-    await scheduleOrderUseCase.execute({
+    const order = await scheduleOrderUseCase.execute({
       itens,
       coupon_code,
       isDelivery,
@@ -24,7 +24,7 @@ class ScheduleOrderController {
       schedule_date,
     });
 
-    return response.status(201).send();
+    return response.status(201).json(order);
   }
 }
 

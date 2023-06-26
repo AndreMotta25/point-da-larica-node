@@ -3,14 +3,11 @@ import { inject, injectable } from 'tsyringe';
 import { Raw, Repository } from 'typeorm';
 
 import { Order } from '@modules/orders/entities/Order';
-import { IListOrderDTO } from '@modules/orders/useCases/ListOrderByDate/ListOrderByDateUseCase';
+import { IListOrderByDateRequest } from '@modules/orders/useCases/dtos/Request/IListOrderByDateRequest';
+import { IOrderDeliveryRequest } from '@modules/orders/useCases/dtos/Request/IOrderDeliveryRequest';
 
 import database from '../../../../database';
-import {
-  IOrderRepository,
-  IRequestOrder,
-  IRequestOrderDelivery,
-} from '../IOrderRepository';
+import { IOrderRepository, IRequestOrder } from '../IOrderRepository';
 
 @injectable()
 class OrderRepository implements IOrderRepository {
@@ -49,7 +46,7 @@ class OrderRepository implements IOrderRepository {
     return orders;
   }
 
-  async getOrderToDelivery({ date, page, limit }: IRequestOrderDelivery) {
+  async getOrderToDelivery({ date, page, limit }: IOrderDeliveryRequest) {
     const orders = this.repository
       .createQueryBuilder('orders')
       .leftJoinAndSelect('orders.delivery', 'delivery')
@@ -77,7 +74,13 @@ class OrderRepository implements IOrderRepository {
       .getMany();
   }
 
-  async getOrderByDate({ minDate, maxDate, date, limit, page }: IListOrderDTO) {
+  async getOrderByDate({
+    minDate,
+    maxDate,
+    date,
+    limit,
+    page,
+  }: IListOrderByDateRequest) {
     const limitItens = limit || 5;
     const pageNumber = page || 1;
 

@@ -4,29 +4,10 @@ import AppError from '@errors/AppError';
 import { IOrderRepository } from '@modules/orders/repositories/IOrderRepository';
 import { IProductRepository } from '@modules/orders/repositories/IProductRepository';
 
-interface IItem {
-  total: number;
-  amount: number;
-  name: string;
-}
-
-interface IDelivery {
-  send: boolean;
-  address: string;
-}
-
-interface IOrderResponseDTO {
-  id: string;
-  full_value: number;
-  discount_price: number;
-  date_of_sale: Date;
-  discount: number;
-  situation: 'ativo' | 'cancelado';
-  coupon_code: string;
-  delivery?: IDelivery;
-  itens: IItem[];
-  isDelivery: boolean;
-}
+import {
+  IDelivery,
+  IGetOrderResponse,
+} from '../dtos/Response/IGetOrderResponse';
 
 @injectable()
 class GetOrderUseCase {
@@ -35,9 +16,9 @@ class GetOrderUseCase {
     @inject('ProductRepository') private repositoryProduct: IProductRepository
   ) {}
 
-  async execute(id: string): Promise<IOrderResponseDTO> {
+  async execute(id: string): Promise<IGetOrderResponse> {
     const order = await this.repository.getOrder(id);
-
+    console.log('aaa');
     if (!order) throw new AppError('Pedido não achado', 404);
 
     const itens = await Promise.all(
@@ -61,6 +42,7 @@ class GetOrderUseCase {
 
     return {
       id: order.id,
+      code: order.code,
       full_value: order.full_value,
       coupon_code: order.coupon_code,
       date_of_sale: order.data_of_sale,
@@ -70,6 +52,7 @@ class GetOrderUseCase {
       discount_price: order.discount_price,
       situation: order.canceled ? 'cancelado' : 'ativo',
       itens,
+      additionalPayment: order.additionalPayment,
     };
   }
 }

@@ -3,7 +3,7 @@ import { inject, injectable } from 'tsyringe';
 import ErrorField from '@errors/ErrorField';
 import { IProductRepository } from '@modules/orders/repositories/IProductRepository';
 
-import { IProductRequestDTO } from './IProductRequestDTO';
+import { ICreateProductRequest } from '../dtos/Request/ICreateProductRequest';
 
 @injectable()
 class CreateProductUseCase {
@@ -13,7 +13,7 @@ class CreateProductUseCase {
     this.repository = repository;
   }
 
-  async execute({ name, value, description, image }: IProductRequestDTO) {
+  async execute({ name, value, description, image }: ICreateProductRequest) {
     const productAlreadyExists = await this.repository.findByName(name);
 
     if (productAlreadyExists)

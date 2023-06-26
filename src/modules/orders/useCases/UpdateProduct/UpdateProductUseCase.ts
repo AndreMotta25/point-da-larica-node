@@ -5,7 +5,7 @@ import AppError from '@errors/AppError';
 import ErrorField from '@errors/ErrorField';
 import { IProductRepository } from '@modules/orders/repositories/IProductRepository';
 
-import { IProductRequestDTO } from '../CreateProduct/IProductRequestDTO';
+import { ICreateProductRequest } from '../dtos/Request/ICreateProductRequest';
 
 @injectable()
 class UpdateProductUseCase {
@@ -13,7 +13,13 @@ class UpdateProductUseCase {
     @inject('ProductRepository') private repository: IProductRepository
   ) {}
 
-  async execute({ value, name, description, image, id }: IProductRequestDTO) {
+  async execute({
+    value,
+    name,
+    description,
+    image,
+    id,
+  }: ICreateProductRequest) {
     const product = await this.repository.findById(id as string);
     if (!product) throw new AppError('Produto não achado', 404);
 

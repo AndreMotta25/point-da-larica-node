@@ -11,20 +11,21 @@ class CreateOrderController {
     if (!errors.isEmpty())
       return response.status(400).json({ errors: errors.array() });
 
-    const { itens, coupon_code, isDelivery, adress, code } = request.body;
+    const { itens, coupon_code, isDelivery, adress, courtesy_code } =
+      request.body;
 
     const createOrderService = container.resolve(CreateOrderUseCase);
 
-    const orderCode = await createOrderService.execute({
+    const order = await createOrderService.execute({
       itens,
       coupon_code,
       isDelivery,
       adress,
       schedule: false,
-      code,
+      courtesy_code,
     });
 
-    return response.status(201).send(orderCode);
+    return response.status(201).json(order);
   }
 }
 

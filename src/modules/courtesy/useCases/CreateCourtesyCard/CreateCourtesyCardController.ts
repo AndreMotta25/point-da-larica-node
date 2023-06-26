@@ -18,7 +18,7 @@ class CreateCourtesyCardController {
       employer_id: id,
       motivation,
     });
-    return response.status(200).json(courtesyCard);
+    return response.status(201).json(courtesyCard);
   }
 }
 

@@ -4,7 +4,7 @@ interface IListOrderByDateResponse {
   situation: 'ativo' | 'cancelado';
   isDelivery: boolean;
   code: string;
-  discount_price: number;
+  final_value: number;
   date_of_sale: Date;
 }
 

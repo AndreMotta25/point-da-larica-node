@@ -1,12 +1,12 @@
 import { Order } from '../entities/Order';
 import { ICreateOrderRequest } from '../useCases/dtos/Request/ICreateOrderRequest';
+import { IListOrderByDateRequest } from '../useCases/dtos/Request/IListOrderByDateRequest';
 import { IOrderDeliveryRequest } from '../useCases/dtos/Request/IOrderDeliveryRequest';
-import { IListOrderDTO } from '../useCases/ListOrderByDate/ListOrderByDateUseCase';
 
 export type IRequestOrder = Omit<ICreateOrderRequest, 'adress' | 'itens'> & {
   full_value: number;
   discount: number;
-  discount_price: number;
+  final_value: number;
   additionalPayment: number;
   code: string;
 };
@@ -21,7 +21,7 @@ interface IOrderRepository {
     date,
     limit,
     page,
-  }: IListOrderDTO): Promise<Order[]>;
+  }: IListOrderByDateRequest): Promise<Order[]>;
   getOrderToDelivery({
     date,
     limit,

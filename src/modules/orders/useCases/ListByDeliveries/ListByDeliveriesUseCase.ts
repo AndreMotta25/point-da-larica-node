@@ -32,7 +32,7 @@ class ListByDeliveriesUseCase {
         full_value: Number(order.full_value),
         situation: order.canceled ? 'cancelado' : 'ativo',
         deliveryInformationId: order.delivery.id,
-        discounted_price: Number(order.discount_price),
+        discounted_price: Number(order.final_value),
         send: order.delivery.send,
         address: order.delivery.adress,
         code: order.code,

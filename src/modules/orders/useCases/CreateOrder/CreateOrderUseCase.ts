@@ -62,7 +62,7 @@ class CreateOrderUseCase {
     if (total <= 0)
       throw new AppError('O total não deve ser menor do que zero', 400);
 
-    let discount_price = 0;
+    let final_value = total;
     let coupon_value = 0;
     let additionalPayment = 0;
     await this.transaction.startTransaction();
@@ -80,7 +80,7 @@ class CreateOrderUseCase {
             422
           );
 
-        discount_price = total - coupon.value;
+        final_value = total - coupon.value;
         coupon_value = coupon.value;
 
         await debitCouponUseCase.execute(coupon.code);
@@ -106,7 +106,7 @@ class CreateOrderUseCase {
       const order = await this.repository.create({
         full_value: total,
         discount: coupon_value,
-        discount_price,
+        final_value,
         coupon_code,
         code: this.codeGenerator.generateCode(4),
         isDelivery,
@@ -149,9 +149,7 @@ class CreateOrderUseCase {
     } catch (error) {
       await this.transaction.rollBackTransaction();
 
-      if (error instanceof AppError) throw error;
-      console.log(error);
-      return undefined;
+      throw error;
     }
   }
 

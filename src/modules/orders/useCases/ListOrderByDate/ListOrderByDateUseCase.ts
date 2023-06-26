@@ -33,7 +33,7 @@ class ListOrderByDateUseCase {
         date_of_sale: order.data_of_sale,
         full_value: Number(order.full_value),
         situation: order.canceled ? 'cancelado' : 'ativo',
-        discount_price: Number(order.discount_price),
+        final_value: Number(order.final_value),
         isDelivery: order.isDelivery,
         code: order.code,
       };

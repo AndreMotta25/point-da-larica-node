@@ -29,7 +29,7 @@ class Order {
   discount: number;
 
   @Column('decimal', { precision: 18, scale: 2 })
-  discount_price: number;
+  final_value: number;
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
   data_of_sale: Date;

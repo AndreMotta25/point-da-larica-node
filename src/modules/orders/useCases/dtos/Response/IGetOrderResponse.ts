@@ -12,7 +12,7 @@ interface IDelivery {
 interface IGetOrderResponse {
   id: string;
   full_value: number;
-  discount_price: number;
+  final_value: number;
   date_of_sale: Date;
   discount: number;
   situation: 'ativo' | 'cancelado';

@@ -49,7 +49,7 @@ class GetOrderUseCase {
       isDelivery: order.isDelivery,
       delivery: order.isDelivery ? delivery : undefined,
       discount: order.discount,
-      discount_price: order.discount_price,
+      final_value: order.final_value,
       situation: order.canceled ? 'cancelado' : 'ativo',
       itens,
       additionalPayment: order.additionalPayment,

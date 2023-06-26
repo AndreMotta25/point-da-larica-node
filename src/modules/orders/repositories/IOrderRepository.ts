@@ -1,5 +1,6 @@
 import { Order } from '../entities/Order';
 import { ICreateOrderRequest } from '../useCases/dtos/Request/ICreateOrderRequest';
+import { IGetAllOrders } from '../useCases/dtos/Request/IGetAllOrder';
 import { IListOrderByDateRequest } from '../useCases/dtos/Request/IListOrderByDateRequest';
 import { IOrderDeliveryRequest } from '../useCases/dtos/Request/IOrderDeliveryRequest';
 
@@ -13,7 +14,7 @@ export type IRequestOrder = Omit<ICreateOrderRequest, 'adress' | 'itens'> & {
 
 interface IOrderRepository {
   create(data: IRequestOrder): Promise<Order>;
-  getOrders(): Promise<Order[]>;
+  getOrders({ limit, page }: IGetAllOrders): Promise<Order[]>;
   getOrder(id: string): Promise<Order | null>;
   getOrderByDate({
     minDate,

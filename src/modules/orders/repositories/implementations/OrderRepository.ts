@@ -3,6 +3,7 @@ import { inject, injectable } from 'tsyringe';
 import { Raw, Repository } from 'typeorm';
 
 import { Order } from '@modules/orders/entities/Order';
+import { IGetAllOrders } from '@modules/orders/useCases/dtos/Request/IGetAllOrder';
 import { IListOrderByDateRequest } from '@modules/orders/useCases/dtos/Request/IListOrderByDateRequest';
 import { IOrderDeliveryRequest } from '@modules/orders/useCases/dtos/Request/IOrderDeliveryRequest';
 
@@ -41,8 +42,15 @@ class OrderRepository implements IOrderRepository {
     return newOrder;
   }
 
-  async getOrders() {
-    const orders = await this.repository.find();
+  async getOrders({ limit, page }: IGetAllOrders) {
+    const limitItens = limit || 5;
+    const pageNumber = page || 1;
+
+    const orders = await this.repository.find({
+      order: { data_of_sale: 'DESC' },
+      take: limitItens,
+      skip: limitItens * (pageNumber - 1),
+    });
     return orders;
   }
 

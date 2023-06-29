@@ -8,10 +8,11 @@ class Delivery {
   @PrimaryColumn()
   id: string;
 
+  // isso aqui serve para não carregar a order toda e sim somente o seu id
   @Column({ nullable: false })
   orderId: string;
 
-  @OneToOne(() => Order, { onDelete: 'CASCADE', nullable: false })
+  @OneToOne(() => Order, { nullable: false })
   @JoinColumn()
   order: Order;
 

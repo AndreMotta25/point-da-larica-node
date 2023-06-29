@@ -5,8 +5,8 @@ import { isAuthenticated } from 'src/middleware/isAuthenticated';
 
 import { CancelOrderController } from '@modules/orders/useCases/CancelOrder/CancelOrderController';
 import { CreateOrderController } from '@modules/orders/useCases/CreateOrder/CreateOrderController';
+import { GetAllOrderController } from '@modules/orders/useCases/GetAllOrders/GetAllOrderController';
 import { GetOrderController } from '@modules/orders/useCases/GetOrder/GetOrderController';
-import { ListByDeliveriesController } from '@modules/orders/useCases/ListByDeliveries/ListByDeliveriesController';
 import { ListOrderByDateController } from '@modules/orders/useCases/ListOrderByDate/ListOrderByDateController';
 import { ScheduleOrderController } from '@modules/orders/useCases/ScheduleOrder/ScheduleOrderController';
 import { SendOrderController } from '@modules/orders/useCases/SendOrder/SendOrderController';
@@ -15,11 +15,11 @@ const orderRoutes = Router();
 
 const createOrderController = new CreateOrderController();
 const listByDate = new ListOrderByDateController();
-const listByDeliveries = new ListByDeliveriesController();
 const getOrderController = new GetOrderController();
 const sendOrderController = new SendOrderController();
 const cancelOrderController = new CancelOrderController();
 const scheduleOrderController = new ScheduleOrderController();
+const getAllOrder = new GetAllOrderController();
 
 orderRoutes.post(
   '/',
@@ -37,10 +37,10 @@ orderRoutes.get(
   listByDate.handler
 );
 orderRoutes.get(
-  '/deliveries',
+  '/all',
   isAuthenticated,
   hasPermission('get_order'),
-  listByDeliveries.handler
+  getAllOrder.handler
 );
 orderRoutes.get(
   '/:id',

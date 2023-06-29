@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { IQueryRunner } from 'src/database/transactions/QueryRunner/IQueryRunner';
 import { inject, injectable } from 'tsyringe';
 import { Raw, Repository } from 'typeorm';
@@ -9,6 +10,15 @@ import { IOrderDeliveryRequest } from '@modules/orders/useCases/dtos/Request/IOr
 
 import database from '../../../../database';
 import { IOrderRepository, IRequestOrder } from '../IOrderRepository';
+
+export interface IGetOrderBy {
+  date?: string;
+  minDate?: string;
+  maxDate?: string;
+  limit: number;
+  page: number;
+  delivery: boolean;
+}
 
 @injectable()
 class OrderRepository implements IOrderRepository {
@@ -54,88 +64,56 @@ class OrderRepository implements IOrderRepository {
     return orders;
   }
 
-  async getOrderToDelivery({ date, page, limit }: IOrderDeliveryRequest) {
-    const orders = this.repository
-      .createQueryBuilder('orders')
-      .leftJoinAndSelect('orders.delivery', 'delivery')
-      .where('orders.isDelivery = :delivery', { delivery: true });
-
-    if (date) {
-      orders.andWhere(
-        `DATE_TRUNC('day', date_of_sale AT TIME ZONE '${process.env.TZ}' ) = :date`,
-        {
-          date: new Date(date),
-        }
-      );
-    } else {
-      orders.andWhere(
-        `DATE_TRUNC('day', date_of_sale AT TIME ZONE '${process.env.TZ}' ) = :date`,
-        {
-          date: new Date().toLocaleDateString().split('-').reverse().join('-'),
-        }
-      );
-    }
-
-    return orders
-      .skip(limit * (page - 1))
-      .take(limit)
-      .getMany();
-  }
-
-  async getOrderByDate({
+  async getOrderBy({
     minDate,
     maxDate,
     date,
     limit,
     page,
-  }: IListOrderByDateRequest) {
+    delivery,
+  }: IGetOrderBy) {
     const limitItens = limit || 5;
     const pageNumber = page || 1;
+    const orders = this.repository.createQueryBuilder('orders');
 
     if (date) {
-      const orders = await this.repository.find({
-        where: {
-          date_of_sale: Raw(
-            (alias) =>
-              `DATE_TRUNC('day', ${alias} AT TIME ZONE '${process.env.TZ}') = :date`,
-            { date }
-          ),
-        },
-        skip: limitItens * (pageNumber - 1),
-        take: limitItens,
-      });
-
-      return orders;
+      orders.where(
+        `DATE_TRUNC('day', date_of_sale AT TIME ZONE '${process.env.TZ}' ) = :date`,
+        { date: new Date(`${date}T00:00:00`) }
+      );
     }
-    if (minDate && maxDate) {
-      const orders = await this.repository.find({
-        where: {
-          date_of_sale: Raw(
-            (alias) =>
-              `${alias} AT TIME ZONE '${process.env.TZ}' BETWEEN '${minDate}T00:00' AND '${maxDate}T23:59'`
-          ),
-        },
-      });
-      return orders;
+    // retorna entre duas datas
+    else if (minDate && maxDate) {
+      orders.where(
+        `date_of_sale AT TIME ZONE '${process.env.TZ}' BETWEEN '${minDate}T00:00' AND '${maxDate}T23:59'`
+      );
     }
-
     // retorna os pedidos do dia
-    const datePoint = new Date();
+    else {
+      const datePoint = new Date();
 
-    const dateNow = `${datePoint.getFullYear()}-${
-      datePoint.getMonth() + 1
-    }-${datePoint.getDate()}`;
+      const dateNow = `${datePoint.getFullYear()}-${
+        datePoint.getMonth() + 1
+      }-${datePoint.getDate()}`;
 
-    const orders = await this.repository.find({
-      where: {
-        date_of_sale: Raw(
-          (alias) =>
-            `DATE_TRUNC('day', ${alias} AT TIME ZONE '${process.env.TZ}') = '${dateNow}'`
-        ),
-      },
-    });
+      orders.where(
+        `DATE_TRUNC('day', date_of_sale AT TIME ZONE '${process.env.TZ}' ) = :date`,
+        { date: dateNow }
+      );
+    }
 
-    return orders;
+    // vai buscar os pedidos que são para entrega
+    if (delivery) {
+      orders
+        .leftJoinAndSelect('orders.delivery', 'delivery')
+        .andWhere('orders.isDelivery = :delivery', { delivery: true });
+    }
+
+    const teste = await orders
+      .skip(limitItens * (pageNumber - 1))
+      .take(limitItens)
+      .getMany();
+    return teste;
   }
 }
 

@@ -1,7 +1,9 @@
 import { Router } from 'express';
 
 import database from '../database';
+import { authenticaRoutes } from './authenticate.routes';
 import couponRoutes from './coupon.routes';
+import { courtesyRoutes } from './courtesy.routes';
 import { employerRoutes } from './employer.routes';
 import { orderRoutes } from './order.routes';
 import { permissionRoutes } from './permission.routes';
@@ -25,5 +27,7 @@ router.use('/order', orderRoutes);
 router.use('/role', roleRoutes);
 router.use('/permission', permissionRoutes);
 router.use('/user', employerRoutes);
+router.use('/authenticate', authenticaRoutes);
+router.use('/courtesy', courtesyRoutes);
 
 export default router;

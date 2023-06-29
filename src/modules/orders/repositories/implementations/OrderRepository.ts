@@ -5,8 +5,6 @@ import { Raw, Repository } from 'typeorm';
 
 import { Order } from '@modules/orders/entities/Order';
 import { IGetAllOrders } from '@modules/orders/useCases/dtos/Request/IGetAllOrder';
-import { IListOrderByDateRequest } from '@modules/orders/useCases/dtos/Request/IListOrderByDateRequest';
-import { IOrderDeliveryRequest } from '@modules/orders/useCases/dtos/Request/IOrderDeliveryRequest';
 
 import database from '../../../../database';
 import { IOrderRepository, IRequestOrder } from '../IOrderRepository';

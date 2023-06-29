@@ -7,14 +7,14 @@ import { CancelOrderController } from '@modules/orders/useCases/CancelOrder/Canc
 import { CreateOrderController } from '@modules/orders/useCases/CreateOrder/CreateOrderController';
 import { GetAllOrderController } from '@modules/orders/useCases/GetAllOrders/GetAllOrderController';
 import { GetOrderController } from '@modules/orders/useCases/GetOrder/GetOrderController';
-import { ListOrderByDateController } from '@modules/orders/useCases/ListOrderByDate/ListOrderByDateController';
+import { ListOrderByController } from '@modules/orders/useCases/ListOrderBy/ListOrderByController';
 import { ScheduleOrderController } from '@modules/orders/useCases/ScheduleOrder/ScheduleOrderController';
 import { SendOrderController } from '@modules/orders/useCases/SendOrder/SendOrderController';
 
 const orderRoutes = Router();
 
 const createOrderController = new CreateOrderController();
-const listByDate = new ListOrderByDateController();
+const listBy = new ListOrderByController();
 const getOrderController = new GetOrderController();
 const sendOrderController = new SendOrderController();
 const cancelOrderController = new CancelOrderController();
@@ -34,7 +34,7 @@ orderRoutes.get(
   '/',
   isAuthenticated,
   hasPermission('get_order'),
-  listByDate.handler
+  listBy.handler
 );
 orderRoutes.get(
   '/all',

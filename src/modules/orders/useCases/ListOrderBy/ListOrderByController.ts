@@ -3,7 +3,7 @@ import { container } from 'tsyringe';
 
 import { ListOrderByUseCase } from './ListOrderByUseCase';
 
-class ListOrderByDateController {
+class ListOrderByController {
   async handler(request: Request, response: Response) {
     const { date, minDate, maxDate, limit, page, isDelivery } = request.query;
     const dates = {
@@ -29,4 +29,4 @@ class ListOrderByDateController {
   }
 }
 
-export { ListOrderByDateController };
+export { ListOrderByController };

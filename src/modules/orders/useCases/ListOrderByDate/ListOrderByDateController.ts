@@ -5,7 +5,7 @@ import { ListOrderByDateUseCase } from './ListOrderByDateUseCase';
 
 class ListOrderByDateController {
   async handler(request: Request, response: Response) {
-    const { date, minDate, maxDate, limit, page } = request.query;
+    const { date, minDate, maxDate, limit, page, isDelivery } = request.query;
     const dates = {
       specificDate: date as string,
       minDate: minDate as string,
@@ -22,6 +22,7 @@ class ListOrderByDateController {
       maxDate: dates.maxDate,
       limit: dates.limit,
       page: dates.page,
+      isDelivery: Boolean(isDelivery),
     });
 
     return response.status(200).json(orders);

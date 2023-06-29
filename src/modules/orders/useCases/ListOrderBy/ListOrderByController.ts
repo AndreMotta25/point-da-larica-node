@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import { ListOrderByDateUseCase } from './ListOrderByDateUseCase';
+import { ListOrderByUseCase } from './ListOrderByUseCase';
 
 class ListOrderByDateController {
   async handler(request: Request, response: Response) {
@@ -14,9 +14,9 @@ class ListOrderByDateController {
       page: Number(page),
     };
 
-    const listByDateUseCase = container.resolve(ListOrderByDateUseCase);
+    const listByUseCase = container.resolve(ListOrderByUseCase);
 
-    const orders = await listByDateUseCase.execute({
+    const orders = await listByUseCase.execute({
       date: dates.specificDate,
       minDate: dates.minDate,
       maxDate: dates.maxDate,

@@ -1,4 +1,4 @@
-interface IListOrderByDateResponse {
+interface IListOrderByResponse {
   id: string;
   full_value: number;
   situation: 'ativo' | 'cancelado';
@@ -8,4 +8,4 @@ interface IListOrderByDateResponse {
   date_of_sale: Date;
 }
 
-export { IListOrderByDateResponse };
+export { IListOrderByResponse };

@@ -2,12 +2,12 @@ import { inject, injectable } from 'tsyringe';
 
 import { IOrderRepository } from '@modules/orders/repositories/IOrderRepository';
 
-import { IListOrderByDateRequest } from '../dtos/Request/IListOrderByDateRequest';
+import { IListOrderByRequest } from '../dtos/Request/IListOrderByRequest';
 import { IDeliveryResponse } from '../dtos/Response/IDeliveryResponse';
-import { IListOrderByDateResponse } from '../dtos/Response/IListOrderByDateResponse';
+import { IListOrderByResponse } from '../dtos/Response/IListOrderByDateResponse';
 
 @injectable()
-class ListOrderByDateUseCase {
+class ListOrderByUseCase {
   private readonly repository: IOrderRepository;
 
   constructor(@inject('OrderRepository') repository: IOrderRepository) {
@@ -21,7 +21,7 @@ class ListOrderByDateUseCase {
     limit,
     page,
     isDelivery,
-  }: IListOrderByDateRequest) {
+  }: IListOrderByRequest) {
     const orders = await this.repository.getOrderBy({
       date,
       minDate,
@@ -50,7 +50,7 @@ class ListOrderByDateUseCase {
     }
 
     const ordersDTO = orders.map((order) => {
-      const orderDTO: IListOrderByDateResponse = {
+      const orderDTO: IListOrderByResponse = {
         id: order.id,
         date_of_sale: order.date_of_sale,
         full_value: Number(order.full_value),
@@ -65,4 +65,4 @@ class ListOrderByDateUseCase {
   }
 }
 
-export { ListOrderByDateUseCase };
+export { ListOrderByUseCase };

@@ -65,8 +65,8 @@ class CreateOrderUseCase {
     let final_value = total;
     let coupon_value = 0;
     let additionalPayment = 0;
-    await this.transaction.startTransaction();
 
+    await this.transaction.startTransaction();
     try {
       // verifica  se o cupom existe
       if (coupon_code) {
@@ -122,7 +122,6 @@ class CreateOrderUseCase {
 
       if (isDelivery) {
         if (!adress) throw new AppError('Faltou o endereço de entrega', 400);
-
         await this.repositoryDelivery.create({ adress, order });
       }
 
@@ -149,7 +148,6 @@ class CreateOrderUseCase {
       };
     } catch (error) {
       await this.transaction.rollBackTransaction();
-
       throw error;
     }
   }

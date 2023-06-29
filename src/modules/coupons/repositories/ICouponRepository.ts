@@ -9,7 +9,7 @@ interface ICouponRepository {
     code,
     minimumValue,
     id,
-  }: ICouponDTO): Promise<void>;
+  }: ICouponDTO): Promise<Coupon>;
   getAll(): Promise<Coupon[]>;
   getCoupon(code: string): Promise<Coupon | null>;
   findById(id: string): Promise<Coupon | null>;

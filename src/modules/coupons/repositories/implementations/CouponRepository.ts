@@ -33,7 +33,7 @@ class CouponRepository implements ICouponRepository {
     minimumValue,
     id,
     valid,
-  }: ICouponDTO): Promise<void> {
+  }: ICouponDTO): Promise<Coupon> {
     const runnerRepository = this.runner.getRepository(Coupon);
     const coupon = runnerRepository.create({
       code,
@@ -46,6 +46,7 @@ class CouponRepository implements ICouponRepository {
     });
 
     await runnerRepository.save(coupon);
+    return coupon;
   }
 
   async getAll(): Promise<Coupon[]> {

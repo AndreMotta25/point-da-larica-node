@@ -1,4 +1,6 @@
 import database from 'src/database';
+import { IQueryRunner } from 'src/database/transactions/QueryRunner/IQueryRunner';
+import { inject, injectable } from 'tsyringe';
 import { Repository } from 'typeorm';
 
 import { CourtesyCard } from '@modules/courtesy/entities/CourtesyCard';
@@ -8,9 +10,11 @@ import {
   ICourtesyCardRequest,
 } from '../ICourtesyCardRepository';
 
+@injectable()
 class CourtesyCardRepository implements ICourtesyCardRepository {
   private repository: Repository<CourtesyCard>;
-  constructor() {
+
+  constructor(@inject('QueryRunner') private runner: IQueryRunner) {
     this.repository = database.getRepository(CourtesyCard);
   }
   async getCourtesyCardByCode(code: string): Promise<CourtesyCard | null> {
@@ -22,8 +26,10 @@ class CourtesyCardRepository implements ICourtesyCardRepository {
   }
 
   async create(data: ICourtesyCardRequest): Promise<CourtesyCard> {
-    const cortesyCard = this.repository.create(data);
-    await this.repository.save(cortesyCard);
+    const runnerRepository = this.runner.getRepository(CourtesyCard);
+
+    const cortesyCard = runnerRepository.create(data);
+    await runnerRepository.save(cortesyCard);
 
     return cortesyCard;
   }

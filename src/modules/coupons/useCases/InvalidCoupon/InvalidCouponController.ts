@@ -1,15 +1,15 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import InvalidCouponService from './InvalidCouponService';
+import InvalidCouponUseCase from './InvalidCouponUseCase';
 
 class InvalidCouponController {
   async handle(request: Request, response: Response) {
     const { id } = request.params;
 
-    const invalidCouponService = container.resolve(InvalidCouponService);
+    const invalidCouponUseCase = container.resolve(InvalidCouponUseCase);
 
-    await invalidCouponService.execute(id);
+    await invalidCouponUseCase.execute(id);
 
     return response.status(200).send();
   }

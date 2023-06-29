@@ -1,5 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 
+import Coupon from '@modules/coupons/entities/Coupon';
+
 import ICodeGenerator from '../../providers/interfaces/ICodeGenerator';
 import ICouponRepository from '../../repositories/ICouponRepository';
 
@@ -11,7 +13,7 @@ interface ICouponRequest {
 }
 
 @injectable()
-class CreateCouponService {
+class CreateCouponUseCase {
   constructor(
     @inject('CouponRepository') private repository: ICouponRepository,
     @inject('CodeGenerator') private generator: ICodeGenerator
@@ -22,15 +24,18 @@ class CreateCouponService {
     amount,
     expire_at,
     minimumValue,
-  }: ICouponRequest): Promise<void> {
+  }: ICouponRequest): Promise<Coupon> {
     const code = this.generator.generateCode(5);
-    await this.repository.create({
+
+    const coupon = await this.repository.create({
       value,
       amount,
       expire_at,
       code,
       minimumValue,
     });
+
+    return coupon;
   }
 }
-export default CreateCouponService;
+export default CreateCouponUseCase;

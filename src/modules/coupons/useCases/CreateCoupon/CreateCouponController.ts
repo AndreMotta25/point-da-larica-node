@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { validationResult } from 'express-validator/src/validation-result';
 import { container } from 'tsyringe';
 
-import CreateCouponService from './CreateCouponService';
+import CreateCouponUseCase from './CreateCouponUseCase';
 
 class CreateCouponController {
   async handler(request: Request, response: Response) {
@@ -15,7 +15,7 @@ class CreateCouponController {
 
     const { value, amount, expire_at, minimumValue } = request.body;
 
-    const service = container.resolve(CreateCouponService);
+    const service = container.resolve(CreateCouponUseCase);
 
     const code = await service.execute({
       value,

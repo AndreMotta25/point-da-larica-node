@@ -4,7 +4,7 @@ import Coupon from '../../entities/Coupon';
 import ICouponRepository from '../../repositories/ICouponRepository';
 
 @injectable()
-class ListCouponService {
+class ListCouponUseCase {
   constructor(
     @inject('CouponRepository') private repository: ICouponRepository
   ) {}
@@ -15,4 +15,4 @@ class ListCouponService {
   }
 }
 
-export default ListCouponService;
+export default ListCouponUseCase;

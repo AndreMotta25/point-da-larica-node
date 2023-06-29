@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import ListCouponService from './ListCouponService';
+import ListCouponUseCase from './ListCouponUseCase';
 
 class ListCouponController {
   async handler(request: Request, response: Response): Promise<Response> {
-    const listCouponService = container.resolve(ListCouponService);
+    const listCouponUseCase = container.resolve(ListCouponUseCase);
 
-    const coupons = await listCouponService.execute();
+    const coupons = await listCouponUseCase.execute();
 
     return response.status(200).json(coupons);
   }

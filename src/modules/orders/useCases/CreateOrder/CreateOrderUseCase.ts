@@ -3,8 +3,8 @@ import { container, inject, injectable } from 'tsyringe';
 
 import AppError from '@errors/AppError';
 import ICodeGenerator from '@modules/coupons/providers/interfaces/ICodeGenerator';
-import DebitCouponService from '@modules/coupons/useCases/DebitCoupon/DebitCouponService';
-import ValidCouponService from '@modules/coupons/useCases/ValidCoupon/ValidCouponService';
+import DebitCouponUseCase from '@modules/coupons/useCases/DebitCoupon/DebitCouponUseCase';
+import ValidCouponUseCase from '@modules/coupons/useCases/ValidCoupon/ValidCouponUseCase';
 import { CourtesyCard } from '@modules/courtesy/entities/CourtesyCard';
 import { ICourtesyCardRepository } from '@modules/courtesy/repositories/ICourtesyCardRepository';
 import { useCourtesyCardUseCase } from '@modules/courtesy/useCases/UseCourtesyCard/useCourtesyCardUseCase';
@@ -70,8 +70,8 @@ class CreateOrderUseCase {
     try {
       // verifica  se o cupom existe
       if (coupon_code) {
-        const validCouponUseCase = container.resolve(ValidCouponService);
-        const debitCouponUseCase = container.resolve(DebitCouponService);
+        const validCouponUseCase = container.resolve(ValidCouponUseCase);
+        const debitCouponUseCase = container.resolve(DebitCouponUseCase);
         const coupon = await validCouponUseCase.execute(coupon_code);
 
         if (!(total >= coupon.minimumValue))

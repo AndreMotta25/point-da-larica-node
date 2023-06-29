@@ -6,7 +6,7 @@ import Coupon from '@modules/coupons/entities/Coupon';
 import ICouponRepository from '../../repositories/ICouponRepository';
 
 @injectable()
-class DebitCouponService {
+class DebitCouponUseCase {
   private repository: ICouponRepository;
 
   constructor(@inject('CouponRepository') repository: ICouponRepository) {
@@ -27,4 +27,4 @@ class DebitCouponService {
   }
 }
 
-export default DebitCouponService;
+export default DebitCouponUseCase;

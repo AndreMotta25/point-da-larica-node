@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import ValidCouponService from './ValidCouponService';
+import ValidCouponUseCase from './ValidCouponUseCase';
 
 class ValidCouponController {
   async handle(request: Request, response: Response) {
     const { code } = request.params;
 
-    const service = container.resolve(ValidCouponService);
+    const service = container.resolve(ValidCouponUseCase);
 
     const cupom = await service.execute(code);
 

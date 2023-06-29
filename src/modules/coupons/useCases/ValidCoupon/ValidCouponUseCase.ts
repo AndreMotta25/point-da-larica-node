@@ -6,7 +6,7 @@ import Coupon from '@modules/coupons/entities/Coupon';
 import ICouponRepository from '../../repositories/ICouponRepository';
 
 @injectable()
-class ValidCouponService {
+class ValidCouponUseCase {
   constructor(
     @inject('CouponRepository') private repository: ICouponRepository
   ) {}
@@ -23,4 +23,4 @@ class ValidCouponService {
   }
 }
 
-export default ValidCouponService;
+export default ValidCouponUseCase;

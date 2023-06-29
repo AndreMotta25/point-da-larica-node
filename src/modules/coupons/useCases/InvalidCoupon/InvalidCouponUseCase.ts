@@ -5,7 +5,7 @@ import AppError from '@errors/AppError';
 import ICouponRepository from '../../repositories/ICouponRepository';
 
 @injectable()
-class InvalidCouponService {
+class InvalidCouponUseCase {
   private readonly repository: ICouponRepository;
 
   constructor(@inject('CouponRepository') repository: ICouponRepository) {
@@ -23,4 +23,4 @@ class InvalidCouponService {
   }
 }
 
-export default InvalidCouponService;
+export default InvalidCouponUseCase;

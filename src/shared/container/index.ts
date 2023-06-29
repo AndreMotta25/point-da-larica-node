@@ -2,6 +2,8 @@ import { SendMail } from 'src/emailProvider/implements/SendMail';
 import { ISendMail } from 'src/emailProvider/ISendMail';
 import { container } from 'tsyringe';
 
+import { ICourtesyCardRepository } from '@modules/courtesy/repositories/ICourtesyCardRepository';
+import { CourtesyCardRepository } from '@modules/courtesy/repositories/implementations/CourtesyCardRepository';
 import { IDeliveryRepository } from '@modules/orders/repositories/IDeliveryRepository';
 import { DeliveryRepository } from '@modules/orders/repositories/implementations/DeliveryRepository';
 import { OrderListRepository } from '@modules/orders/repositories/implementations/OrderListRepository';
@@ -64,4 +66,9 @@ container.registerSingleton<IPermissionRepository>(
 container.registerSingleton<IEmployerRepository>(
   'EmployerRepository',
   EmployerRepository
+);
+
+container.registerSingleton<ICourtesyCardRepository>(
+  'CourtesyCardRepository',
+  CourtesyCardRepository
 );

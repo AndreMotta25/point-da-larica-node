@@ -1,6 +1,9 @@
-import { DataSource } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
+import { SeederOptions } from 'typeorm-extension';
 
-export default new DataSource({
+import { MainSeeder } from './seeds/MainSeeder';
+
+const options: DataSourceOptions & SeederOptions = {
   type: 'postgres',
   host: 'localhost',
   username: 'docker',
@@ -10,6 +13,11 @@ export default new DataSource({
   entities: [
     './src/modules/coupons/entities/*.ts',
     './src/modules/orders/entities/*.ts',
+    './src/modules/users/entities/*.ts',
+    './src/modules/courtesy/entities/*.ts',
   ],
   migrations: ['./src/database/migrations/*.ts'],
-});
+  seeds: [MainSeeder],
+};
+
+export default new DataSource(options);

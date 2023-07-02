@@ -21,7 +21,8 @@ class useCourtesyCardUseCase {
         `A cortesia expirou em ${courtesyCard.expiresIn.toLocaleString()}`
       );
 
-    if (courtesyCard.value <= 0) throw new AppError('Sem saldo suficiente');
+    if (courtesyCard.value <= 0)
+      throw new AppError('Cartão cortesia sem saldo suficiente');
 
     return courtesyCard;
   }

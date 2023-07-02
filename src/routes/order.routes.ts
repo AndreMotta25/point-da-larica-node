@@ -8,6 +8,7 @@ import { CreateOrderController } from '@modules/orders/useCases/CreateOrder/Crea
 import { GetAllOrderController } from '@modules/orders/useCases/GetAllOrders/GetAllOrderController';
 import { GetOrderController } from '@modules/orders/useCases/GetOrder/GetOrderController';
 import { ListOrderByController } from '@modules/orders/useCases/ListOrderBy/ListOrderByController';
+import { SalesOfWeekController } from '@modules/orders/useCases/SalesOfWeek/SalesOfWeekController';
 import { ScheduleOrderController } from '@modules/orders/useCases/ScheduleOrder/ScheduleOrderController';
 import { SendOrderController } from '@modules/orders/useCases/SendOrder/SendOrderController';
 
@@ -20,6 +21,7 @@ const sendOrderController = new SendOrderController();
 const cancelOrderController = new CancelOrderController();
 const scheduleOrderController = new ScheduleOrderController();
 const getAllOrder = new GetAllOrderController();
+const salesOfWeek = new SalesOfWeekController();
 
 orderRoutes.post(
   '/',
@@ -28,7 +30,12 @@ orderRoutes.post(
   createOrderController.handler
 );
 
-orderRoutes.post('/schedule', scheduleOrderController.handler);
+orderRoutes.post(
+  '/schedule',
+  isAuthenticated,
+  hasPermission('register_order'),
+  scheduleOrderController.handler
+);
 
 orderRoutes.get(
   '/',
@@ -36,6 +43,14 @@ orderRoutes.get(
   hasPermission('get_order'),
   listBy.handler
 );
+
+orderRoutes.get(
+  '/salesOfWeek',
+  isAuthenticated,
+  hasPermission('get_sales_of_week'),
+  salesOfWeek.handle
+);
+
 orderRoutes.get(
   '/all',
   isAuthenticated,

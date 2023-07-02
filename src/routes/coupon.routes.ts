@@ -1,4 +1,6 @@
 import { Request, Response, Router } from 'express';
+import { hasPermission } from 'src/middleware/hasPermission';
+import { isAuthenticated } from 'src/middleware/isAuthenticated';
 
 import CreateCouponController from '../modules/coupons/useCases/CreateCoupon/CreateCouponController';
 import InvalidCouponController from '../modules/coupons/useCases/InvalidCoupon/InvalidCouponController';
@@ -15,23 +17,31 @@ const invalidController = new InvalidCouponController();
 couponRoutes.post(
   '/',
   couponCreateValidade,
-  (request: Request, response: Response) => {
-    createController.handler(request, response);
-  }
+  isAuthenticated,
+  hasPermission('create_coupon'),
+  createController.handler
 );
-couponRoutes.get('/', (request: Request, response: Response) => {
-  listController.handler(request, response);
-});
+
+couponRoutes.get(
+  '/',
+  isAuthenticated,
+  hasPermission('get_coupon'),
+  listController.handler
+);
+
 // Tenho que colocar o valor da compra aqui para validar também
 couponRoutes.get(
   '/:code/isValid',
-  async (request: Request, response: Response) => {
-    await validController.handle(request, response);
-  }
+  isAuthenticated,
+  hasPermission('get_coupon'),
+  validController.handle
 );
 
-couponRoutes.put('/:id/invalid', (request: Request, response: Response) => {
-  invalidController.handle(request, response);
-});
+couponRoutes.put(
+  '/:id/invalid',
+  isAuthenticated,
+  hasPermission('invalid_coupon'),
+  invalidController.handle
+);
 
 export default couponRoutes;

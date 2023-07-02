@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { IQueryRunner } from 'src/database/transactions/QueryRunner/IQueryRunner';
+import { dateToString } from 'src/utils/dateToString';
 import { inject, injectable } from 'tsyringe';
 import { Raw, Repository } from 'typeorm';
 
 import { Order } from '@modules/orders/entities/Order';
 import { IGetAllOrders } from '@modules/orders/useCases/dtos/Request/IGetAllOrder';
+import { IGetSalesOfWeek } from '@modules/orders/useCases/dtos/Request/IGetSalesOfWeek';
 
 import database from '../../../../database';
 import { IOrderRepository, IRequestOrder } from '../IOrderRepository';
@@ -88,15 +90,9 @@ class OrderRepository implements IOrderRepository {
     }
     // retorna os pedidos do dia
     else {
-      const datePoint = new Date();
-
-      const dateNow = `${datePoint.getFullYear()}-${
-        datePoint.getMonth() + 1
-      }-${datePoint.getDate()}`;
-
       orders.where(
         `DATE_TRUNC('day', date_of_sale AT TIME ZONE '${process.env.TZ}' ) = :date`,
-        { date: dateNow }
+        { date: dateToString(new Date()) }
       );
     }
 
@@ -112,6 +108,22 @@ class OrderRepository implements IOrderRepository {
       .take(limitItens)
       .getMany();
     return teste;
+  }
+
+  async getSalesOfWeek({ minDate, maxDate }: IGetSalesOfWeek) {
+    const orders = this.repository.createQueryBuilder('orders');
+    orders
+      .select("DATE_TRUNC('day',date_of_sale)")
+      .addSelect('sum(final_value)', 'sum')
+      .addSelect('count(*)')
+      .where(
+        `date_of_sale AT TIME ZONE '${process.env.TZ}' BETWEEN '${dateToString(
+          minDate
+        )}T00:00:00' AND '${dateToString(maxDate)}T23:59:00'`
+      )
+      .groupBy("DATE_TRUNC('day',date_of_sale)");
+
+    return orders.getRawMany();
   }
 }
 

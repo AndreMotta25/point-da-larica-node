@@ -92,12 +92,13 @@ class CreateOrderUseCase {
         const courtesyCardUseCase = container.resolve(useCourtesyCardUseCase);
         cortesy = await courtesyCardUseCase.execute(courtesy_code);
 
-        if (cortesy.value < total) {
-          additionalPayment = total - cortesy.value;
+        if (cortesy.value < final_value) {
+          additionalPayment = final_value - cortesy.value;
           total = cortesy.value;
+          final_value = cortesy.value;
           cortesy.value = 0;
         } else {
-          cortesy.value = total - cortesy.value;
+          cortesy.value -= final_value;
         }
         // salvar as modificaçoes feitas no courtesy
         await this.courtesyCardRepository.create(cortesy);
@@ -141,7 +142,8 @@ class CreateOrderUseCase {
       await this.transaction.commitTransaction();
 
       return {
-        remaining_balance: additionalPayment > 0 ? additionalPayment : 0,
+        remaining_balance:
+          additionalPayment > 0 ? Number(additionalPayment.toPrecision(3)) : 0,
         finalized: !(additionalPayment > 0),
         id_order: order.id,
         code: order.code,

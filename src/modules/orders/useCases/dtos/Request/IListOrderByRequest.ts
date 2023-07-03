@@ -4,5 +4,6 @@ export interface IListOrderByRequest {
   maxDate?: string;
   limit: number;
   page: number;
-  isDelivery: boolean;
+  isDelivery: number | null;
+  isSchedule: number | null;
 }

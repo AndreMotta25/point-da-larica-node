@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { IQueryRunner } from 'src/database/transactions/QueryRunner/IQueryRunner';
 import { dateToString } from 'src/utils/dateToString';
+import { utcToLocal } from 'src/utils/utcToLocal';
 import { inject, injectable } from 'tsyringe';
 import { Raw, Repository } from 'typeorm';
 
@@ -17,7 +18,8 @@ export interface IGetOrderBy {
   maxDate?: string;
   limit: number;
   page: number;
-  delivery: boolean;
+  delivery: boolean | null;
+  schedule: boolean | null;
 }
 
 @injectable()
@@ -71,6 +73,7 @@ class OrderRepository implements IOrderRepository {
     limit,
     page,
     delivery,
+    schedule = false,
   }: IGetOrderBy) {
     const limitItens = limit || 5;
     const pageNumber = page || 1;
@@ -90,23 +93,35 @@ class OrderRepository implements IOrderRepository {
     }
     // retorna os pedidos do dia
     else {
+      const date = utcToLocal(new Date(), {
+        locale: 'pt-BR',
+        config: { timeZone: process.env.TZ },
+      }).split('T')[0];
+
       orders.where(
         `DATE_TRUNC('day', date_of_sale AT TIME ZONE '${process.env.TZ}' ) = :date`,
-        { date: dateToString(new Date()) }
+        {
+          date: `${date}`,
+        }
       );
     }
-
     // vai buscar os pedidos que são para entrega
-    if (delivery) {
+    if (delivery !== null && delivery !== undefined) {
       orders
         .leftJoinAndSelect('orders.delivery', 'delivery')
-        .andWhere('orders.isDelivery = :delivery', { delivery: true });
+        .andWhere('orders.isDelivery = :delivery', {
+          delivery: !!delivery,
+        });
+    }
+    if (schedule !== null && schedule !== undefined) {
+      orders.andWhere('orders.schedule = :schedule', { schedule: !!schedule });
     }
 
     const teste = await orders
       .skip(limitItens * (pageNumber - 1))
       .take(limitItens)
       .getMany();
+
     return teste;
   }
 
@@ -127,4 +142,4 @@ class OrderRepository implements IOrderRepository {
   }
 }
 
-export { OrderRepository };
+export { OrderRepository, IGetSalesOfWeek };

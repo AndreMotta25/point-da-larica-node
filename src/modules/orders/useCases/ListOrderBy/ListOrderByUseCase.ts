@@ -21,6 +21,7 @@ class ListOrderByUseCase {
     limit,
     page,
     isDelivery,
+    isSchedule,
   }: IListOrderByRequest) {
     const orders = await this.repository.getOrderBy({
       date,
@@ -28,9 +29,9 @@ class ListOrderByUseCase {
       maxDate,
       limit,
       page,
-      delivery: isDelivery,
+      delivery: isDelivery === null ? null : Boolean(isDelivery),
+      schedule: isSchedule === null ? null : Boolean(isSchedule),
     });
-
     if (isDelivery) {
       const ordersDTO = orders.map((order) => {
         const orderDTO: IDeliveryResponse = {

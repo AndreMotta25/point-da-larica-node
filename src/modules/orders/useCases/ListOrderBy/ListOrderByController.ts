@@ -5,7 +5,9 @@ import { ListOrderByUseCase } from './ListOrderByUseCase';
 
 class ListOrderByController {
   async handler(request: Request, response: Response) {
-    const { date, minDate, maxDate, limit, page, isDelivery } = request.query;
+    const { date, minDate, maxDate, limit, page, isDelivery, isSchedule } =
+      request.query;
+
     const dates = {
       specificDate: date as string,
       minDate: minDate as string,
@@ -15,14 +17,14 @@ class ListOrderByController {
     };
 
     const listByUseCase = container.resolve(ListOrderByUseCase);
-
     const orders = await listByUseCase.execute({
       date: dates.specificDate,
       minDate: dates.minDate,
       maxDate: dates.maxDate,
       limit: dates.limit,
       page: dates.page,
-      isDelivery: Boolean(isDelivery),
+      isDelivery: isDelivery === undefined ? null : Number(isDelivery),
+      isSchedule: isSchedule === undefined ? null : Number(isSchedule),
     });
 
     return response.status(200).json(orders);

@@ -25,6 +25,8 @@ class AuthenticateUserUseCase {
     const passwordMatch = await compare(password, user.password);
     if (!passwordMatch) throw new AppError('Usuario ou Senha Incorretos', 401);
 
+    if (!user.situation) throw new AppError('Usuario ou Senha Incorretos', 401);
+
     const token = sign(
       {
         subject: user.id,

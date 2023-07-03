@@ -47,8 +47,12 @@ class Employer {
   })
   roles: Role[];
 
+  @Column({ default: true })
+  situation: boolean;
+
   constructor() {
     this.id = v4();
+    this.situation = true;
   }
 }
 

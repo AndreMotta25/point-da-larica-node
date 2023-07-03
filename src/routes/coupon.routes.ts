@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { hasPermission } from 'src/middleware/hasPermission';
 import { isAuthenticated } from 'src/middleware/isAuthenticated';
+import { isWorking } from 'src/middleware/isWorking';
 
 import CreateCouponController from '../modules/coupons/useCases/CreateCoupon/CreateCouponController';
 import InvalidCouponController from '../modules/coupons/useCases/InvalidCoupon/InvalidCouponController';
@@ -19,6 +20,7 @@ couponRoutes.post(
   couponCreateValidade,
   isAuthenticated,
   hasPermission('create_coupon'),
+  isWorking,
   createController.handler
 );
 
@@ -26,6 +28,7 @@ couponRoutes.get(
   '/',
   isAuthenticated,
   hasPermission('get_coupon'),
+  isWorking,
   listController.handler
 );
 
@@ -34,6 +37,7 @@ couponRoutes.get(
   '/:code/isValid',
   isAuthenticated,
   hasPermission('get_coupon'),
+  isWorking,
   validController.handle
 );
 
@@ -41,6 +45,7 @@ couponRoutes.put(
   '/:id/invalid',
   isAuthenticated,
   hasPermission('invalid_coupon'),
+  isWorking,
   invalidController.handle
 );
 

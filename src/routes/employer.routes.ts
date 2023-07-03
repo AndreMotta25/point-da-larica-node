@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { hasPermission } from 'src/middleware/hasPermission';
 import { isAuthenticated } from 'src/middleware/isAuthenticated';
+import { isWorking } from 'src/middleware/isWorking';
 
 import { AssignRolesController } from '@modules/users/useCases/AssignRoles/AssignRolesController';
 import { CreateEmployerController } from '@modules/users/useCases/CreateEmployer/CreateEmployerController';
@@ -24,18 +25,21 @@ employerRoutes.post(
   '/',
   isAuthenticated,
   hasPermission('create_user'),
+  isWorking,
   createController.handle
 );
 employerRoutes.post(
   '/:id/assign_roles',
   isAuthenticated,
   hasPermission('assign_role'),
+  isWorking,
   assignRoles.handle
 );
 employerRoutes.delete(
   '/:id/remove_roles',
   isAuthenticated,
   hasPermission('remove_role'),
+  isWorking,
   removeRoles.handle
 );
 
@@ -43,10 +47,16 @@ employerRoutes.patch(
   '/:id/fire',
   isAuthenticated,
   hasPermission('fire_employer'),
+  isWorking,
   inactiveEmployerController.handle
 );
 
-employerRoutes.get('/', isAuthenticated, getEmployerController.handle);
+employerRoutes.get(
+  '/',
+  isAuthenticated,
+  isWorking,
+  getEmployerController.handle
+);
 
 employerRoutes.post('/forget-password', forgetPassword.handle);
 

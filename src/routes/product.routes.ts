@@ -2,6 +2,7 @@ import { Router } from 'express';
 import multer from 'multer';
 import { hasPermission } from 'src/middleware/hasPermission';
 import { isAuthenticated } from 'src/middleware/isAuthenticated';
+import { isWorking } from 'src/middleware/isWorking';
 import { upload } from 'src/utils/upload';
 
 import { CreateProductController } from '@modules/orders/useCases/CreateProduct/CreateProductController';
@@ -38,6 +39,7 @@ productRoutes.post(
   productValidate,
   isAuthenticated,
   hasPermission('create_product'),
+  isWorking,
   createProductController.handler
 );
 
@@ -45,20 +47,23 @@ productRoutes.get(
   '/:id',
   isAuthenticated,
   hasPermission('get_product'),
+  isWorking,
   getProductController.handle
 );
 productRoutes.get(
   '/',
   isAuthenticated,
   hasPermission('get_product'),
+  isWorking,
   listProductController.handle
 );
 productRoutes.put(
   '/:id',
   multerUpload.single('image'),
-  updateProduct.handle,
   isAuthenticated,
-  hasPermission('create_product')
+  hasPermission('create_product'),
+  isWorking,
+  updateProduct.handle
 );
 
 export { productRoutes };

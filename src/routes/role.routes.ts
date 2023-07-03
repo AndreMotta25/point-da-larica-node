@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { hasPermission } from 'src/middleware/hasPermission';
 import { is } from 'src/middleware/is';
 import { isAuthenticated } from 'src/middleware/isAuthenticated';
+import { isWorking } from 'src/middleware/isWorking';
 
 import { AssignPermitionsController } from '@modules/users/useCases/AssignPermitions/AssignPermitionsController';
 import { CreateRoleController } from '@modules/users/useCases/CreateRole/CreateRoleController';
@@ -24,6 +25,7 @@ roleRoutes.get(
   '/',
   isAuthenticated,
   hasPermission('get_role'),
+  isWorking,
   getRolesController.handle
 );
 

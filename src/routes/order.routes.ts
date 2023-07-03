@@ -3,6 +3,7 @@ import { hasPermission } from 'src/middleware/hasPermission';
 import { invalidToken } from 'src/middleware/invalidToken';
 import { isAuthenticated } from 'src/middleware/isAuthenticated';
 
+import { AdditionalPaymentController } from '@modules/orders/useCases/AdditionalPayment/AdditionalPaymentController';
 import { CancelOrderController } from '@modules/orders/useCases/CancelOrder/CancelOrderController';
 import { CreateOrderController } from '@modules/orders/useCases/CreateOrder/CreateOrderController';
 import { GetAllOrderController } from '@modules/orders/useCases/GetAllOrders/GetAllOrderController';
@@ -22,6 +23,7 @@ const cancelOrderController = new CancelOrderController();
 const scheduleOrderController = new ScheduleOrderController();
 const getAllOrder = new GetAllOrderController();
 const salesOfWeek = new SalesOfWeekController();
+const additionalPayment = new AdditionalPaymentController();
 
 orderRoutes.post(
   '/',
@@ -76,6 +78,13 @@ orderRoutes.patch(
   hasPermission('cancel_order'),
   cancelOrderController.handle,
   invalidToken
+);
+
+orderRoutes.put(
+  '/additionalPayment/:id',
+  isAuthenticated,
+  hasPermission('register_order'),
+  additionalPayment.handle
 );
 
 export { orderRoutes };

@@ -6,6 +6,7 @@ import { AssignRolesController } from '@modules/users/useCases/AssignRoles/Assig
 import { CreateEmployerController } from '@modules/users/useCases/CreateEmployer/CreateEmployerController';
 import { ForgotPasswordController } from '@modules/users/useCases/ForgetPassword/ForgotPasswordController';
 import { GetEmployerController } from '@modules/users/useCases/GetEmployer/GetEmployerController';
+import { InactiveEmployerController } from '@modules/users/useCases/InactivateEmployer/InactiveEmployerController';
 import { RemoveRolesFromEmployerController } from '@modules/users/useCases/RemoveRolesFromEmployer/RemoveRolesFromEmployerController';
 import { ResetPasswordController } from '@modules/users/useCases/ResetPassword/ResetPasswordController';
 
@@ -17,6 +18,7 @@ const forgetPassword = new ForgotPasswordController();
 const resetPassword = new ResetPasswordController();
 const removeRoles = new RemoveRolesFromEmployerController();
 const getEmployerController = new GetEmployerController();
+const inactiveEmployerController = new InactiveEmployerController();
 
 employerRoutes.post(
   '/',
@@ -35,6 +37,13 @@ employerRoutes.delete(
   isAuthenticated,
   hasPermission('remove_role'),
   removeRoles.handle
+);
+
+employerRoutes.patch(
+  '/:id/fire',
+  isAuthenticated,
+  hasPermission('fire_employer'),
+  inactiveEmployerController.handle
 );
 
 employerRoutes.get('/', isAuthenticated, getEmployerController.handle);

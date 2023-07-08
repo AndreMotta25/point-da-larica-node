@@ -1,7 +1,7 @@
 import { Repository } from 'typeorm';
 
 import { Product } from '@modules/orders/entities/Product';
-import { IProductRequestDTO } from '@modules/orders/useCases/CreateProduct/IProductRequestDTO';
+import { ICreateProductRequest } from '@modules/orders/useCases/dtos/Request/ICreateProductRequest';
 
 import database from '../../../../database';
 import { IProductRepository } from '../IProductRepository';
@@ -25,7 +25,7 @@ class ProductRepository implements IProductRepository {
     const product = await this.repository.findOne({ where: { name } });
     return product;
   }
-  async create(product: IProductRequestDTO): Promise<void> {
+  async create(product: ICreateProductRequest): Promise<void> {
     const productCopy = this.repository.create({ ...product });
     await this.repository.save(productCopy);
   }

@@ -23,9 +23,9 @@ class UpdateProductUseCase {
     const product = await this.repository.findById(id as string);
     if (!product) throw new AppError('Produto não achado', 404);
 
-    const productAllReadyExists = await this.repository.findByName(name);
+    const productExists = await this.repository.findByName(name);
 
-    if (productAllReadyExists && !(productAllReadyExists.id === product.id)) {
+    if (productExists && !(productExists.id === product.id)) {
       throw new ErrorField(name, 'Nome indisponivel', 'name', 400);
     }
 
@@ -46,4 +46,3 @@ class UpdateProductUseCase {
 }
 
 export { UpdateProductUseCase };
-// image-1683423140470

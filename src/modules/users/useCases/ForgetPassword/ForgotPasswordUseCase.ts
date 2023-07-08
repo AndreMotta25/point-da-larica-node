@@ -1,10 +1,11 @@
 import { sign } from 'jsonwebtoken';
-import { ISendMail } from 'src/emailProvider/ISendMail';
-import { convertTime } from 'src/utils/convertTime';
 import { inject, injectable } from 'tsyringe';
 
 import AppError from '@errors/AppError';
 import { IEmployerRepository } from '@modules/users/repositories/IEmployerRepository';
+
+import { ISendMail } from '../../../../emailProvider/ISendMail';
+import { convertTime } from '../../../../utils/convertTime';
 
 @injectable()
 class ForgotPasswordUseCase {

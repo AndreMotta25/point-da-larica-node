@@ -9,6 +9,6 @@ export interface ICreateOrderRequest {
   adress: string;
   id?: string;
   courtesy_code?: string;
-  schedule: boolean;
+  isSchedule: boolean;
   schedule_date?: Date;
 }

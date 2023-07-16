@@ -19,7 +19,7 @@ export interface IGetOrderBy {
   limit: number;
   page: number;
   delivery: boolean | null;
-  schedule: boolean | null;
+  isSchedule: boolean | null;
 }
 
 @injectable()
@@ -73,7 +73,7 @@ class OrderRepository implements IOrderRepository {
     limit,
     page,
     delivery,
-    schedule = false,
+    isSchedule = false,
   }: IGetOrderBy) {
     const limitItens = limit || 5;
     const pageNumber = page || 1;
@@ -113,8 +113,10 @@ class OrderRepository implements IOrderRepository {
           delivery: !!delivery,
         });
     }
-    if (schedule !== null && schedule !== undefined) {
-      orders.andWhere('orders.schedule = :schedule', { schedule: !!schedule });
+    if (isSchedule !== null && isSchedule !== undefined) {
+      orders.andWhere('orders.isSchedule = :isSchedule', {
+        isSchedule: !!isSchedule,
+      });
     }
 
     const teste = await orders

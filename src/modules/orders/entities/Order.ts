@@ -57,7 +57,7 @@ class Order {
   isDelivery: boolean;
 
   @Column({ default: false })
-  schedule: boolean;
+  isSchedule: boolean;
 
   @Column({
     type: 'timestamp without time zone',
@@ -73,7 +73,7 @@ class Order {
 
   constructor() {
     this.id = uuidV4();
-    this.schedule = false;
+    this.isSchedule = false;
   }
 }
 

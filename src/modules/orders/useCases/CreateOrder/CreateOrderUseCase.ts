@@ -51,7 +51,7 @@ class CreateOrderUseCase {
     itens,
     isDelivery,
     adress,
-    schedule,
+    isSchedule,
     schedule_date,
     courtesy_code,
   }: ICreateOrderRequest): Promise<ICreateOrderResponse | undefined> {
@@ -111,7 +111,7 @@ class CreateOrderUseCase {
         coupon_code,
         code: this.codeGenerator.generateCode(4),
         isDelivery,
-        schedule,
+        isSchedule,
         schedule_date,
         additionalPayment: 0,
       });

@@ -1,7 +1,7 @@
 import { container, injectable } from 'tsyringe';
 
 import { CreateOrderUseCase } from '../CreateOrder/CreateOrderUseCase';
-import { ICreateOrderRequest } from '../dtos/Request/ICreateOrderRequest';
+import { ICreateOrderScheduleRequest } from '../dtos/Request/ICreateOrderScheduleRequest';
 
 @injectable()
 class ScheduleOrderUseCase {
@@ -10,20 +10,11 @@ class ScheduleOrderUseCase {
     this.createOrderUseCase = container.resolve(CreateOrderUseCase);
   }
   // aqui vamos usar o useCase de criar um pedido
-  async execute({
-    coupon_code,
-    itens,
-    isDelivery,
-    adress,
-    schedule_date,
-  }: ICreateOrderRequest) {
+  async execute(data: ICreateOrderScheduleRequest) {
     const order = await this.createOrderUseCase.execute({
-      schedule: true,
-      coupon_code,
-      itens,
-      isDelivery,
-      adress,
-      schedule_date,
+      ...data,
+      isSchedule: true,
+      adress: data.address,
     });
 
     return order;

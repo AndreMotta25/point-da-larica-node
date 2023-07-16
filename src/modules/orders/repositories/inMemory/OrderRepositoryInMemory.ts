@@ -51,8 +51,8 @@ class OrderRepositoryInMemory implements IOrderRepository {
     if (data.delivery) {
       orders = orders.filter((order) => order.isDelivery === data.delivery);
     }
-    if (data.schedule) {
-      orders = orders.filter((order) => order.schedule === data.schedule);
+    if (data.isSchedule) {
+      orders = orders.filter((order) => order.isSchedule === data.isSchedule);
     }
 
     return orders;
@@ -87,3 +87,5 @@ class OrderRepositoryInMemory implements IOrderRepository {
 }
 
 export { OrderRepositoryInMemory };
+
+// acredito que o timezone que está aqui é utc e o do quoka é o local

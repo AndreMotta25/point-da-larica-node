@@ -11,7 +11,7 @@ class ScheduleOrderController {
     if (!errors.isEmpty())
       return response.status(400).json({ errors: errors.array() });
 
-    const { itens, coupon_code, isDelivery, adress, schedule_date } =
+    const { itens, coupon_code, isDelivery, address, schedule_date } =
       request.body;
 
     const scheduleOrderUseCase = container.resolve(ScheduleOrderUseCase);
@@ -20,7 +20,7 @@ class ScheduleOrderController {
       itens,
       coupon_code,
       isDelivery,
-      adress,
+      address,
       schedule_date,
     });
 

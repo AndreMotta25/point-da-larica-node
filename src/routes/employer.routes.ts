@@ -10,6 +10,12 @@ import { GetEmployerController } from '@modules/users/useCases/GetEmployer/GetEm
 import { InactiveEmployerController } from '@modules/users/useCases/InactivateEmployer/InactiveEmployerController';
 import { RemoveRolesFromEmployerController } from '@modules/users/useCases/RemoveRolesFromEmployer/RemoveRolesFromEmployerController';
 import { ResetPasswordController } from '@modules/users/useCases/ResetPassword/ResetPasswordController';
+import { assignRolesValidator } from '@modules/users/validations/assignRoles.validation';
+import { createEmployerValidator } from '@modules/users/validations/createEmployer.validation';
+import { forgetPasswordValidade } from '@modules/users/validations/forgetPassword.validation';
+import { removeRolesFromEmployerValidator } from '@modules/users/validations/removeRolesFromEmployer.validation';
+import { resetPasswordValidate } from '@modules/users/validations/resetPassword.validation';
+import { verifyUser } from '@modules/users/validations/verifyUser.validation';
 
 const employerRoutes = Router();
 
@@ -23,6 +29,7 @@ const inactiveEmployerController = new InactiveEmployerController();
 
 employerRoutes.post(
   '/',
+  createEmployerValidator,
   isAuthenticated,
   hasPermission('create_user'),
   isWorking,
@@ -30,6 +37,7 @@ employerRoutes.post(
 );
 employerRoutes.post(
   '/:id/assign_roles',
+  assignRolesValidator,
   isAuthenticated,
   hasPermission('assign_role'),
   isWorking,
@@ -37,6 +45,7 @@ employerRoutes.post(
 );
 employerRoutes.delete(
   '/:id/remove_roles',
+  removeRolesFromEmployerValidator,
   isAuthenticated,
   hasPermission('remove_role'),
   isWorking,
@@ -45,6 +54,7 @@ employerRoutes.delete(
 
 employerRoutes.patch(
   '/:id/fire',
+  verifyUser,
   isAuthenticated,
   hasPermission('fire_employer'),
   isWorking,
@@ -58,8 +68,16 @@ employerRoutes.get(
   getEmployerController.handle
 );
 
-employerRoutes.post('/forget-password', forgetPassword.handle);
+employerRoutes.post(
+  '/forget-password',
+  forgetPasswordValidade,
+  forgetPassword.handle
+);
 
-employerRoutes.patch('/reset-password/:token', resetPassword.handle);
+employerRoutes.patch(
+  '/reset-password/:token',
+  resetPasswordValidate,
+  resetPassword.handle
+);
 
 export { employerRoutes };

@@ -3,7 +3,7 @@ import { inject, injectable } from 'tsyringe';
 import AppError from '@errors/AppError';
 import { IProductRepository } from '@modules/orders/repositories/IProductRepository';
 
-import { IProductList } from '../dtos/shared/ICreateOrderRequest';
+import { IProductList } from '../dtos/Request/ICreateOrderRequest';
 
 @injectable()
 class GetTotalUseCase {

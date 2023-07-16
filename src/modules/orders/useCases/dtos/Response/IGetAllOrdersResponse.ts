@@ -1,3 +1,3 @@
-import { IListOrderByDateResponse } from './IListOrderByDateResponse';
+import { IListOrderByResponse } from './IListOrderByDateResponse';
 
-export type IGetAllOrdersResponse = IListOrderByDateResponse;
+export type IGetAllOrdersResponse = IListOrderByResponse;

@@ -13,10 +13,27 @@ class CodeGenerator implements ICodeGenerator {
   }
 
   generateCode(totalOfCaracter: number): string {
+    const LETTER = 1;
+    let initiate = false;
+
     for (let i = 1; i <= totalOfCaracter; i += 1) {
-      if (this.random(0, 2) === 1) this.code.push(this.toLetter());
-      else this.code.push(this.random(0, 10).toString());
+      const lastIndex = this.code.length - 1;
+
+      if (initiate) {
+        if (!this.code[lastIndex].match(/[0-9]/))
+          this.code.push(this.random(0, 10).toString());
+        else if (!this.code[lastIndex].match(/^[a-zA-Z]*$/))
+          this.code.push(this.toLetter());
+        // eslint-disable-next-line prettier/prettier
+      } 
+      else {
+        if (this.random(0, 2) === LETTER) this.code.push(this.toLetter());
+        else this.code.push(this.random(0, 10).toString());
+
+        initiate = true;
+      }
     }
+    // tenho que verificar se o codigo gerado está certo
     return this.code.join('');
   }
 

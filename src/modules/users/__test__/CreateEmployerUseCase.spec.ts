@@ -1,10 +1,11 @@
+import { mock, MockProxy } from 'jest-mock-extended';
+
 import AppError from '@errors/AppError';
 import ErrorField from '@errors/ErrorField';
 import CodeGenerator from '@modules/coupons/providers/implementations/CodeGenerator';
 import ICodeGenerator from '@modules/coupons/providers/interfaces/ICodeGenerator';
 
 import { ISendMail } from '../../../emailProvider/ISendMail';
-import { SendMailMock } from '../../../emailProvider/mock/SendMailMock';
 import { IEmployerRepository } from '../repositories/IEmployerRepository';
 import { EmployerRepositoryInMemory } from '../repositories/in-memory/EmployerRepositoryInMemory';
 import { PermissionRepositoryInMemory } from '../repositories/in-memory/PermissionRepositoryInMemory';
@@ -15,7 +16,7 @@ import { CreateEmployerUseCase } from '../useCases/CreateEmployer/CreateEmployer
 import { CreateRoleUseCase } from '../useCases/CreateRole/CreateRoleUseCase';
 
 let codeGenerator: ICodeGenerator;
-let sendEmail: ISendMail;
+let sendEmail: MockProxy<ISendMail>;
 
 let employerRepository: IEmployerRepository;
 let roleRepository: IRoleRepository;
@@ -27,7 +28,7 @@ let createEmployerUseCase: CreateEmployerUseCase;
 describe('Criar um Empregado', () => {
   beforeEach(() => {
     codeGenerator = new CodeGenerator();
-    sendEmail = new SendMailMock();
+    sendEmail = mock();
 
     employerRepository = new EmployerRepositoryInMemory();
     roleRepository = new RoleRepositoryInMemory();

@@ -1,17 +1,17 @@
 import { hash } from 'bcryptjs';
-import { decode, verify } from 'jsonwebtoken';
+import { mock, MockProxy } from 'jest-mock-extended';
+import { decode } from 'jsonwebtoken';
 
 import AppError from '@errors/AppError';
 
 import { ISendMail } from '../../../emailProvider/ISendMail';
-import { SendMailMock } from '../../../emailProvider/mock/SendMailMock';
 import { IEmployerRepository } from '../repositories/IEmployerRepository';
 import { EmployerRepositoryInMemory } from '../repositories/in-memory/EmployerRepositoryInMemory';
 import { ForgotPasswordUseCase } from '../useCases/ForgetPassword/ForgotPasswordUseCase';
 
 let employerRepository: IEmployerRepository;
 let forgetPasswordUseCase: ForgotPasswordUseCase;
-let sendEmail: ISendMail;
+let sendEmail: MockProxy<ISendMail>;
 
 interface IJwtTest {
   subject: string;
@@ -20,7 +20,7 @@ interface IJwtTest {
 describe('Esqueceu a senha', () => {
   beforeEach(() => {
     employerRepository = new EmployerRepositoryInMemory();
-    sendEmail = new SendMailMock();
+    sendEmail = mock();
 
     forgetPasswordUseCase = new ForgotPasswordUseCase(
       employerRepository,

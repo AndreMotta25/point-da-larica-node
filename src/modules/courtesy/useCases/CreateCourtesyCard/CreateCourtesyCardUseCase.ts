@@ -17,10 +17,12 @@ class CreateCourtesyCardUseCase {
   ) {}
 
   async execute(data: ICreateCourtesyCardRequest) {
-    const DAYS = 20;
+    const DAYS_TO_EXPIRE = 20;
 
-    const expireDate = new Date();
-    expireDate.setDate(expireDate.getDate() + DAYS);
+    const expire = new Date();
+    expire.setDate(expire.getDate() + DAYS_TO_EXPIRE);
+
+    const expireIn = new Date(`${expire.toISOString().split('T')[0]}T23:59:59`);
 
     const employer = await this.employerRepository.findById(data.employer_id);
 
@@ -33,14 +35,16 @@ class CreateCourtesyCardUseCase {
     if (!data.motivation.length)
       throw new AppError('Explique o motivo da cortesia!', 400);
 
-    await this.courtesyRepository.create({
+    const courtesyCard = await this.courtesyRepository.create({
       cpf: data.cpf,
       employer,
-      expiresIn: expireDate,
+      expiresIn: expireIn,
       value: data.value,
       code: this.codeGenerator.generateCode(4),
       motivation: data.motivation,
     });
+
+    return courtesyCard;
   }
 }
 

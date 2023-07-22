@@ -4,7 +4,7 @@ import AppError from '@errors/AppError';
 import { ICourtesyCardRepository } from '@modules/courtesy/repositories/ICourtesyCardRepository';
 
 @injectable()
-class useCourtesyCardUseCase {
+class UseCourtesyCardUseCase {
   constructor(
     @inject('CourtesyCardRepository')
     private courtesyCardRepository: ICourtesyCardRepository
@@ -13,8 +13,9 @@ class useCourtesyCardUseCase {
   async execute(code: string) {
     const courtesyCard =
       await this.courtesyCardRepository.getCourtesyCardByCode(code);
+
     if (!courtesyCard)
-      throw new AppError('O cliente não tem credito na loja!', 400);
+      throw new AppError('O cliente não tem credito na loja!', 404);
 
     if (courtesyCard.expiresIn < new Date())
       throw new AppError(
@@ -28,4 +29,4 @@ class useCourtesyCardUseCase {
   }
 }
 
-export { useCourtesyCardUseCase };
+export { UseCourtesyCardUseCase };

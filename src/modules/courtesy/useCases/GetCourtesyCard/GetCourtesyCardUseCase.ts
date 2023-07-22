@@ -27,9 +27,8 @@ class GetCourtesyCardUseCase {
     const courtesy = await this.courtesyCardRepository.getCourtesyCardByCode(
       code
     );
-    if (!courtesy) throw new AppError('Catão cortesia não existe');
-    console.log(courtesy.employer.roles);
-    console.log(courtesy.employer);
+    if (!courtesy) throw new AppError('Cartão cortesia não existe');
+
     const courtesyDTO: ICourtesyResponse = {
       id: courtesy?.id,
       code: courtesy?.code,

@@ -1,5 +1,5 @@
-import { SendMail } from 'src/emailProvider/implements/SendMail';
-import { ISendMail } from 'src/emailProvider/ISendMail';
+import { SendMail } from 'src/provider/email/implements/SendMail';
+import { ISendMail } from 'src/provider/email/ISendMail';
 import { container } from 'tsyringe';
 
 import { ICourtesyCardRepository } from '@modules/courtesy/repositories/ICourtesyCardRepository';

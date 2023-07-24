@@ -1,17 +1,17 @@
 import { Request, Response } from 'express';
-import { validationResult } from 'express-validator';
+import { validator } from 'src/emailProvider/resultValidator/implements/validator';
 import { container } from 'tsyringe';
 
 import { CreateOrderUseCase } from './CreateOrderUseCase';
 
 class CreateOrderController {
   async handler(request: Request, response: Response) {
-    const errors = validationResult(request);
+    const result = validator(request);
 
-    if (!errors.isEmpty())
-      return response.status(400).json({ errors: errors.array() });
+    if (result.hasErrors())
+      return response.status(400).json({ errors: result.getErrors() });
 
-    const { itens, coupon_code, isDelivery, adress, courtesy_code } =
+    const { itens, coupon_code, isDelivery, address, courtesy_code } =
       request.body;
 
     const createOrderService = container.resolve(CreateOrderUseCase);
@@ -20,7 +20,7 @@ class CreateOrderController {
       itens,
       coupon_code,
       isDelivery,
-      adress,
+      adress: address,
       isSchedule: false,
       courtesy_code,
     });

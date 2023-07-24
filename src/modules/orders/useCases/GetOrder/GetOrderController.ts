@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { validator } from 'src/emailProvider/resultValidator/implements/validator';
 import { container } from 'tsyringe';
 
 import { GetOrderUseCase } from './GetOrderUseCase';
@@ -6,6 +7,11 @@ import { GetOrderUseCase } from './GetOrderUseCase';
 class GetOrderController {
   async handler(request: Request, response: Response) {
     const { id } = request.params;
+
+    const result = validator(request);
+
+    if (result.hasErrors())
+      return response.status(400).json({ errors: result.getErrors() });
 
     const getOrderUseCase = container.resolve(GetOrderUseCase);
     const order = await getOrderUseCase.execute(id);

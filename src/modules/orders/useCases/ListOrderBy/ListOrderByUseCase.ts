@@ -30,7 +30,7 @@ class ListOrderByUseCase {
       limit,
       page,
       delivery: isDelivery === null ? null : Boolean(isDelivery),
-      schedule: isSchedule === null ? null : Boolean(isSchedule),
+      isSchedule: isSchedule === null ? null : Boolean(isSchedule),
     });
     if (isDelivery) {
       const ordersDTO = orders.map((order) => {

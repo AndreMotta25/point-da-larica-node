@@ -1,15 +1,15 @@
 import { Request, Response } from 'express';
-import { validationResult } from 'express-validator';
+import { validator } from 'src/emailProvider/resultValidator/implements/validator';
 import { container } from 'tsyringe';
 
 import { ScheduleOrderUseCase } from './ScheduleOrderUseCase';
 
 class ScheduleOrderController {
   async handler(request: Request, response: Response) {
-    const errors = validationResult(request);
+    const result = validator(request);
 
-    if (!errors.isEmpty())
-      return response.status(400).json({ errors: errors.array() });
+    if (result.hasErrors())
+      return response.status(400).json({ errors: result.getErrors() });
 
     const { itens, coupon_code, isDelivery, address, schedule_date } =
       request.body;

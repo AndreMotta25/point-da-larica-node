@@ -34,8 +34,18 @@ class PermissionSeeder implements Seeder {
       },
       {
         id: v4(),
-        name: 'create_order',
-        description: 'Create a Order',
+        name: 'get_coupon',
+        description: 'Get a Coupon',
+      },
+      {
+        id: v4(),
+        name: 'invalid_coupon',
+        description: 'Invalid a Coupon',
+      },
+      {
+        id: v4(),
+        name: 'register_order',
+        description: 'Register a Order',
       },
       {
         id: v4(),
@@ -46,6 +56,11 @@ class PermissionSeeder implements Seeder {
         id: v4(),
         name: 'get_order',
         description: 'Get a Order',
+      },
+      {
+        id: v4(),
+        name: 'send_order',
+        description: 'Send a Order',
       },
       {
         id: v4(),
@@ -64,10 +79,46 @@ class PermissionSeeder implements Seeder {
       },
       {
         id: v4(),
+        name: 'get_role',
+        description: 'Get a Role',
+      },
+      {
+        id: v4(),
+        name: 'assign_role',
+        description: 'Assign a Role',
+      },
+      {
+        id: v4(),
+        name: 'remove_role',
+        description: 'Remove a Role',
+      },
+      {
+        id: v4(),
         name: 'create_permission',
         description: 'Create a Permission',
       },
+      {
+        id: v4(),
+        name: 'create_courtesy',
+        description: 'Create a Courtesy Card',
+      },
+      {
+        id: v4(),
+        name: 'get_courtesy',
+        description: 'Get a Courtesy Card',
+      },
+      {
+        id: v4(),
+        name: 'get_sales_of_week',
+        description: 'Get Sales Of Week',
+      },
+      {
+        id: v4(),
+        name: 'fire_employer',
+        description: 'Fire An Employer',
+      },
     ];
+
     const repository = dataSource.getRepository(Permission);
     const roleRepository = dataSource.getRepository(Role);
 
@@ -93,9 +144,13 @@ class PermissionSeeder implements Seeder {
         where: {
           name: 'admin',
         },
+        relations: { permissions: true },
       })) as Role;
 
-      roleAdmin.permissions = permissionsFiltered;
+      roleAdmin.permissions = [
+        ...permissionsFiltered,
+        ...roleAdmin.permissions,
+      ];
       await roleRepository.save(roleAdmin);
 
       console.log('Inseriu as Permissoes');

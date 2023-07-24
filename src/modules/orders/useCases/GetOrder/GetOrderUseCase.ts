@@ -18,7 +18,7 @@ class GetOrderUseCase {
 
   async execute(id: string): Promise<IGetOrderResponse> {
     const order = await this.repository.getOrder(id);
-    console.log('aaa');
+
     if (!order) throw new AppError('Pedido não achado', 404);
 
     const itens = await Promise.all(

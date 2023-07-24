@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { validator } from 'src/emailProvider/resultValidator/implements/validator';
+import { validator } from 'src/provider/resultValidator/implements/validator';
 import { container } from 'tsyringe';
 
 import { GetProductUseCase } from './GetProductUseCase';

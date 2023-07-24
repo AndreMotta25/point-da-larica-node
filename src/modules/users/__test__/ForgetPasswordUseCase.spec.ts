@@ -4,7 +4,7 @@ import { decode } from 'jsonwebtoken';
 
 import AppError from '@errors/AppError';
 
-import { ISendMail } from '../../../emailProvider/ISendMail';
+import { ISendMail } from '../../../provider/email/ISendMail';
 import { IEmployerRepository } from '../repositories/IEmployerRepository';
 import { EmployerRepositoryInMemory } from '../repositories/in-memory/EmployerRepositoryInMemory';
 import { ForgotPasswordUseCase } from '../useCases/ForgetPassword/ForgotPasswordUseCase';

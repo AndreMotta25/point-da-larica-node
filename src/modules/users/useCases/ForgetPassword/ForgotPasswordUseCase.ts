@@ -4,7 +4,7 @@ import { inject, injectable } from 'tsyringe';
 import AppError from '@errors/AppError';
 import { IEmployerRepository } from '@modules/users/repositories/IEmployerRepository';
 
-import { ISendMail } from '../../../../emailProvider/ISendMail';
+import { ISendMail } from '../../../../provider/email/ISendMail';
 import { convertTime } from '../../../../utils/convertTime';
 
 @injectable()

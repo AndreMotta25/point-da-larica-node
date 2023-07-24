@@ -1,5 +1,5 @@
 import { hash } from 'bcryptjs';
-import { ISendMail } from 'src/emailProvider/ISendMail';
+import { ISendMail } from 'src/provider/email/ISendMail';
 import { inject, injectable } from 'tsyringe';
 import { v4 } from 'uuid';
 

@@ -5,7 +5,7 @@ import ErrorField from '@errors/ErrorField';
 import CodeGenerator from '@modules/coupons/providers/implementations/CodeGenerator';
 import ICodeGenerator from '@modules/coupons/providers/interfaces/ICodeGenerator';
 
-import { ISendMail } from '../../../emailProvider/ISendMail';
+import { ISendMail } from '../../../provider/email/ISendMail';
 import { IEmployerRepository } from '../repositories/IEmployerRepository';
 import { EmployerRepositoryInMemory } from '../repositories/in-memory/EmployerRepositoryInMemory';
 import { PermissionRepositoryInMemory } from '../repositories/in-memory/PermissionRepositoryInMemory';

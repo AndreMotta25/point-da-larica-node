@@ -9,7 +9,9 @@ import { CreateProductController } from '@modules/orders/useCases/CreateProduct/
 import { GetProductController } from '@modules/orders/useCases/GetProduct/GetProductController';
 import { ListProductController } from '@modules/orders/useCases/ListProducts/ListProductController';
 import { UpdateProductController } from '@modules/orders/useCases/UpdateProduct/UpdateProductController';
-import { productValidate } from '@modules/orders/validations/productCreate.validation';
+import { productValidator } from '@modules/orders/validations/productCreate.validation';
+import { updateProductValidator } from '@modules/orders/validations/updateProduct.validation';
+import { verifyProduct as verifyProductValidator } from '@modules/orders/validations/verifyProduct.validation';
 
 const multerUpload = multer(
   upload({
@@ -36,7 +38,7 @@ const updateProduct = new UpdateProductController();
 productRoutes.post(
   '/',
   multerUpload.single('image'),
-  productValidate,
+  productValidator,
   isAuthenticated,
   hasPermission('create_product'),
   isWorking,
@@ -45,6 +47,7 @@ productRoutes.post(
 
 productRoutes.get(
   '/:id',
+  verifyProductValidator(),
   isAuthenticated,
   hasPermission('get_product'),
   isWorking,
@@ -60,6 +63,7 @@ productRoutes.get(
 productRoutes.put(
   '/:id',
   multerUpload.single('image'),
+  updateProductValidator,
   isAuthenticated,
   hasPermission('create_product'),
   isWorking,

@@ -13,6 +13,14 @@ import { ListOrderByController } from '@modules/orders/useCases/ListOrderBy/List
 import { SalesOfWeekController } from '@modules/orders/useCases/SalesOfWeek/SalesOfWeekController';
 import { ScheduleOrderController } from '@modules/orders/useCases/ScheduleOrder/ScheduleOrderController';
 import { SendOrderController } from '@modules/orders/useCases/SendOrder/SendOrderController';
+import { additionalPaymentValidator } from '@modules/orders/validations/additionalPayment.validation';
+import { createOrderValidator } from '@modules/orders/validations/createOrder.validation';
+import { getAllOrdersValidator } from '@modules/orders/validations/getAllOrders.validation';
+import { listOrdersValidator } from '@modules/orders/validations/listOrdersBy.validation';
+import { salesOfWeekValidator } from '@modules/orders/validations/salesOfWeek.validation';
+import { scheduleOrderValidator } from '@modules/orders/validations/scheduleOrder.validation';
+import { sendOrderValidator } from '@modules/orders/validations/sendOrder.validation';
+import { verifyOrder as verifyOrderValidator } from '@modules/orders/validations/verifyOrder.validation';
 
 const orderRoutes = Router();
 
@@ -28,6 +36,7 @@ const additionalPayment = new AdditionalPaymentController();
 
 orderRoutes.post(
   '/',
+  createOrderValidator,
   isAuthenticated,
   hasPermission('register_order'),
   isWorking,
@@ -36,6 +45,7 @@ orderRoutes.post(
 
 orderRoutes.post(
   '/schedule',
+  scheduleOrderValidator,
   isAuthenticated,
   hasPermission('register_order'),
   isWorking,
@@ -44,6 +54,7 @@ orderRoutes.post(
 
 orderRoutes.get(
   '/',
+  listOrdersValidator,
   isAuthenticated,
   hasPermission('get_order'),
   isWorking,
@@ -52,6 +63,7 @@ orderRoutes.get(
 
 orderRoutes.get(
   '/salesOfWeek',
+  salesOfWeekValidator,
   isAuthenticated,
   hasPermission('get_sales_of_week'),
   isWorking,
@@ -60,6 +72,7 @@ orderRoutes.get(
 
 orderRoutes.get(
   '/all',
+  getAllOrdersValidator,
   isAuthenticated,
   hasPermission('get_order'),
   isWorking,
@@ -67,6 +80,7 @@ orderRoutes.get(
 );
 orderRoutes.get(
   '/:id',
+  verifyOrderValidator(),
   isAuthenticated,
   hasPermission('get_order'),
   isWorking,
@@ -75,6 +89,7 @@ orderRoutes.get(
 
 orderRoutes.patch(
   '/send/:id',
+  sendOrderValidator,
   isAuthenticated,
   hasPermission('send_order'),
   isWorking,
@@ -82,6 +97,7 @@ orderRoutes.patch(
 );
 orderRoutes.patch(
   '/cancel/:id',
+  verifyOrderValidator(),
   isAuthenticated,
   hasPermission('cancel_order'),
   isWorking,
@@ -91,6 +107,7 @@ orderRoutes.patch(
 
 orderRoutes.put(
   '/additionalPayment/:id',
+  additionalPaymentValidator,
   isAuthenticated,
   hasPermission('register_order'),
   isWorking,

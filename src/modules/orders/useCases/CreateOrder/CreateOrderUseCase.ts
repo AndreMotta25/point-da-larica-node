@@ -7,7 +7,7 @@ import DebitCouponUseCase from '@modules/coupons/useCases/DebitCoupon/DebitCoupo
 import ValidCouponUseCase from '@modules/coupons/useCases/ValidCoupon/ValidCouponUseCase';
 import { CourtesyCard } from '@modules/courtesy/entities/CourtesyCard';
 import { ICourtesyCardRepository } from '@modules/courtesy/repositories/ICourtesyCardRepository';
-import { useCourtesyCardUseCase } from '@modules/courtesy/useCases/UseCourtesyCard/useCourtesyCardUseCase';
+import { UseCourtesyCardUseCase } from '@modules/courtesy/useCases/UseCourtesyCard/UseCourtesyCardUseCase';
 import { Product } from '@modules/orders/entities/Product';
 import { IDeliveryRepository } from '@modules/orders/repositories/IDeliveryRepository';
 import { IOrderListRepository } from '@modules/orders/repositories/IOrderListRepository';
@@ -89,7 +89,7 @@ class CreateOrderUseCase {
       let cortesy: CourtesyCard | null = null;
 
       if (courtesy_code) {
-        const courtesyCardUseCase = container.resolve(useCourtesyCardUseCase);
+        const courtesyCardUseCase = container.resolve(UseCourtesyCardUseCase);
         cortesy = await courtesyCardUseCase.execute(courtesy_code);
 
         if (cortesy.value < final_value) {

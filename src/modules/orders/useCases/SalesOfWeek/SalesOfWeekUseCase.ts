@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe';
 
 import { IOrderRepository } from '@modules/orders/repositories/IOrderRepository';
 
-interface ISalesOfWeek {
+export interface ISalesOfWeek {
   date_trunc: Date;
   sum: number;
   count: number;
@@ -52,11 +52,3 @@ class SalesOfWeekUseCase {
 }
 
 export { SalesOfWeekUseCase };
-
-// const teste = data.reduce((acc: ITeste, day) => {
-//   return {
-//     ...acc,
-//     [day.date_trunc.getUTCDay()]:
-//       Number(day.count) + (acc[day.date_trunc.getUTCDay()] || 0),
-//   };
-// }, {});

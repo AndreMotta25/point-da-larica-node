@@ -20,7 +20,7 @@ class CreateOrderController {
       itens,
       coupon_code,
       isDelivery,
-      adress: address,
+      address,
       isSchedule: false,
       courtesy_code,
     });

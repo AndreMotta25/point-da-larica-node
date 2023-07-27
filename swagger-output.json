@@ -1,0 +1,1054 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Point da Larica Documentation",
+    "description": "This is an api to manage the sale of snacks",
+    "version": "1.0.0",
+    "contact":{
+      "email": "andremotta16041998@gmail.com"
+    } 
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3333/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "User",
+      "description": "Endpoint for Employer"
+    },
+    {
+      "name": "Coupon",
+      "description": "Endpoint for Coupon"
+    },
+    {
+      "name": "Product",
+      "description": "Endpoint for Product"
+    },
+    {
+      "name": "Order",
+      "description": "Endpoint for Order"
+    },
+    {
+      "name": "Role",
+      "description": "Endpoint for Employer"
+    },
+    {
+      "name": "Courtesy",
+      "description": "Endpoint for Courtesy"
+    }
+  ],
+  "paths": {
+    "/coupon/": {
+      "post": {
+        "description": "Create an Coupon for Discount",
+        "summary": "Create an Coupon",
+        "tags": [
+          "Coupon"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/Coupon"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "code": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "number"
+                  },
+                  "amount": {
+                    "type": "number"
+                  },
+                  "expire_at": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "valid": {
+                    "type": "boolean"
+                  },
+                  "minimumValue": {
+                    "type": "number"
+                  }
+                },
+                "example": {
+                  "value": 10,
+                  "amount": 2,
+                  "expire_at": "2023-08-01T12:00:00",
+                  "minimumValue": 4
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "description": "Get a List of Coupon",
+        "summary": "Get an Coupon",
+        "tags": [
+          "Coupon"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Coupon"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/coupon/{code}/isValid": {
+      "get": {
+        "description": "Verify if an Coupon is valid",
+        "summary": "Verify an Coupon",
+        "tags": [
+          "Coupon"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/Coupon"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/coupon/{id}/invalid": {
+      "put": {
+        "description": "Make a Coupon Invalid ",
+        "summary": "Invalid an Coupon",
+        "tags": [
+          "Coupon"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No-Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/product/": {
+      "post": {
+        "description": "",
+        "tags": [
+          "Product"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "get": {
+        "description": "",
+        "tags": [
+          "Product"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/product/{id}": {
+      "get": {
+        "description": "",
+        "tags": [
+          "Product"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "tags": [
+          "Product"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/order/": {
+      "post": {
+        "description": "",
+        "tags": [
+          "Order"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "get": {
+        "description": "",
+        "tags": [
+          "Order"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/order/schedule": {
+      "post": {
+        "description": "",
+        "tags": [
+          "Order"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/order/salesOfWeek": {
+      "get": {
+        "description": "",
+        "tags": [
+          "Order"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/order/all": {
+      "get": {
+        "description": "",
+        "tags": [
+          "Order"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/order/{id}": {
+      "get": {
+        "description": "",
+        "tags": [
+          "Order"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/order/send/{id}": {
+      "patch": {
+        "description": "",
+        "tags": [
+          "Order"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/order/cancel/{id}": {
+      "patch": {
+        "description": "",
+        "tags": [
+          "Order"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/order/additionalPayment/{id}": {
+      "put": {
+        "description": "",
+        "tags": [
+          "Order"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/role/": {
+      "post": {
+        "description": "",
+        "tags": [
+          "Role"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "get": {
+        "description": "",
+        "tags": [
+          "Role"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/role/{id}": {
+      "post": {
+        "description": "",
+        "tags": [
+          "Role"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/user/": {
+      "post": {
+        "description": "",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "get": {
+        "description": "",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/user/{id}/assign_roles": {
+      "post": {
+        "description": "",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/user/{id}/remove_roles": {
+      "delete": {
+        "description": "",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/user/{id}/fire": {
+      "patch": {
+        "description": "",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/user/forget-password": {
+      "post": {
+        "description": "",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/user/reset-password/{token}": {
+      "patch": {
+        "description": "",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/authenticate/sign": {
+      "post": {
+        "description": "Authentica an Employer",
+        "tags": [
+          "Sign"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/courtesy/": {
+      "post": {
+        "description": "",
+        "tags": [
+          "Courtesy"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/courtesy/{id}": {
+      "get": {
+        "description": "",
+        "tags": [
+          "Courtesy"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Coupon": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "expire_at": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "valid": {
+          "type": "boolean"
+        },
+        "minimumValue": {
+          "type": "number"
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization"
+      }
+    }
+  }
+}

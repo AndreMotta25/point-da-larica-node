@@ -5,6 +5,8 @@ import { isWorking } from 'src/middleware/isWorking';
 
 import { CreateCourtesyCardController } from '@modules/courtesy/useCases/CreateCourtesyCard/CreateCourtesyCardController';
 import { GetCourtesyCardController } from '@modules/courtesy/useCases/GetCourtesyCard/GetCourtesyCardController';
+import { createCourtesyValidator } from '@modules/courtesy/validations/createCourtesy.validation';
+import { getCourtesyValidator } from '@modules/courtesy/validations/getCourtesy.validation';
 
 const courtesyRoutes = Router();
 
@@ -13,6 +15,7 @@ const getCourtesyController = new GetCourtesyCardController();
 
 courtesyRoutes.post(
   '/',
+  createCourtesyValidator,
   isAuthenticated,
   hasPermission('create_courtesy'),
   isWorking,
@@ -20,7 +23,8 @@ courtesyRoutes.post(
 );
 
 courtesyRoutes.get(
-  '/:id',
+  '/:code',
+  getCourtesyValidator,
   isAuthenticated,
   hasPermission('get_courtesy'),
   isWorking,

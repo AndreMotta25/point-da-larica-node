@@ -1,17 +1,16 @@
 import 'reflect-metadata';
 import { Request, Response } from 'express';
-import { validationResult } from 'express-validator/src/validation-result';
+import { validator } from 'src/provider/resultValidator/implements/validator';
 import { container } from 'tsyringe';
 
 import CreateCouponUseCase from './CreateCouponUseCase';
 
 class CreateCouponController {
   async handler(request: Request, response: Response) {
-    const errors = validationResult(request);
+    const result = validator(request);
 
-    if (!errors.isEmpty()) {
-      return response.status(400).json({ errors: errors.array() });
-    }
+    if (result.hasErrors())
+      return response.status(400).json({ errors: result.getErrors() });
 
     const { value, amount, expire_at, minimumValue } = request.body;
 

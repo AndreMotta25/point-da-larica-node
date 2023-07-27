@@ -1,10 +1,16 @@
 import { Request, Response } from 'express';
+import { validator } from 'src/provider/resultValidator/implements/validator';
 import { container } from 'tsyringe';
 
 import ValidCouponUseCase from './ValidCouponUseCase';
 
 class ValidCouponController {
   async handle(request: Request, response: Response) {
+    const result = validator(request);
+
+    if (result.hasErrors())
+      return response.status(400).json({ errors: result.getErrors() });
+
     const { code } = request.params;
 
     const service = container.resolve(ValidCouponUseCase);

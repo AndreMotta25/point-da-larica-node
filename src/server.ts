@@ -4,6 +4,7 @@ import './shared/container';
 import 'dotenv/config';
 
 import express, { NextFunction, Request, Response } from 'express';
+import path from 'path';
 import swagger from 'swagger-ui-express';
 
 import swaggerJson from '../swagger-output.json';
@@ -15,6 +16,8 @@ const app = express();
 app.use(express.json());
 
 app.use('/api-docs', swagger.serve, swagger.setup(swaggerJson));
+
+app.use('/images', express.static(path.resolve(__dirname, '..', 'images')));
 
 app.use(router);
 

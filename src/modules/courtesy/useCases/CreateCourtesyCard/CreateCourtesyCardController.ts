@@ -11,7 +11,7 @@ class CreateCourtesyCardController {
     if (result.hasErrors())
       return response.status(400).json({ errors: result.getErrors() });
 
-    const { value, cpf, motivation } = request.body;
+    const { value, client_cpf, motivation } = request.body;
     const { id } = request.user;
 
     const createCourtesyCardUseCase = container.resolve(
@@ -19,7 +19,7 @@ class CreateCourtesyCardController {
     );
 
     const courtesyCard = await createCourtesyCardUseCase.execute({
-      cpf,
+      cpf: client_cpf,
       value,
       employer_id: id,
       motivation,

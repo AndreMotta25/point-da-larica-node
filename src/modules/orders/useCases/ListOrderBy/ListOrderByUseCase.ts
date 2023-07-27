@@ -32,24 +32,6 @@ class ListOrderByUseCase {
       delivery: isDelivery === null ? null : Boolean(isDelivery),
       isSchedule: isSchedule === null ? null : Boolean(isSchedule),
     });
-    if (isDelivery) {
-      const ordersDTO = orders.map((order) => {
-        const orderDTO: IDeliveryResponse = {
-          id: order.id,
-          date_of_sale: order.date_of_sale,
-          full_value: Number(order.full_value),
-          situation: order.canceled ? 'cancelado' : 'ativo',
-          deliveryInformationId: order.delivery.id,
-          discounted_price: Number(order.final_value),
-          send: order.delivery.send,
-          address: order.delivery.adress,
-          code: order.code,
-        };
-        return orderDTO;
-      });
-      return ordersDTO;
-    }
-
     const ordersDTO = orders.map((order) => {
       const orderDTO: IListOrderByResponse = {
         id: order.id,
@@ -59,6 +41,9 @@ class ListOrderByUseCase {
         final_value: Number(order.final_value),
         isDelivery: order.isDelivery,
         code: order.code,
+        address: order.delivery?.adress || null,
+        deliveryInformationId: order.delivery?.id || null,
+        send: order.delivery?.send !== undefined ? order.delivery.send : null,
       };
       return orderDTO;
     });

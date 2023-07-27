@@ -6,6 +6,9 @@ interface IListOrderByResponse {
   code: string;
   final_value: number;
   date_of_sale: Date;
+  address: string | null;
+  send: boolean | null;
+  deliveryInformationId: string | null;
 }
 
 export { IListOrderByResponse };

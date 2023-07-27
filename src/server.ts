@@ -13,6 +13,9 @@ import ErrorField from './errors/ErrorField';
 import router from './routes';
 
 const app = express();
+
+app.set('Access-Control-Allow-Origin', '*');
+
 app.use(express.json());
 
 app.use('/api-docs', swagger.serve, swagger.setup(swaggerJson));

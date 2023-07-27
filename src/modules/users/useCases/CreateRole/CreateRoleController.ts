@@ -1,17 +1,15 @@
 import { Request, Response } from 'express';
-import { validationResult } from 'express-validator';
+import { validator } from 'src/provider/resultValidator/implements/validator';
 import { container } from 'tsyringe';
 
 import { CreateRoleUseCase } from './CreateRoleUseCase';
 
 class CreateRoleController {
   async handle(request: Request, response: Response) {
-    const result = validationResult(request);
+    const result = validator(request);
 
-    if (!result.isEmpty()) {
-      return response.json({ errors: result.array() });
-    }
-
+    if (result.hasErrors())
+      return response.status(400).json({ errors: result.getErrors() });
     const { name, description, permissions } = request.body;
 
     const createRoleUseCase = container.resolve(CreateRoleUseCase);

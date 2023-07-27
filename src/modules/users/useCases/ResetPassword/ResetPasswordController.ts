@@ -1,16 +1,15 @@
 import { Request, Response } from 'express';
-import { validationResult } from 'express-validator';
+import { validator } from 'src/provider/resultValidator/implements/validator';
 import { container } from 'tsyringe';
 
 import { ResetPasswordUseCase } from './ResetPasswordUseCase';
 
 class ResetPasswordController {
   async handle(request: Request, response: Response) {
-    const result = validationResult(request);
+    const result = validator(request);
 
-    if (!result.isEmpty()) {
-      return response.json({ errors: result.array() });
-    }
+    if (result.hasErrors())
+      return response.status(400).json({ errors: result.getErrors() });
 
     const { token } = request.params;
     const { new_password } = request.body;

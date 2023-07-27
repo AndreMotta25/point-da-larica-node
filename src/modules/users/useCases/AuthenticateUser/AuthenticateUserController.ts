@@ -1,13 +1,15 @@
 import { Request, Response } from 'express';
-import { validationResult } from 'express-validator';
+import { validator } from 'src/provider/resultValidator/implements/validator';
 import { container } from 'tsyringe';
 
 import { AuthenticateUserUseCase } from './AuthenticateUserUseCase';
 
 class AuthenticateUserController {
   async handle(request: Request, response: Response) {
-    const result = validationResult(request);
-    if (!result.isEmpty()) return response.json({ errors: result.array() });
+    const result = validator(request);
+
+    if (result.hasErrors())
+      return response.status(400).json({ errors: result.getErrors() });
 
     const { email, password } = request.body;
 

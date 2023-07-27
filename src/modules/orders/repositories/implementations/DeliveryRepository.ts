@@ -31,10 +31,10 @@ class DeliveryRepository implements IDeliveryRepository {
     return orderDelivery;
   }
 
-  async create({ adress, order }: IDeliveryDTO): Promise<void> {
+  async create({ address, order }: IDeliveryDTO): Promise<void> {
     const runnerRepository = this.queryRunner.getRepository(Delivery);
 
-    const delivery = runnerRepository.create({ adress, order });
+    const delivery = runnerRepository.create({ address, order });
 
     await runnerRepository.save(delivery);
   }

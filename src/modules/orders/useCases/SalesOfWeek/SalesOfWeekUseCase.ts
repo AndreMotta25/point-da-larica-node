@@ -12,7 +12,7 @@ interface IGetSalesOfWeek {
   maxDate?: Date;
 }
 
-interface IGetSalesOfWeekResponse {
+export interface IGetSalesOfWeekResponse {
   date_trunc: Date;
   sum: number;
   count: number;

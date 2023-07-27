@@ -34,7 +34,7 @@ describe('Envia um pedido', () => {
     });
     order.date_of_sale = new Date();
 
-    await deliveryRepository.create({ adress: 'Rua do figo, 51', order });
+    await deliveryRepository.create({ address: 'Rua do figo, 51', order });
 
     const delivery = await sendOrderUseCase.execute(order.id);
     expect(delivery.send).toBeTruthy();

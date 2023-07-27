@@ -98,10 +98,9 @@ describe('Pega uma pedido', () => {
 
     order.delivery = {
       id: v4(),
-      adress: 'rua teste',
+      address: 'rua teste',
       orderId: order.id,
       send: false,
-      status: '',
       order,
     };
 

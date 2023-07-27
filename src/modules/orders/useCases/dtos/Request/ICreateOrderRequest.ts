@@ -6,7 +6,7 @@ export interface ICreateOrderRequest {
   coupon_code?: string;
   itens: IProductList[];
   isDelivery: boolean;
-  adress: string;
+  address: string;
   id?: string;
   courtesy_code?: string;
   isSchedule: boolean;

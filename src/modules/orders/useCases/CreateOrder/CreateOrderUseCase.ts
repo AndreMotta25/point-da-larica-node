@@ -50,7 +50,7 @@ class CreateOrderUseCase {
     coupon_code,
     itens,
     isDelivery,
-    adress,
+    address,
     isSchedule,
     schedule_date,
     courtesy_code,
@@ -122,8 +122,8 @@ class CreateOrderUseCase {
       }
 
       if (isDelivery) {
-        if (!adress) throw new AppError('Faltou o endereço de entrega', 400);
-        await this.repositoryDelivery.create({ adress, order });
+        if (!address) throw new AppError('Faltou o endereço de entrega', 400);
+        await this.repositoryDelivery.create({ address, order });
       }
 
       this.clearRepeatedItens(itens).forEach(async (item) => {

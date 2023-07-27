@@ -12,16 +12,13 @@ class Delivery {
   @Column({ nullable: false })
   orderId: string;
 
+  // A chave estrageira é feita aqui e não em cima
   @OneToOne(() => Order, { nullable: false })
   @JoinColumn()
   order: Order;
 
   @Column({ nullable: false })
-  adress: string;
-
-  // retirar depois
-  @Column({ default: 'A enviar' })
-  status: string;
+  address: string;
 
   @Column({ default: false })
   send: boolean;

@@ -35,7 +35,7 @@ class GetOrderUseCase {
 
     if (order.isDelivery) {
       delivery = {
-        address: order.delivery.adress,
+        address: order.delivery.address,
         send: order.delivery.send,
       };
     }

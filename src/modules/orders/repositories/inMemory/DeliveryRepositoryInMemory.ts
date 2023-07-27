@@ -8,13 +8,12 @@ class DeliveryRepositoryInMemory implements IDeliveryRepository {
     this.repository = [];
   }
 
-  async create({ adress, order }: IDeliveryDTO): Promise<void> {
+  async create({ address, order }: IDeliveryDTO): Promise<void> {
     const delivery = new Delivery();
     Object.assign(delivery, {
-      adress,
+      address,
       orderId: order.id,
       send: false,
-      status: 'A enviar',
     });
     this.repository.push(delivery);
   }

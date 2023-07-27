@@ -3,7 +3,6 @@ import { inject, injectable } from 'tsyringe';
 import { IOrderRepository } from '@modules/orders/repositories/IOrderRepository';
 
 import { IListOrderByRequest } from '../dtos/Request/IListOrderByRequest';
-import { IDeliveryResponse } from '../dtos/Response/IDeliveryResponse';
 import { IListOrderByResponse } from '../dtos/Response/IListOrderByDateResponse';
 
 @injectable()
@@ -41,7 +40,7 @@ class ListOrderByUseCase {
         final_value: Number(order.final_value),
         isDelivery: order.isDelivery,
         code: order.code,
-        address: order.delivery?.adress || null,
+        address: order.delivery?.address || null,
         deliveryInformationId: order.delivery?.id || null,
         send: order.delivery?.send !== undefined ? order.delivery.send : null,
       };

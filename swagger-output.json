@@ -75,39 +75,13 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "code": {
-                    "type": "string"
-                  },
-                  "value": {
-                    "type": "number"
-                  },
-                  "amount": {
-                    "type": "number"
-                  },
-                  "expire_at": {
-                    "type": "string"
-                  },
-                  "created_at": {
-                    "type": "string"
-                  },
-                  "valid": {
-                    "type": "boolean"
-                  },
-                  "minimumValue": {
-                    "type": "number"
-                  }
-                },
-                "example": {
-                  "value": 10,
-                  "amount": 2,
-                  "expire_at": "2023-08-01T12:00:00",
-                  "minimumValue": 4
-                }
+                "$ref":"#/definitions/Coupon"          
+              },
+              "example": {
+                "value": 10,
+                "amount": 2,
+                "expire_at": "2023-08-01T12:00:00",
+                "minimumValue": 4
               }
             }
           }
@@ -179,6 +153,9 @@
               }
             }
           },
+          "404":{
+            "description":"Not Found"
+          },
           "401": {
             "description": "Unauthorized"
           }
@@ -214,13 +191,17 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "404":{
+            "description":"Not Found"
           }
         }
       }
     },
     "/product/": {
       "post": {
-        "description": "",
+        "description": "Create a Product",
+        "summary":"Create a Product",
         "tags": [
           "Product"
         ],
@@ -230,23 +211,45 @@
             ]
           }
         ],
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
+          "201": {
+            "description": "Created"
+          },
           "401": {
             "description": "Unauthorized"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema":{
+                "type":"object",
+                "properties": {
+                  "name": {
+                    "type":"string"
+                  },
+                  "value": {
+                    "type":"number"
+                  },
+                  "description": {
+                    "type":"string"
+                  },
+                  "file": {
+                    "type":"string",
+                    "format":"binary"
+                  }
+                }
+              }
+            }
           }
         }
       },
       "get": {
-        "description": "",
+        "description": "Get all products",
+        "summary":"Get products",
         "tags": [
           "Product"
         ],
@@ -256,16 +259,20 @@
             ]
           }
         ],
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Product"
+                  }
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized"
           }
@@ -274,7 +281,8 @@
     },
     "/product/{id}": {
       "get": {
-        "description": "",
+        "description": "Get an specific product",
+        "summary":"Get product",
         "tags": [
           "Product"
         ],
@@ -292,23 +300,30 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
+          "200": {
+            "description":"Ok",
+            "content":{
+              "application/json": {
+                "schema":{
+                  "$ref":"#/definitions/Product"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized"
+          }, 
+          "404":{
+            "description":"Not Found"
           }
         }
       },
       "put": {
-        "description": "",
+        "description": "Update a product",
+        "summary": "Update a product",
         "tags": [
           "Product"
         ],
@@ -326,18 +341,45 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
+          "204": {
+            "description": "No-Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
           "401": {
             "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required":true,
+          "content": {
+            "multipart/form-data": {
+              "schema":{
+                "type":"object",
+                "properties": {
+                  "name": {
+                    "type":"string"
+                  },
+                  "value": {
+                    "type":"number"
+                  },
+                  "description": {
+                    "type":"string"
+                  },
+                  "image": {
+                    "type":"string",
+                    "format":"binary"
+                  }
+                }
+              },
+              "encoding":{
+                "contentType": "image/png, image/jpeg"
+              }
+            }
           }
         }
       }
@@ -1038,6 +1080,26 @@
         },
         "minimumValue": {
           "type": "number"
+        }
+      }
+    },
+    "Product": {
+      "type":"object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number"
+        },
+        "description": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
         }
       }
     }

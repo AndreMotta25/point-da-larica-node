@@ -1,3 +1,4 @@
+import { dateToString } from 'src/utils/dateToString';
 import { inject, injectable } from 'tsyringe';
 
 import { IOrderRepository } from '@modules/orders/repositories/IOrderRepository';
@@ -45,6 +46,46 @@ class SalesOfWeekUseCase {
       maxDate: max,
     })) as ISalesOfWeek[];
 
+    // ==============================================
+
+    const diffInDays = Math.ceil(
+      Math.abs(max.getTime() - min.getTime()) / (1000 * 60 * 60 * 24)
+    );
+
+    const daysOfWeek: string[] = [dateToString(max)]; // It will start with the biggest date
+
+    // eslint-disable-next-line no-plusplus
+    for (let lessDay = diffInDays; lessDay > 0; lessDay--) {
+      const date = new Date(
+        new Date(max).setDate(new Date(max).getDate() - lessDay)
+      );
+
+      daysOfWeek.push(`${dateToString(date)}`);
+    }
+
+    const saleDates = data.map((d) => dateToString(d.date_trunc));
+
+    const emptyDates: string[] = [];
+
+    Object.entries(daysOfWeek).forEach((d) => {
+      if (!saleDates.includes(d[1])) emptyDates.push(d[1]);
+    });
+
+    const fakeDates: ISalesOfWeek[] = [];
+
+    emptyDates.forEach((date) => {
+      const sale = {
+        date_trunc: new Date(`${date}Z`),
+        sum: 0,
+        count: 0,
+      };
+      fakeDates.push(sale);
+    });
+    console.log(fakeDates);
+
+    data.push(...fakeDates);
+
+    // ==============================================
     return data.reduce((acc: IGetSalesOfWeekResponse[], groupData) => {
       return [...acc, { ...groupData, day: groupData.date_trunc.getUTCDay() }];
     }, []);

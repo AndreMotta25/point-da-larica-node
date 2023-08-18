@@ -11,10 +11,16 @@ export type ICourtesyCardRequest = Omit<
   expiresIn: Date;
   code: string;
 };
-
+export interface IGetCourtesyCardByCodeAndCpf {
+  code: string;
+  cpf: string;
+}
 interface ICourtesyCardRepository {
   create(data: ICourtesyCardRequest): Promise<CourtesyCard>;
-  getCourtesyCardByCode(code: string): Promise<CourtesyCard | null>;
+  getCourtesyCardByCodeAndCpf({
+    code,
+    cpf,
+  }: IGetCourtesyCardByCodeAndCpf): Promise<CourtesyCard | null>;
 }
 
 export { ICourtesyCardRepository };

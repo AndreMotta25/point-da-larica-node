@@ -54,6 +54,7 @@ class CreateOrderUseCase {
     isSchedule,
     schedule_date,
     courtesy_code,
+    cpf_client,
   }: ICreateOrderRequest): Promise<ICreateOrderResponse | undefined> {
     const getTotalUseCase = container.resolve(GetTotalUseCase);
 
@@ -88,9 +89,12 @@ class CreateOrderUseCase {
       // verifica se o comprador tem credito na loja
       let cortesy: CourtesyCard | null = null;
 
-      if (courtesy_code) {
+      if (courtesy_code && cpf_client) {
         const courtesyCardUseCase = container.resolve(UseCourtesyCardUseCase);
-        cortesy = await courtesyCardUseCase.execute(courtesy_code);
+        cortesy = await courtesyCardUseCase.execute({
+          code: courtesy_code,
+          cpf_client,
+        });
 
         if (cortesy.value < final_value) {
           additionalPayment = final_value - cortesy.value;

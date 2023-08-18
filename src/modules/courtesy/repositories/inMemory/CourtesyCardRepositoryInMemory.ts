@@ -3,6 +3,7 @@ import { CourtesyCard } from '@modules/courtesy/entities/CourtesyCard';
 import {
   ICourtesyCardRepository,
   ICourtesyCardRequest,
+  IGetCourtesyCardByCodeAndCpf,
 } from '../ICourtesyCardRepository';
 
 class CourtesyCardRepositoryInMemory implements ICourtesyCardRepository {
@@ -10,6 +11,7 @@ class CourtesyCardRepositoryInMemory implements ICourtesyCardRepository {
   constructor() {
     this.courtesyCardRepository = [];
   }
+
   async create(data: ICourtesyCardRequest): Promise<CourtesyCard> {
     let courtesyCard: CourtesyCard;
     if (data.id) {
@@ -23,8 +25,15 @@ class CourtesyCardRepositoryInMemory implements ICourtesyCardRepository {
 
     return courtesyCard;
   }
-  async getCourtesyCardByCode(code: string): Promise<CourtesyCard | null> {
-    return this.courtesyCardRepository.find((c) => c.code === code) || null;
+  async getCourtesyCardByCodeAndCpf({
+    code,
+    cpf,
+  }: IGetCourtesyCardByCodeAndCpf): Promise<CourtesyCard | null> {
+    return (
+      this.courtesyCardRepository.find(
+        (c) => c.code === code && c.cpf === cpf
+      ) || null
+    );
   }
 }
 export { CourtesyCardRepositoryInMemory };

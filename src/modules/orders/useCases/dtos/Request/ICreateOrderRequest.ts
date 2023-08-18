@@ -11,4 +11,5 @@ export interface ICreateOrderRequest {
   courtesy_code?: string;
   isSchedule: boolean;
   schedule_date?: Date;
+  cpf_client?: string;
 }

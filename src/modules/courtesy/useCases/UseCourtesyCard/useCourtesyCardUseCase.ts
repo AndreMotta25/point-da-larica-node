@@ -3,6 +3,11 @@ import { inject, injectable } from 'tsyringe';
 import AppError from '@errors/AppError';
 import { ICourtesyCardRepository } from '@modules/courtesy/repositories/ICourtesyCardRepository';
 
+export interface IUseCourtesyCardByCodeAndCpf {
+  code: string;
+  cpf_client: string;
+}
+
 @injectable()
 class UseCourtesyCardUseCase {
   constructor(
@@ -10,9 +15,12 @@ class UseCourtesyCardUseCase {
     private courtesyCardRepository: ICourtesyCardRepository
   ) {}
 
-  async execute(code: string) {
+  async execute({ code, cpf_client }: IUseCourtesyCardByCodeAndCpf) {
     const courtesyCard =
-      await this.courtesyCardRepository.getCourtesyCardByCode(code);
+      await this.courtesyCardRepository.getCourtesyCardByCodeAndCpf({
+        code,
+        cpf: cpf_client,
+      });
 
     if (!courtesyCard)
       throw new AppError('O cliente não tem credito na loja!', 404);

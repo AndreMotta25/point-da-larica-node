@@ -8,6 +8,7 @@ import { CourtesyCard } from '@modules/courtesy/entities/CourtesyCard';
 import {
   ICourtesyCardRepository,
   ICourtesyCardRequest,
+  IGetCourtesyCardByCodeAndCpf,
 } from '../ICourtesyCardRepository';
 
 @injectable()
@@ -17,9 +18,12 @@ class CourtesyCardRepository implements ICourtesyCardRepository {
   constructor(@inject('QueryRunner') private runner: IQueryRunner) {
     this.repository = database.getRepository(CourtesyCard);
   }
-  async getCourtesyCardByCode(code: string): Promise<CourtesyCard | null> {
+  async getCourtesyCardByCodeAndCpf({
+    code,
+    cpf,
+  }: IGetCourtesyCardByCodeAndCpf): Promise<CourtesyCard | null> {
     const courtesy = await this.repository.findOne({
-      where: { code },
+      where: { code, cpf },
       relations: { employer: { roles: true } },
     });
     return courtesy;

@@ -3,6 +3,8 @@ import { inject, injectable } from 'tsyringe';
 import AppError from '@errors/AppError';
 import { ICourtesyCardRepository } from '@modules/courtesy/repositories/ICourtesyCardRepository';
 
+import { IUseCourtesyCardByCodeAndCpf } from '../UseCourtesyCard/UseCourtesyCardUseCase';
+
 interface ICourtesyResponse {
   id: string;
   code: string;
@@ -23,10 +25,13 @@ class GetCourtesyCardUseCase {
     private courtesyCardRepository: ICourtesyCardRepository
   ) {}
 
-  async execute(code: string) {
-    const courtesy = await this.courtesyCardRepository.getCourtesyCardByCode(
-      code
-    );
+  async execute({ code, cpf_client }: IUseCourtesyCardByCodeAndCpf) {
+    const courtesy =
+      await this.courtesyCardRepository.getCourtesyCardByCodeAndCpf({
+        code,
+        cpf: cpf_client,
+      });
+
     if (!courtesy) throw new AppError('Cartão cortesia não existe');
 
     const courtesyDTO: ICourtesyResponse = {

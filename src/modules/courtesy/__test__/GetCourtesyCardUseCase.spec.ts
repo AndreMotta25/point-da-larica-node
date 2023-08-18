@@ -16,7 +16,7 @@ describe('Cria um cartão cortesia', () => {
   });
 
   test('Deveria achar um cartão cortesia', async () => {
-    courtesyCardRepository.getCourtesyCardByCode.mockResolvedValue({
+    courtesyCardRepository.getCourtesyCardByCodeAndCpf.mockResolvedValue({
       id: v4(),
       code: '1S3S',
       cpf: '523.740.050-70',
@@ -37,13 +37,19 @@ describe('Cria um cartão cortesia', () => {
       used: false,
       value: 10,
     });
-    const cortesy = await getCourtesyCardUseCase.execute('1S3S');
+    const cortesy = await getCourtesyCardUseCase.execute({
+      code: '1S3S',
+      cpf_client: '523.740.050-70',
+    });
     expect(cortesy.id).not.toBeNull();
   });
 
   test('Deveria ocorrer um erro ao não achar o cartão', async () => {
     await expect(async () => {
-      await getCourtesyCardUseCase.execute('1S3S');
+      await getCourtesyCardUseCase.execute({
+        code: '1S3S',
+        cpf_client: '523.740.050-70',
+      });
     }).rejects.toHaveProperty('msg', 'Cartão cortesia não existe');
   });
 });

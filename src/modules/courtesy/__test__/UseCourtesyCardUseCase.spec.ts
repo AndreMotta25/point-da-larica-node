@@ -17,7 +17,7 @@ describe('Usar um cartão cortersia', () => {
   test('Deveria retornar a cortesia para ser usada', async () => {
     const expireDate = new Date().setDate(new Date().getDate() + 2);
 
-    courtesyCardRepository.getCourtesyCardByCode.mockResolvedValue({
+    courtesyCardRepository.getCourtesyCardByCodeAndCpf.mockResolvedValue({
       code: 'A3D4',
       cpf: '532.135.650-59',
       id: v4(),
@@ -28,19 +28,27 @@ describe('Usar um cartão cortersia', () => {
       used: false,
       value: 10,
     });
-    const coutesy = await useCourtesyCardUseCase.execute('A3D4');
+    const coutesy = await useCourtesyCardUseCase.execute({
+      code: 'A3D4',
+      cpf_client: '532.135.650-59',
+    });
     expect(coutesy.code).toEqual('A3D4');
   });
   test('Deveria ocorrer um erro pelo cliente não ter credito na loja.', async () => {
     await expect(async () => {
-      courtesyCardRepository.getCourtesyCardByCode.mockResolvedValue(null);
-      await useCourtesyCardUseCase.execute('A3D4');
+      courtesyCardRepository.getCourtesyCardByCodeAndCpf.mockResolvedValue(
+        null
+      );
+      await useCourtesyCardUseCase.execute({
+        code: 'A3D4',
+        cpf_client: '532.135.650-59',
+      });
     }).rejects.toHaveProperty('msg', 'O cliente não tem credito na loja!');
   });
   test('Deveria ocorrer um erro caso a cortesia tenha expirado', async () => {
     const expireDate = new Date('2023-07-20T00:00:00');
     await expect(async () => {
-      courtesyCardRepository.getCourtesyCardByCode.mockResolvedValue({
+      courtesyCardRepository.getCourtesyCardByCodeAndCpf.mockResolvedValue({
         code: 'A3D4',
         cpf: '532.135.650-59',
         id: v4(),
@@ -51,7 +59,10 @@ describe('Usar um cartão cortersia', () => {
         used: false,
         value: 10,
       });
-      await useCourtesyCardUseCase.execute('A3D4');
+      await useCourtesyCardUseCase.execute({
+        code: 'A3D4',
+        cpf_client: '532.135.650-59',
+      });
     }).rejects.toHaveProperty(
       'msg',
       `A cortesia expirou em ${expireDate.toLocaleString()}`
@@ -61,7 +72,7 @@ describe('Usar um cartão cortersia', () => {
     await expect(async () => {
       const expireDate = new Date().setDate(new Date().getDate() + 2);
 
-      courtesyCardRepository.getCourtesyCardByCode.mockResolvedValue({
+      courtesyCardRepository.getCourtesyCardByCodeAndCpf.mockResolvedValue({
         code: 'A3D4',
         cpf: '532.135.650-59',
         id: v4(),
@@ -73,7 +84,10 @@ describe('Usar um cartão cortersia', () => {
         value: 0,
       });
 
-      await useCourtesyCardUseCase.execute('A3D4');
+      await useCourtesyCardUseCase.execute({
+        code: 'A3D4',
+        cpf_client: '532.135.650-59',
+      });
     }).rejects.toHaveProperty('msg', 'Cartão cortesia sem saldo suficiente');
   });
 });

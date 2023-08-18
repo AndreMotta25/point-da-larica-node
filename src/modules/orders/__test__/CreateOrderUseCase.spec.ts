@@ -362,6 +362,7 @@ describe('Criando pedido', () => {
     await createOrderUseCase.execute({
       coupon_code: '',
       courtesy_code: 'AXDC',
+      cpf_client: 'xxx.xxx.xxx',
       isDelivery: false,
       address: '',
       isSchedule: false,

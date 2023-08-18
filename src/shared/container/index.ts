@@ -1,5 +1,9 @@
 import { SendMail } from 'src/provider/email/implements/SendMail';
 import { ISendMail } from 'src/provider/email/ISendMail';
+import { IExcel } from 'src/provider/worksheet/IExcel';
+import { IExcelManager } from 'src/provider/worksheet/IExcelManager';
+import { Excel } from 'src/provider/worksheet/implementations/Excel';
+import { ExcelManager } from 'src/provider/worksheet/implementations/ExcelManager';
 import { container } from 'tsyringe';
 
 import { ICourtesyCardRepository } from '@modules/courtesy/repositories/ICourtesyCardRepository';
@@ -33,6 +37,9 @@ container.registerSingleton<ISendMail>('SendMail', SendMail);
 
 container.registerSingleton<ITransaction>('Transaction', Transaction);
 container.registerSingleton<IQueryRunner>('QueryRunner', QRunner);
+
+container.register<IExcelManager>('ExcelManager', ExcelManager);
+container.register<IExcel>('Excel', Excel);
 
 container.registerSingleton<ICouponRepository>(
   'CouponRepository',

@@ -3,6 +3,7 @@ import 'express-async-errors';
 import './shared/container';
 import 'dotenv/config';
 
+import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
 import path from 'path';
 import swagger from 'swagger-ui-express';
@@ -14,7 +15,7 @@ import router from './routes';
 
 const app = express();
 
-app.set('Access-Control-Allow-Origin', '*');
+app.use(cors()); // config
 
 app.use(express.json());
 

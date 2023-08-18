@@ -46,6 +46,7 @@ class SendMail implements ISendMail {
       },
       attachments: [
         { filename: 'logo.png', path: './images/logo.png', cid: 'logo' },
+        ...(options.attachments || []),
       ],
     };
     this.transporter.sendMail(data, (err) => {

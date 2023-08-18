@@ -14,7 +14,7 @@ class ScheduleOrderUseCase {
     const order = await this.createOrderUseCase.execute({
       ...data,
       isSchedule: true,
-      adress: data.address,
+      address: data.address,
     });
 
     return order;

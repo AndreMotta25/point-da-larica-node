@@ -1,9 +1,9 @@
-import { dateToString } from 'src/utils/dateToString';
-import { diffInDays as diff } from 'src/utils/diffInDays';
-import { utcDateToLocalDate } from 'src/utils/utcToLocalDate';
 import { inject, injectable } from 'tsyringe';
 
 import { IOrderRepository } from '@modules/orders/repositories/IOrderRepository';
+import { dateToString } from '@utils/dateToString';
+import { diffInDays as diff } from '@utils/diffInDays';
+import { utcDateToLocalDate } from '@utils/utcToLocalDate';
 
 export interface ISalesOfWeek {
   date_trunc: Date;

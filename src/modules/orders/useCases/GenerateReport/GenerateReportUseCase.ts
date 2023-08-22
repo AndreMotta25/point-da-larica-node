@@ -4,6 +4,7 @@ import { IExcelManager } from 'src/provider/worksheet/IExcelManager';
 import { container, inject, injectable } from 'tsyringe';
 
 import AppError from '@errors/AppError';
+import { Permission } from '@modules/users/entities/Permission';
 import { IEmployerRepository } from '@modules/users/repositories/IEmployerRepository';
 
 import { SalesOfWeekUseCase } from '../SalesOfWeek/SalesOfWeekUseCase';
@@ -22,9 +23,18 @@ class GenerateReportUseCase {
 
     if (!employer) throw new AppError('Empregado não achado', 404);
 
+    const permissions = employer.roles
+      .reduce((acc: Permission[], item) => {
+        return [...acc, ...item.permissions];
+      }, [])
+      .map((p) => p.name);
+
+    if (!permissions.includes('received_report'))
+      throw new AppError('Função não permitida para o email em questão', 403);
+
     const salesOfWeek = container.resolve(SalesOfWeekUseCase);
 
-    const sales = await await salesOfWeek.execute({});
+    const sales = await salesOfWeek.execute({});
 
     this.excelManager.setData(sales);
     await this.excelManager.save('excel.xlsx');

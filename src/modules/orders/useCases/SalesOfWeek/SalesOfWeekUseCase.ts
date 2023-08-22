@@ -1,4 +1,6 @@
 import { dateToString } from 'src/utils/dateToString';
+import { diffInDays as diff } from 'src/utils/diffInDays';
+import { utcDateToLocalDate } from 'src/utils/utcToLocalDate';
 import { inject, injectable } from 'tsyringe';
 
 import { IOrderRepository } from '@modules/orders/repositories/IOrderRepository';
@@ -18,8 +20,19 @@ export interface IGetSalesOfWeekResponse {
   sum: number;
   count: number;
   day: number;
+  dayOfMonth: number;
+  dayOfWeek: string;
 }
 
+const daysOfWeek = [
+  'Domingo',
+  'Segunda',
+  'Terça',
+  'Quarta',
+  'Quinta',
+  'Sexta',
+  'Sabado',
+];
 @injectable()
 class SalesOfWeekUseCase {
   constructor(
@@ -46,49 +59,54 @@ class SalesOfWeekUseCase {
       maxDate: max,
     })) as ISalesOfWeek[];
 
-    // ==============================================
+    const diffInDays = diff(max, min);
 
-    const diffInDays = Math.ceil(
-      Math.abs(max.getTime() - min.getTime()) / (1000 * 60 * 60 * 24)
-    );
-
-    const daysOfWeek: string[] = [dateToString(max)]; // It will start with the biggest date
+    const dates: string[] = [];
+    const currentDay = max.getDate(); // pega o dia do horario local.
 
     // eslint-disable-next-line no-plusplus
     for (let lessDay = diffInDays; lessDay > 0; lessDay--) {
-      const date = new Date(
-        new Date(max).setDate(new Date(max).getDate() - lessDay)
+      /*
+        Preciso que seja no horario local, pq se o horario for 2023-08-20 as 23:00:00 o node colocará para 2023-08-21T02:00:00. 
+        Essa parte tem quer em horario local, pq o que vem do banco está mapeado pelo horario local
+      */
+      const date = utcDateToLocalDate(
+        new Date(new Date(max).setDate(currentDay - lessDay))
       );
-
-      daysOfWeek.push(`${dateToString(date)}`);
+      dates.push(`${dateToString(date)}`);
     }
 
+    dates.push(`${dateToString(utcDateToLocalDate(max))}`);
+
     const saleDates = data.map((d) => dateToString(d.date_trunc));
-
-    const emptyDates: string[] = [];
-
-    Object.entries(daysOfWeek).forEach((d) => {
-      if (!saleDates.includes(d[1])) emptyDates.push(d[1]);
-    });
-
-    const fakeDates: ISalesOfWeek[] = [];
-
-    emptyDates.forEach((date) => {
-      const sale = {
-        date_trunc: new Date(`${date}Z`),
+    const emptyDates = dates.filter((sale) => !saleDates.includes(sale));
+    const mockDates = emptyDates.map((date) => {
+      return {
+        date_trunc: new Date(`${date}T00:00:00Z`),
         sum: 0,
         count: 0,
       };
-      fakeDates.push(sale);
     });
-    console.log(fakeDates);
 
-    data.push(...fakeDates);
+    data.push(...mockDates);
 
-    // ==============================================
-    return data.reduce((acc: IGetSalesOfWeekResponse[], groupData) => {
-      return [...acc, { ...groupData, day: groupData.date_trunc.getUTCDay() }];
-    }, []);
+    /*
+      Como todos os horarios foram setados para meia-noite se usarmos o getDay(), vamos ter o horario local que será as 21:00 horas no horario
+      de brasilia que é um dia anterior. então se o horario é 2023-08-12:T00:00:00 ao usar o getDate iria para 2023-08-11:T21:00:00
+    */
+    return data
+      .reduce((acc: IGetSalesOfWeekResponse[], groupData) => {
+        return [
+          ...acc,
+          {
+            ...groupData,
+            day: groupData.date_trunc.getUTCDay(),
+            dayOfWeek: daysOfWeek[groupData.date_trunc.getUTCDay()],
+            dayOfMonth: groupData.date_trunc.getUTCDate(),
+          },
+        ];
+      }, [])
+      .sort((a, b) => a.dayOfMonth - b.dayOfMonth);
   }
 }
 

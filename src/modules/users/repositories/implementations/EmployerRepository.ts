@@ -32,7 +32,7 @@ class EmployerRepository implements IEmployerRepository {
       where: {
         email,
       },
-      relations: { roles: true },
+      relations: { roles: { permissions: true } },
     });
     return user;
   }

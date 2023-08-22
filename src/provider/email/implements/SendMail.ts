@@ -33,7 +33,7 @@ class SendMail implements ISendMail {
     );
 
     this.transporter.verify((error, success) => {
-      if (error) throw new Error(error.message);
+      if (error) throw new Error('Credências de envio de email incorretas');
     });
   }
 
@@ -49,9 +49,7 @@ class SendMail implements ISendMail {
         ...(options.attachments || []),
       ],
     };
-    this.transporter.sendMail(data, (err) => {
-      if (err) throw new Error(err.message);
-    });
+    await this.transporter.sendMail(data);
   }
 }
 export { SendMail };

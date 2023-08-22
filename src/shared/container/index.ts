@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { SendMail } from 'src/provider/email/implements/SendMail';
 import { ISendMail } from 'src/provider/email/ISendMail';
 import { IExcel } from 'src/provider/worksheet/IExcel';
@@ -33,7 +34,7 @@ import ICouponRepository from '../../modules/coupons/repositories/ICouponReposit
 import CouponRepository from '../../modules/coupons/repositories/implementations/CouponRepository';
 
 container.register<ICodeGenerator>('CodeGenerator', CodeGenerator);
-container.registerSingleton<ISendMail>('SendMail', SendMail);
+container.register<ISendMail>('SendMail', { useValue: new SendMail() }); // Vai ser instanciada, antes da necessidade.
 
 container.registerSingleton<ITransaction>('Transaction', Transaction);
 container.registerSingleton<IQueryRunner>('QueryRunner', QRunner);

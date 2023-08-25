@@ -15,6 +15,7 @@ describe('Pedidos da semana', () => {
     orderRepository = mock();
     salesOfWeekUseCase = new SalesOfWeekUseCase(orderRepository);
   });
+
   test('Deveria retornar a quantidade de pedidos feitos por cada dia da semana baseando entre duas datas', async () => {
     const orders: ISalesOfWeek[] = [
       { count: 2, date_trunc: new Date('2023-06-02T00:00:00'), sum: 20 },
@@ -28,20 +29,14 @@ describe('Pedidos da semana', () => {
       maxDate: new Date('2023-06-05'),
     });
 
-    expect(result.length).toBe(2);
+    expect(result.length).toBe(5);
     expect(result[0]).toHaveProperty('day');
   });
   test('Deveria retornar a quantidade de pedidos feitos por cada dia da semana, sem passar uma data especifica', async () => {
-    const orders: ISalesOfWeek[] = [
-      { count: 2, date_trunc: new Date('2023-06-02T00:00:00'), sum: 20 },
-      { count: 3, date_trunc: new Date('2023-06-04T00:00:00'), sum: 10 },
-    ];
-
-    orderRepository.getSalesOfWeek.mockResolvedValue(orders);
+    orderRepository.getSalesOfWeek.mockResolvedValue([]);
 
     const result = await salesOfWeekUseCase.execute({});
-
-    expect(result.length).toBe(2);
+    expect(result.length).toBe(8);
     expect(result[0]).toHaveProperty('day');
   });
 });

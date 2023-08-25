@@ -8,24 +8,24 @@ import { v4 } from 'uuid';
 import ICodeGenerator from '@modules/coupons/providers/interfaces/ICodeGenerator';
 import DebitCouponUseCase from '@modules/coupons/useCases/DebitCoupon/DebitCouponUseCase';
 import ValidCouponUseCase from '@modules/coupons/useCases/ValidCoupon/ValidCouponUseCase';
-import { CourtesyCard } from '@modules/courtesy/entities/CourtesyCard';
 import { ICourtesyCardRepository } from '@modules/courtesy/repositories/ICourtesyCardRepository';
 import { UseCourtesyCardUseCase } from '@modules/courtesy/useCases/UseCourtesyCard/UseCourtesyCardUseCase';
 
 import { ITransaction } from '../../../database/transactions/Transaction/ITransaction';
-import { Delivery } from '../entities/Delivery';
 import { IDeliveryRepository } from '../repositories/IDeliveryRepository';
+import { OrderRepositoryInMemory } from '../repositories/inMemory/OrderRepositoryInMemory';
 import { IOrderListRepository } from '../repositories/IOrderListRepository';
 import { IOrderRepository } from '../repositories/IOrderRepository';
 import { IProductRepository } from '../repositories/IProductRepository';
 import { CreateOrderUseCase } from '../useCases/CreateOrder/CreateOrderUseCase';
+import { ICreateOrderResponse } from '../useCases/dtos/Response/ICreateOrderResponse';
 import { GetTotalUseCase } from '../useCases/GetTotal/GetTotalUseCase';
 
 let createOrderUseCase: CreateOrderUseCase;
 let transactions: MockProxy<ITransaction>;
 let productRepository: MockProxy<IProductRepository>;
 let orderListRepository: MockProxy<IOrderListRepository>;
-let orderRepository: MockProxy<IOrderRepository>;
+let orderRepository: IOrderRepository;
 let deliveryRepository: MockProxy<IDeliveryRepository>;
 let codeGenerator: MockProxy<ICodeGenerator>;
 let courtesyCardRepository: MockProxy<ICourtesyCardRepository>;
@@ -83,10 +83,11 @@ describe('Criando pedido', () => {
     transactions = mock();
     productRepository = mock();
     orderListRepository = mock();
-    orderRepository = mock();
+    // orderRepository = mock();
     deliveryRepository = mock();
     codeGenerator = mock();
     courtesyCardRepository = mock();
+    orderRepository = new OrderRepositoryInMemory();
 
     GetTotalUseCaseMock = jest.fn().mockImplementation(() => {
       return {
@@ -115,24 +116,7 @@ describe('Criando pedido', () => {
   test('Deveria criar um pedido', async () => {
     const productId = v4();
 
-    orderRepository.create.mockResolvedValue({
-      id: v4(),
-      full_value: 10,
-      discount: 0,
-      final_value: 10,
-      coupon_code: '',
-      code: 'ADEF',
-      isDelivery: false,
-      isSchedule: false,
-      schedule_date: new Date(),
-      additionalPayment: 0,
-      canceled: false,
-      courtesy: new CourtesyCard(),
-      date_of_sale: new Date(),
-      orderList: [],
-      productList: [],
-      delivery: new Delivery(),
-    });
+    codeGenerator.generateCode.mockReturnValue('ASF2');
     productRepository.findById.mockResolvedValue({
       id: productId,
       description: 'teste',
@@ -142,7 +126,7 @@ describe('Criando pedido', () => {
       value: 5,
     });
 
-    const order = await createOrderUseCase.execute({
+    const { id_order } = (await createOrderUseCase.execute({
       coupon_code: '',
       courtesy_code: '',
       isDelivery: false,
@@ -150,9 +134,12 @@ describe('Criando pedido', () => {
       isSchedule: false,
       schedule_date: new Date(),
       itens: [{ id: productId, amount: 2 }],
-    });
+    })) as ICreateOrderResponse;
 
-    expect(order?.id_order).not.toBeNull();
+    const order = await orderRepository.getOrder(id_order);
+
+    expect(id_order).not.toBeNull();
+    expect(order?.final_value).toBe(10);
     expect(GetTotalUseCaseMock).toHaveBeenCalled();
     expect(transactions.commitTransaction).toHaveBeenCalled();
     expect(transactions.startTransaction).toHaveBeenCalled();
@@ -188,24 +175,8 @@ describe('Criando pedido', () => {
 
   test('Deveria ser possivel utilizar um cupom no pedido', async () => {
     const productId = v4();
-    orderRepository.create.mockResolvedValue({
-      id: v4(),
-      full_value: 10,
-      discount: 5,
-      final_value: 5,
-      coupon_code: 'AAC3',
-      code: 'ADEF',
-      isDelivery: false,
-      isSchedule: false,
-      schedule_date: new Date(),
-      additionalPayment: 0,
-      canceled: false,
-      courtesy: new CourtesyCard(),
-      date_of_sale: new Date(),
-      orderList: [],
-      productList: [],
-      delivery: new Delivery(),
-    });
+
+    codeGenerator.generateCode.mockReturnValue('ASF2');
     productRepository.findById.mockResolvedValue({
       id: productId,
       description: 'teste',
@@ -215,7 +186,7 @@ describe('Criando pedido', () => {
       value: 5,
     });
 
-    const order = await createOrderUseCase.execute({
+    const { id_order } = (await createOrderUseCase.execute({
       coupon_code: 'AAC3',
       courtesy_code: '',
       isDelivery: false,
@@ -223,9 +194,13 @@ describe('Criando pedido', () => {
       isSchedule: false,
       schedule_date: new Date(),
       itens: [{ id: productId, amount: 2 }],
-    });
+    })) as ICreateOrderResponse;
 
-    expect(order?.id_order).not.toBeNull();
+    const order = await orderRepository.getOrder(id_order);
+
+    expect(id_order).not.toBeNull();
+    expect(order?.final_value).toBe(5);
+    expect(order?.discount).toBe(5);
     expect(validCouponExecute).toHaveBeenCalledWith('AAC3');
     expect(debitCouponExecute).toHaveBeenCalledWith('AAC3');
   });
@@ -255,25 +230,6 @@ describe('Criando pedido', () => {
 
   test('Deveria ocorrer um erro sendo o pedido para entrega sem um endereço', async () => {
     await expect(async () => {
-      orderRepository.create.mockResolvedValue({
-        id: v4(),
-        full_value: 10,
-        discount: 5,
-        final_value: 5,
-        coupon_code: '',
-        code: 'AAC3',
-        isDelivery: true,
-        isSchedule: false,
-        schedule_date: new Date(),
-        additionalPayment: 0,
-        canceled: false,
-        courtesy: new CourtesyCard(),
-        date_of_sale: new Date(),
-        orderList: [],
-        productList: [],
-        delivery: new Delivery(),
-      });
-
       await createOrderUseCase.execute({
         coupon_code: 'AAC3',
         courtesy_code: '',
@@ -287,27 +243,12 @@ describe('Criando pedido', () => {
     expect(transactions.startTransaction).toHaveBeenCalled();
     expect(transactions.rollBackTransaction).toHaveBeenCalled();
     expect(transactions.commitTransaction).not.toHaveBeenCalled();
+    expect(deliveryRepository.create).not.toHaveBeenCalled();
   });
   test('Deveria registrar um pedido para entrega', async () => {
     const productId = v4();
-    orderRepository.create.mockResolvedValue({
-      id: v4(),
-      full_value: 10,
-      discount: 0,
-      final_value: 10,
-      coupon_code: '',
-      code: 'ADEF',
-      isDelivery: false,
-      isSchedule: false,
-      schedule_date: new Date(),
-      additionalPayment: 0,
-      canceled: false,
-      courtesy: new CourtesyCard(),
-      date_of_sale: new Date(),
-      orderList: [],
-      productList: [],
-      delivery: new Delivery(),
-    });
+
+    codeGenerator.generateCode.mockReturnValue('ASF2');
     productRepository.findById.mockResolvedValue({
       id: productId,
       description: 'teste',
@@ -316,7 +257,7 @@ describe('Criando pedido', () => {
       orderList: [],
       value: 5,
     });
-    await createOrderUseCase.execute({
+    const { id_order } = (await createOrderUseCase.execute({
       coupon_code: '',
       courtesy_code: '',
       isDelivery: true,
@@ -324,8 +265,14 @@ describe('Criando pedido', () => {
       isSchedule: false,
       schedule_date: new Date(),
       itens: [{ id: productId, amount: 2 }],
-    });
-    expect(orderRepository.create).toHaveBeenCalled();
+    })) as ICreateOrderResponse;
+
+    const order = await orderRepository.getOrder(id_order);
+
+    expect(id_order).not.toBeNull();
+    expect(order?.final_value).toBe(10);
+    expect(order?.isDelivery).toBeTruthy();
+
     expect(transactions.commitTransaction).toHaveBeenCalled();
     expect(transactions.startTransaction).toHaveBeenCalled();
     expect(deliveryRepository.create).toHaveBeenCalled();
@@ -333,24 +280,8 @@ describe('Criando pedido', () => {
 
   test('Deveria ser possivel utilizar uma cortesia', async () => {
     const productId = v4();
-    orderRepository.create.mockResolvedValue({
-      id: v4(),
-      full_value: 10,
-      discount: 0,
-      final_value: 10,
-      coupon_code: '',
-      code: 'ADEF',
-      isDelivery: false,
-      isSchedule: false,
-      schedule_date: new Date(),
-      additionalPayment: 0,
-      canceled: false,
-      courtesy: new CourtesyCard(),
-      date_of_sale: new Date(),
-      orderList: [],
-      productList: [],
-      delivery: new Delivery(),
-    });
+
+    codeGenerator.generateCode.mockReturnValue('ASF2');
     productRepository.findById.mockResolvedValue({
       id: productId,
       description: 'teste',
@@ -359,7 +290,7 @@ describe('Criando pedido', () => {
       orderList: [],
       value: 5,
     });
-    await createOrderUseCase.execute({
+    const { id_order, remaining_balance } = (await createOrderUseCase.execute({
       coupon_code: '',
       courtesy_code: 'AXDC',
       cpf_client: 'xxx.xxx.xxx',
@@ -368,9 +299,13 @@ describe('Criando pedido', () => {
       isSchedule: false,
       schedule_date: new Date(),
       itens: [{ id: productId, amount: 2 }],
-    });
+    })) as ICreateOrderResponse;
+
+    const order = await orderRepository.getOrder(id_order);
+
+    expect(remaining_balance).toBe(7);
+    expect(order?.final_value).toBe(3);
     expect(courtesyCardRepository.create).toHaveBeenCalled();
-    expect(orderRepository.create).toHaveBeenCalledTimes(2);
     expect(transactions.commitTransaction).toHaveBeenCalled();
     expect(transactions.startTransaction).toHaveBeenCalled();
   });

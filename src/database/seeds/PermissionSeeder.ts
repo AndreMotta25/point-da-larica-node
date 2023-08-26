@@ -117,6 +117,16 @@ class PermissionSeeder implements Seeder {
         name: 'fire_employer',
         description: 'Fire An Employer',
       },
+      {
+        id: v4(),
+        name: 'received_report',
+        description: 'Can Received a report sales of week',
+      },
+      {
+        id: v4(),
+        name: 'send_mail',
+        description: 'Can send an email',
+      },
     ];
 
     const repository = dataSource.getRepository(Permission);

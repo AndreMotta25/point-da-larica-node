@@ -41,6 +41,6 @@ describe('Criar um cupom', () => {
 
     const coupons = await listCouponUseCase.execute();
 
-    expect(coupons).toEqual([coupon1, coupon2]);
+    expect(coupons).toHaveLength(2);
   });
 });

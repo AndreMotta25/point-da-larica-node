@@ -17,6 +17,7 @@ class CouponRepositoryInMemory implements ICouponRepository {
     code,
     minimumValue,
     id,
+    valid,
   }: ICouponDTO): Promise<Coupon> {
     let coupon: Coupon;
 
@@ -32,6 +33,7 @@ class CouponRepositoryInMemory implements ICouponRepository {
       expire_at,
       code,
       minimumValue,
+      valid: valid === undefined || valid,
     });
 
     if (id && (await this.findById(id))) return coupon; // atualiza

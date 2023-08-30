@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
-import Coupon from '@modules/coupons/entities/Coupon';
+import { ICreateCouponResponse } from '@modules/coupons/dtos/Response/ICreateCouponResponse';
 
 import ICodeGenerator from '../../providers/interfaces/ICodeGenerator';
 import ICouponRepository from '../../repositories/ICouponRepository';
@@ -24,7 +24,7 @@ class CreateCouponUseCase {
     amount,
     expire_at,
     minimumValue,
-  }: ICouponRequest): Promise<Coupon> {
+  }: ICouponRequest): Promise<ICreateCouponResponse> {
     const code = this.generator.generateCode(5);
 
     const coupon = await this.repository.create({
@@ -35,7 +35,15 @@ class CreateCouponUseCase {
       minimumValue,
     });
 
-    return coupon;
+    return {
+      id: coupon.id,
+      code: coupon.code,
+      amount: coupon.amount,
+      expire_at: coupon.expire_at,
+      minimumValue: coupon.minimumValue,
+      value: coupon.value,
+      valid: coupon.valid,
+    };
   }
 }
 export default CreateCouponUseCase;

@@ -5,10 +5,10 @@ import { GenerateReportUseCase } from './GenerateReportUseCase';
 
 class GenerateReportController {
   async handle(request: Request, response: Response) {
-    const { email } = request.body;
+    const { email } = request.query; // não pode ser no body
 
     const generateReporteUseCase = container.resolve(GenerateReportUseCase);
-    await generateReporteUseCase.execute(email);
+    await generateReporteUseCase.execute(email as string);
 
     return response.status(201).send();
   }

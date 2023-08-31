@@ -7,6 +7,7 @@ import { isWorking } from 'src/middleware/isWorking';
 import { AdditionalPaymentController } from '@modules/orders/useCases/AdditionalPayment/AdditionalPaymentController';
 import { CancelOrderController } from '@modules/orders/useCases/CancelOrder/CancelOrderController';
 import { CreateOrderController } from '@modules/orders/useCases/CreateOrder/CreateOrderController';
+import { GenerateReportController } from '@modules/orders/useCases/GenerateReport/GenerateReportController';
 import { GetAllOrderController } from '@modules/orders/useCases/GetAllOrders/GetAllOrderController';
 import { GetOrderController } from '@modules/orders/useCases/GetOrder/GetOrderController';
 import { ListOrderByController } from '@modules/orders/useCases/ListOrderBy/ListOrderByController';
@@ -33,6 +34,7 @@ const scheduleOrderController = new ScheduleOrderController();
 const getAllOrder = new GetAllOrderController();
 const salesOfWeek = new SalesOfWeekController();
 const additionalPayment = new AdditionalPaymentController();
+const generateReportController = new GenerateReportController();
 
 orderRoutes.post(
   '/',
@@ -60,7 +62,13 @@ orderRoutes.get(
   isWorking,
   listBy.handler
 );
-
+orderRoutes.get(
+  '/generate_report',
+  isAuthenticated,
+  hasPermission('send_mail'),
+  isWorking,
+  generateReportController.handle
+);
 orderRoutes.get(
   '/salesOfWeek',
   salesOfWeekValidator,

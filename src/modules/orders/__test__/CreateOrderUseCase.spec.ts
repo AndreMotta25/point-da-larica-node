@@ -12,6 +12,7 @@ import { ICourtesyCardRepository } from '@modules/courtesy/repositories/ICourtes
 import { UseCourtesyCardUseCase } from '@modules/courtesy/useCases/UseCourtesyCard/UseCourtesyCardUseCase';
 
 import { ITransaction } from '../../../database/transactions/Transaction/ITransaction';
+import { ProductType } from '../entities/Product';
 import { IDeliveryRepository } from '../repositories/IDeliveryRepository';
 import { OrderRepositoryInMemory } from '../repositories/inMemory/OrderRepositoryInMemory';
 import { IOrderListRepository } from '../repositories/IOrderListRepository';
@@ -29,6 +30,7 @@ let orderRepository: IOrderRepository;
 let deliveryRepository: MockProxy<IDeliveryRepository>;
 let codeGenerator: MockProxy<ICodeGenerator>;
 let courtesyCardRepository: MockProxy<ICourtesyCardRepository>;
+const productId = v4();
 
 const validCouponExecute = jest.fn(() => {
   return { id: v4(), value: 5, minimumValue: 1, code: 'AAC3' };
@@ -89,6 +91,7 @@ describe('Criando pedido', () => {
     courtesyCardRepository = mock();
     orderRepository = new OrderRepositoryInMemory();
 
+    // Esta aqui só para aprendizado, pq não precisa ser feito assim.
     GetTotalUseCaseMock = jest.fn().mockImplementation(() => {
       return {
         execute: jest.fn(() => 10),
@@ -96,6 +99,17 @@ describe('Criando pedido', () => {
     });
     container.register(GetTotalUseCase, {
       useValue: new GetTotalUseCaseMock(),
+    });
+
+    // mockando aqui não vou precisar de mockar em outras partes do teste.
+    productRepository.findById.mockResolvedValue({
+      id: productId,
+      description: 'teste',
+      image: '',
+      name: 'x-burguer',
+      orderList: [],
+      value: 5,
+      type: ProductType.FRITAS,
     });
 
     createOrderUseCase = new CreateOrderUseCase(
@@ -114,17 +128,7 @@ describe('Criando pedido', () => {
   });
 
   test('Deveria criar um pedido', async () => {
-    const productId = v4();
-
     codeGenerator.generateCode.mockReturnValue('ASF2');
-    productRepository.findById.mockResolvedValue({
-      id: productId,
-      description: 'teste',
-      image: '',
-      name: 'x-burguer',
-      orderList: [],
-      value: 5,
-    });
 
     const { id_order } = (await createOrderUseCase.execute({
       coupon_code: '',
@@ -174,17 +178,7 @@ describe('Criando pedido', () => {
   });
 
   test('Deveria ser possivel utilizar um cupom no pedido', async () => {
-    const productId = v4();
-
     codeGenerator.generateCode.mockReturnValue('ASF2');
-    productRepository.findById.mockResolvedValue({
-      id: productId,
-      description: 'teste',
-      image: '',
-      name: 'x-burguer',
-      orderList: [],
-      value: 5,
-    });
 
     const { id_order } = (await createOrderUseCase.execute({
       coupon_code: 'AAC3',
@@ -246,17 +240,8 @@ describe('Criando pedido', () => {
     expect(deliveryRepository.create).not.toHaveBeenCalled();
   });
   test('Deveria registrar um pedido para entrega', async () => {
-    const productId = v4();
-
     codeGenerator.generateCode.mockReturnValue('ASF2');
-    productRepository.findById.mockResolvedValue({
-      id: productId,
-      description: 'teste',
-      image: '',
-      name: 'x-burguer',
-      orderList: [],
-      value: 5,
-    });
+
     const { id_order } = (await createOrderUseCase.execute({
       coupon_code: '',
       courtesy_code: '',
@@ -279,17 +264,7 @@ describe('Criando pedido', () => {
   });
 
   test('Deveria ser possivel utilizar uma cortesia', async () => {
-    const productId = v4();
-
     codeGenerator.generateCode.mockReturnValue('ASF2');
-    productRepository.findById.mockResolvedValue({
-      id: productId,
-      description: 'teste',
-      image: '',
-      name: 'x-burguer',
-      orderList: [],
-      value: 5,
-    });
     const { id_order, remaining_balance } = (await createOrderUseCase.execute({
       coupon_code: '',
       courtesy_code: 'AXDC',

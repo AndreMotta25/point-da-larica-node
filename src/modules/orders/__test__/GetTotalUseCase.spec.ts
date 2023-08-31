@@ -1,6 +1,6 @@
 import { v4 } from 'uuid';
 
-import { Product } from '../entities/Product';
+import { Product, ProductType } from '../entities/Product';
 import { ProductRepositoryInMemory } from '../repositories/inMemory/ProductRepositoryInMemory';
 import { IProductRepository } from '../repositories/IProductRepository';
 import { GetTotalUseCase } from '../useCases/GetTotal/GetTotalUseCase';
@@ -20,6 +20,7 @@ describe('Retorna total de itens', () => {
       value: 10,
       description: 'An Delicius hamburguer',
       image: '',
+      type: ProductType.LANCHES,
     });
     const food1 = (await repositoryProduct.findByName('x-burguer')) as Product;
 
@@ -28,6 +29,7 @@ describe('Retorna total de itens', () => {
       value: 5,
       description: 'A piece of cake',
       image: '',
+      type: ProductType.LANCHES,
     });
     const food2 = (await repositoryProduct.findByName('cake')) as Product;
 

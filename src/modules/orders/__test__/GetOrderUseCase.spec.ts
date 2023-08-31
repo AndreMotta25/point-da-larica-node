@@ -5,7 +5,7 @@ import { OrderList } from '@modules/orders/entities/OrderList';
 import { OrderRepositoryInMemory } from '@modules/orders/repositories/inMemory/OrderRepositoryInMemory';
 import { ProductRepositoryInMemory } from '@modules/orders/repositories/inMemory/ProductRepositoryInMemory';
 
-import { Product } from '../entities/Product';
+import { Product, ProductType } from '../entities/Product';
 import { CreateProductUseCase } from '../useCases/CreateProduct/CreateProductUseCase';
 import { GetOrderUseCase } from '../useCases/GetOrder/GetOrderUseCase';
 
@@ -29,6 +29,7 @@ describe('Pega uma pedido', () => {
       value: 10,
       description: 'An Delicius hamburguer',
       image: '',
+      type: ProductType.COMBO,
     });
 
     const product = (await productRepository.findByName(
@@ -72,6 +73,7 @@ describe('Pega uma pedido', () => {
       value: 10,
       description: 'An Delicius hamburguer',
       image: '',
+      type: ProductType.COMBO,
     });
 
     const product = (await productRepository.findByName(

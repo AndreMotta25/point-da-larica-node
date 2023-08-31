@@ -2,6 +2,7 @@ import { inject, injectable } from 'tsyringe';
 
 import AppError from '@errors/AppError';
 import { IProductRepository } from '@modules/orders/repositories/IProductRepository';
+import { types } from '@utils/typesOfProduct';
 
 import { IGetProductResponse } from '../dtos/Response/IGetProductResponse';
 
@@ -20,6 +21,7 @@ class GetProductUseCase {
       name: product.name,
       price: product.value,
       image: product.image,
+      type: types[product.type],
     };
   }
 }

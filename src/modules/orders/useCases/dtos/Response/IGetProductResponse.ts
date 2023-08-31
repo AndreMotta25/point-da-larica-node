@@ -4,5 +4,6 @@ interface IGetProductResponse {
   name: string;
   description: string;
   image: string;
+  type: string;
 }
 export { IGetProductResponse };

@@ -13,7 +13,7 @@ class CreateProductController {
 
     const { file } = request;
 
-    const { name, value, description } = request.body;
+    const { name, value, description, type } = request.body;
 
     const createUseCase = container.resolve(CreateProductUseCase);
 
@@ -22,6 +22,7 @@ class CreateProductController {
       value,
       description,
       image: file?.filename as string,
+      type,
     });
 
     return response.status(201).send();

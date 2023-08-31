@@ -23,7 +23,7 @@ courtesyRoutes.post(
 );
 
 courtesyRoutes.get(
-  '/:code',
+  '/',
   getCourtesyValidator,
   isAuthenticated,
   hasPermission('get_courtesy'),

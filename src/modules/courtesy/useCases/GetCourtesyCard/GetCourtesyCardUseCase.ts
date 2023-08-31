@@ -32,7 +32,7 @@ class GetCourtesyCardUseCase {
         cpf: cpf_client,
       });
 
-    if (!courtesy) throw new AppError('Cartão cortesia não existe');
+    if (!courtesy) throw new AppError('Cartão cortesia não Achado');
 
     const courtesyDTO: ICourtesyResponse = {
       id: courtesy?.id,

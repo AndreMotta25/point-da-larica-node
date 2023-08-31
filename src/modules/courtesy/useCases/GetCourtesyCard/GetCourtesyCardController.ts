@@ -11,11 +11,14 @@ class GetCourtesyCardController {
     if (result.hasErrors())
       return response.status(400).json({ errors: result.getErrors() });
 
-    const { code } = request.params;
+    const { code, cpf } = request.query;
 
     const getCourtesyCardUseCase = container.resolve(GetCourtesyCardUseCase);
 
-    const courtesy = await getCourtesyCardUseCase.execute(code);
+    const courtesy = await getCourtesyCardUseCase.execute({
+      code: code as string,
+      cpf_client: cpf as string,
+    });
 
     return response.status(200).json(courtesy);
   }

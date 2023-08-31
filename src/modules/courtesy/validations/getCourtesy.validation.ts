@@ -1,11 +1,17 @@
-import { param } from 'express-validator';
+import { query, param } from 'express-validator';
+
+import { isCpf } from '../../users/validations/utils.validation';
 
 const getCourtesyValidator = [
-  param('code')
+  query('code')
     .isString()
     .withMessage('Codigo tem que ser uma string')
     .trim()
     .notEmpty()
-    .withMessage('O codigo não pode ficar vazio'),
+    .withMessage('O codigo não pode ficar vazio')
+    .escape(),
+  query('cpf')
+    .custom((value: string) => isCpf(value))
+    .escape(),
 ];
 export { getCourtesyValidator };

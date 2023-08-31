@@ -2,7 +2,7 @@ import { v4 } from 'uuid';
 
 import AppError from '@errors/AppError';
 
-import { Product } from '../entities/Product';
+import { Product, ProductType } from '../entities/Product';
 import { ProductRepositoryInMemory } from '../repositories/inMemory/ProductRepositoryInMemory';
 import { IProductRepository } from '../repositories/IProductRepository';
 import { ICreateProductRequest } from '../useCases/dtos/Request/ICreateProductRequest';
@@ -22,6 +22,7 @@ describe('Atualizar Produto', () => {
       description: 'An delicious hamburguer',
       value: 5,
       image: '',
+      type: ProductType.COMBO,
     };
     await productRepository.create(product);
 
@@ -33,6 +34,7 @@ describe('Atualizar Produto', () => {
       value: 10,
       image: '',
       id,
+      type: ProductType.COMBO,
     });
     const productUpdated = (await productRepository.findByName(
       'x-burguer'
@@ -48,6 +50,7 @@ describe('Atualizar Produto', () => {
         value: 10,
         image: '',
         id: v4(),
+        type: ProductType.COMBO,
       });
     }).rejects.toBeInstanceOf(AppError);
     await expect(async () => {
@@ -57,6 +60,7 @@ describe('Atualizar Produto', () => {
         value: 10,
         image: '',
         id: v4(),
+        type: ProductType.COMBO,
       });
     }).rejects.toHaveProperty('msg', 'Produto não achado');
   });
@@ -67,6 +71,7 @@ describe('Atualizar Produto', () => {
         description: 'An delicious hamburguer',
         value: 5,
         image: '',
+        type: ProductType.COMBO,
       };
       await productRepository.create(product1);
 
@@ -75,6 +80,7 @@ describe('Atualizar Produto', () => {
         description: 'An delicious hamburguer',
         value: 3,
         image: '',
+        type: ProductType.COMBO,
       };
       await productRepository.create(product2);
 
@@ -88,6 +94,7 @@ describe('Atualizar Produto', () => {
         value: 10,
         image: '',
         id,
+        type: ProductType.COMBO,
       });
     }).rejects.toHaveProperty('msg', 'Nome indisponivel');
   });

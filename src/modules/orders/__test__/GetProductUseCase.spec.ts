@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { v4 } from 'uuid';
 
+import { ProductType } from '../entities/Product';
 import { ProductRepository } from '../repositories/implementations/ProductRepository';
 import { GetProductUseCase } from '../useCases/GetProduct/GetProductUseCase';
 
@@ -23,6 +24,7 @@ describe('first', () => {
       image: './teste.png',
       value: 0,
       orderList: [],
+      type: ProductType.COMBO,
     });
     const product = await getProductUseCase.execute(productId);
     expect(product.id).toEqual(productId);

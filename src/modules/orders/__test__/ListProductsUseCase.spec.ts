@@ -1,3 +1,4 @@
+import { ProductType } from '../entities/Product';
 import { ProductRepositoryInMemory } from '../repositories/inMemory/ProductRepositoryInMemory';
 import { IProductRepository } from '../repositories/IProductRepository';
 import { ListProductsUseCase } from '../useCases/ListProducts/ListProductsUseCase';
@@ -17,12 +18,14 @@ describe('Lista Produtos', () => {
       description: 'A delicious x-burguer',
       image: '',
       value: 10,
+      type: ProductType.FRITAS,
     });
     await productRepository.create({
       name: 'cake',
       description: 'A wonderfull cake',
       image: '',
       value: 20,
+      type: ProductType.FRITAS,
     });
 
     const products = await listProductsUseCase.execute();

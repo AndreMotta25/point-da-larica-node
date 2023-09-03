@@ -43,6 +43,8 @@ class ListOrderByUseCase {
         address: order.delivery?.address || null,
         deliveryInformationId: order.delivery?.id || null,
         send: order.delivery?.send !== undefined ? order.delivery.send : null,
+        isSchedule: order.isSchedule,
+        schedule_date: isSchedule ? order.schedule_date : null,
       };
       return orderDTO;
     });

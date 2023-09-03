@@ -9,6 +9,8 @@ interface IListOrderByResponse {
   address: string | null;
   send: boolean | null;
   deliveryInformationId: string | null;
+  isSchedule: boolean;
+  schedule_date: Date | null;
 }
 
 export { IListOrderByResponse };

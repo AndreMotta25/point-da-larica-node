@@ -53,6 +53,8 @@ class GetOrderUseCase {
       situation: order.canceled ? 'cancelado' : 'ativo',
       itens,
       additionalPayment: order.additionalPayment,
+      isSchedule: order.isSchedule,
+      schedule_date: order.isSchedule ? order.schedule_date : null,
     };
   }
 }

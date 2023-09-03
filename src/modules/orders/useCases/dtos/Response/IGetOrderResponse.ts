@@ -22,6 +22,8 @@ interface IGetOrderResponse {
   isDelivery: boolean;
   code: string;
   additionalPayment: number;
+  isSchedule: boolean;
+  schedule_date: Date | null;
 }
 
 export { IGetOrderResponse, IItem, IDelivery };

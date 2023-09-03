@@ -13,6 +13,7 @@ import { IDeliveryRepository } from '@modules/orders/repositories/IDeliveryRepos
 import { IOrderListRepository } from '@modules/orders/repositories/IOrderListRepository';
 import { IOrderRepository } from '@modules/orders/repositories/IOrderRepository';
 import { IProductRepository } from '@modules/orders/repositories/IProductRepository';
+import { IEmployerRepository } from '@modules/users/repositories/IEmployerRepository';
 
 import {
   ICreateOrderRequest,
@@ -37,7 +38,9 @@ class CreateOrderUseCase {
     @inject('DeliveryRepository') repositoryDelivery: IDeliveryRepository,
     @inject('CodeGenerator') codeGenerator: ICodeGenerator,
     @inject('CourtesyCardRepository')
-    private courtesyCardRepository: ICourtesyCardRepository
+    private courtesyCardRepository: ICourtesyCardRepository,
+    @inject('EmployerRepository')
+    private repositoryEmployer: IEmployerRepository
   ) {
     this.repositoryProduct = repositoryProduct;
     this.repository = repository;
@@ -55,7 +58,14 @@ class CreateOrderUseCase {
     schedule_date,
     courtesy_code,
     cpf_client,
+    employer,
   }: ICreateOrderRequest): Promise<ICreateOrderResponse | undefined> {
+    const employerExists = await this.repositoryEmployer.findById(employer);
+
+    if (!employerExists) {
+      throw new AppError('Empregado não achado', 404);
+    }
+
     const getTotalUseCase = container.resolve(GetTotalUseCase);
 
     let total = await getTotalUseCase.execute(itens);
@@ -73,13 +83,16 @@ class CreateOrderUseCase {
       if (coupon_code) {
         const validCouponUseCase = container.resolve(ValidCouponUseCase);
         const debitCouponUseCase = container.resolve(DebitCouponUseCase);
-        const coupon = await validCouponUseCase.execute(coupon_code);
+        const coupon = await validCouponUseCase.execute({
+          code: coupon_code,
+          value: total,
+        });
 
-        if (!(total >= coupon.minimumValue))
-          throw new AppError(
-            'A compra não alcançou o valor minimo para usar o cupom',
-            422
-          );
+        // if (!(total >= coupon.minimumValue))
+        //   throw new AppError(
+        //     'A compra não alcançou o valor minimo para usar o cupom',
+        //     422
+        //   );
 
         final_value = total - coupon.value;
         coupon_value = coupon.value;
@@ -118,6 +131,7 @@ class CreateOrderUseCase {
         isSchedule,
         schedule_date,
         additionalPayment: 0,
+        employer: employerExists,
       });
 
       if (cortesy) {

@@ -1,3 +1,5 @@
+import { Employer } from '@modules/users/entities/Employer';
+
 import { Order } from '../entities/Order';
 import { ICreateOrderRequest } from '../useCases/dtos/Request/ICreateOrderRequest';
 import { IGetAllOrders } from '../useCases/dtos/Request/IGetAllOrder';
@@ -7,12 +9,16 @@ import {
   IGetSalesOfWeek,
 } from './implementations/OrderRepository';
 
-export type IRequestOrder = Omit<ICreateOrderRequest, 'address' | 'itens'> & {
+export type IRequestOrder = Omit<
+  ICreateOrderRequest,
+  'address' | 'itens' | 'employer'
+> & {
   full_value: number;
   discount: number;
   final_value: number;
   additionalPayment: number;
   code: string;
+  employer: Employer;
 };
 
 interface IOrderRepository {

@@ -12,6 +12,7 @@ import {
 import { v4 as uuidV4 } from 'uuid';
 
 import { CourtesyCard } from '@modules/courtesy/entities/CourtesyCard';
+import { Employer } from '@modules/users/entities/Employer';
 
 import { Delivery } from './Delivery';
 import { OrderList } from './OrderList';
@@ -70,6 +71,9 @@ class Order {
 
   @ManyToOne(() => CourtesyCard)
   courtesy: CourtesyCard;
+
+  @ManyToOne(() => Employer)
+  employer: Employer;
 
   constructor() {
     this.id = uuidV4();

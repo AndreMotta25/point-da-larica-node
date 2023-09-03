@@ -15,6 +15,7 @@ class ScheduleOrderUseCase {
       ...data,
       isSchedule: true,
       address: data.address,
+      employer: data.employer,
     });
 
     return order;

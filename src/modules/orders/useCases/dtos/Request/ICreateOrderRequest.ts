@@ -12,4 +12,5 @@ export interface ICreateOrderRequest {
   isSchedule: boolean;
   schedule_date?: Date;
   cpf_client?: string;
+  employer: string;
 }

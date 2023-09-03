@@ -8,4 +8,5 @@ export interface ICreateOrderScheduleRequest {
   id?: string;
   courtesy_code?: string;
   schedule_date?: Date;
+  employer: string;
 }

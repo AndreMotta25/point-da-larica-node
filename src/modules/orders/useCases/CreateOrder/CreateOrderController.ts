@@ -7,6 +7,7 @@ import { CreateOrderUseCase } from './CreateOrderUseCase';
 class CreateOrderController {
   async handler(request: Request, response: Response) {
     const result = validator(request);
+    const { user } = request;
 
     if (result.hasErrors())
       return response.status(400).json({ errors: result.getErrors() });
@@ -23,6 +24,7 @@ class CreateOrderController {
       address,
       isSchedule: false,
       courtesy_code,
+      employer: user.id,
     });
 
     return response.status(201).json(order);

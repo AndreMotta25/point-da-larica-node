@@ -16,7 +16,7 @@ const isAuthenticated = async (
 ) => {
   const { authorization } = request.headers;
 
-  if (!authorization) throw new AppError('Falta o token', 400);
+  if (!authorization) throw new AppError('Falta o token', 401);
 
   const [, token] = authorization.split(' ');
 

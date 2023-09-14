@@ -17,7 +17,7 @@ class ListCouponUseCase {
       return {
         id: coupon.id,
         code: coupon.code,
-        value: coupon.value,
+        value: Number(coupon.value),
         expire_at: coupon.expire_at,
       };
     });

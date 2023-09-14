@@ -83,16 +83,11 @@ class CreateOrderUseCase {
       if (coupon_code) {
         const validCouponUseCase = container.resolve(ValidCouponUseCase);
         const debitCouponUseCase = container.resolve(DebitCouponUseCase);
+
         const coupon = await validCouponUseCase.execute({
           code: coupon_code,
           value: total,
         });
-
-        // if (!(total >= coupon.minimumValue))
-        //   throw new AppError(
-        //     'A compra não alcançou o valor minimo para usar o cupom',
-        //     422
-        //   );
 
         final_value = total - coupon.value;
         coupon_value = coupon.value;

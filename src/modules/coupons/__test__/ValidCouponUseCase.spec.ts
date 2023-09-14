@@ -35,13 +35,13 @@ describe('Criar um cupom', () => {
       minimumValue: 5,
     });
 
-    const coupon = await validCouponUseCase.execute(code);
+    const coupon = await validCouponUseCase.execute({ code, value: 6 });
 
     expect(coupon.valid).toBe(true);
   });
   test('Deveria ocorrer um erro caso o cupom não for achado', async () => {
     await expect(async () => {
-      await validCouponUseCase.execute('123234');
+      await validCouponUseCase.execute({ code: 'AXA13', value: 6 });
     }).rejects.toBeInstanceOf(ErrorField);
   });
 
@@ -57,7 +57,7 @@ describe('Criar um cupom', () => {
 
       await couponRepositoriInMemory.create(coupon);
 
-      await validCouponUseCase.execute(coupon.code);
+      await validCouponUseCase.execute({ code: coupon.code, value: 1 });
     }).rejects.toBeInstanceOf(ErrorField);
   });
 
@@ -69,7 +69,7 @@ describe('Criar um cupom', () => {
         expire_at: date,
         minimumValue: 5,
       });
-      await validCouponUseCase.execute(code);
+      await validCouponUseCase.execute({ code, value: 1 });
     }).rejects.toBeInstanceOf(ErrorField);
   });
   test('Deveria ocorrer um erro caso o cupom já tenha expirado ', async () => {
@@ -80,7 +80,7 @@ describe('Criar um cupom', () => {
         expire_at: new Date('2023-06-27T00:00:00'),
         minimumValue: 5,
       });
-      await validCouponUseCase.execute(code);
+      await validCouponUseCase.execute({ code, value: 1 });
     }).rejects.toBeInstanceOf(ErrorField);
   });
 });

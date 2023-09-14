@@ -14,6 +14,18 @@ let productRepository: ProductRepositoryInMemory;
 
 let getOrderUseCase: GetOrderUseCase;
 let createProduct: CreateProductUseCase;
+const idEmployer = v4();
+const employer = {
+  id: idEmployer,
+  name: 'user test',
+  cpf: 'xxx.xxx.xxx-xx',
+  email: 'teste@gmail.com',
+  created_at: new Date(),
+  hashToken: v4(),
+  password: '12345',
+  roles: [],
+  situation: true,
+};
 
 describe('Pega uma pedido', () => {
   beforeEach(() => {
@@ -47,6 +59,7 @@ describe('Pega uma pedido', () => {
       final_value: 10,
       discount: 0,
       isSchedule: false,
+      employer,
     });
 
     const orderList = new OrderList();
@@ -91,6 +104,7 @@ describe('Pega uma pedido', () => {
       final_value: 10,
       discount: 0,
       isSchedule: false,
+      employer,
     });
 
     const orderList = new OrderList();

@@ -50,6 +50,6 @@ describe('Cria um cartão cortesia', () => {
         code: '1S3S',
         cpf_client: '523.740.050-70',
       });
-    }).rejects.toHaveProperty('msg', 'Cartão cortesia não existe');
+    }).rejects.toHaveProperty('msg', 'Cartão cortesia não Achado');
   });
 });

@@ -28,7 +28,7 @@ describe('Lista Produtos', () => {
       type: ProductType.FRITAS,
     });
 
-    const products = await listProductsUseCase.execute();
+    const products = await listProductsUseCase.execute(ProductType[1]);
     expect(products.length).toBe(2);
   });
 });

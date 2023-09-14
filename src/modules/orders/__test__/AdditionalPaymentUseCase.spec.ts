@@ -8,6 +8,18 @@ import { AdditionalPaymentUseCase } from '../useCases/AdditionalPayment/Addition
 
 let additionalPaymentUseCase: AdditionalPaymentUseCase;
 let orderRepository: IOrderRepository;
+const idEmployer = v4();
+const employer = {
+  id: idEmployer,
+  name: 'user test',
+  cpf: 'xxx.xxx.xxx-xx',
+  email: 'teste@gmail.com',
+  created_at: new Date(),
+  hashToken: v4(),
+  password: '12345',
+  roles: [],
+  situation: true,
+};
 
 describe('Pagamento adicional', () => {
   beforeEach(() => {
@@ -27,6 +39,7 @@ describe('Pagamento adicional', () => {
       final_value: 10,
       discount: 0,
       isSchedule: false,
+      employer,
     });
 
     const { finalized, remaining_balance } =

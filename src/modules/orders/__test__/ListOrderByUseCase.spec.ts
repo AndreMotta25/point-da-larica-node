@@ -1,3 +1,7 @@
+import { v4 } from 'uuid';
+
+import { Employer } from '@modules/users/entities/Employer';
+
 import { Delivery } from '../entities/Delivery';
 import { OrderRepositoryInMemory } from '../repositories/inMemory/OrderRepositoryInMemory';
 import { IOrderRepository } from '../repositories/IOrderRepository';
@@ -5,11 +9,25 @@ import { ListOrderByUseCase } from '../useCases/ListOrderBy/ListOrderByUseCase';
 
 let orderRepository: IOrderRepository;
 let listOrderByUseCase: ListOrderByUseCase;
+const idEmployer = v4();
+let employer: Employer;
 
 describe('Lista os pedidos', () => {
   beforeEach(() => {
     orderRepository = new OrderRepositoryInMemory();
     listOrderByUseCase = new ListOrderByUseCase(orderRepository);
+
+    employer = {
+      id: idEmployer,
+      name: 'user test',
+      cpf: 'xxx.xxx.xxx-xx',
+      email: 'teste@gmail.com',
+      created_at: new Date(),
+      hashToken: v4(),
+      password: '12345',
+      roles: [],
+      situation: true,
+    };
   });
 
   test('Deveria retornar os pedidos de uma data especifica', async () => {
@@ -24,6 +42,7 @@ describe('Lista os pedidos', () => {
       coupon_code: '',
       courtesy_code: '',
       schedule_date: new Date(),
+      employer,
     });
     order.date_of_sale = new Date();
 
@@ -52,6 +71,7 @@ describe('Lista os pedidos', () => {
       coupon_code: '',
       courtesy_code: '',
       schedule_date: new Date(),
+      employer,
     });
     const secundaryOrder = await orderRepository.create({
       code: 'GXWE',
@@ -64,6 +84,7 @@ describe('Lista os pedidos', () => {
       coupon_code: '',
       courtesy_code: '',
       schedule_date: new Date(),
+      employer,
     });
     const thirtyOrder = await orderRepository.create({
       code: 'HAXE',
@@ -76,6 +97,7 @@ describe('Lista os pedidos', () => {
       coupon_code: '',
       courtesy_code: '',
       schedule_date: new Date(),
+      employer,
     });
     const fourthOrder = await orderRepository.create({
       code: 'QXXE',
@@ -88,6 +110,7 @@ describe('Lista os pedidos', () => {
       coupon_code: '',
       courtesy_code: '',
       schedule_date: new Date(),
+      employer,
     });
 
     firstOrder.date_of_sale = new Date('2023-07-01T22:00:00');
@@ -118,6 +141,7 @@ describe('Lista os pedidos', () => {
       coupon_code: '',
       courtesy_code: '',
       schedule_date: new Date(),
+      employer,
     });
     const secundaryOrder = await orderRepository.create({
       code: 'GXWE',
@@ -130,6 +154,7 @@ describe('Lista os pedidos', () => {
       coupon_code: '',
       courtesy_code: '',
       schedule_date: new Date(),
+      employer,
     });
     const thirtyOrder = await orderRepository.create({
       code: 'HAXE',
@@ -142,6 +167,7 @@ describe('Lista os pedidos', () => {
       coupon_code: '',
       courtesy_code: '',
       schedule_date: new Date(),
+      employer,
     });
     const fourthOrder = await orderRepository.create({
       code: 'QXXE',
@@ -154,6 +180,7 @@ describe('Lista os pedidos', () => {
       coupon_code: '',
       courtesy_code: '',
       schedule_date: new Date(),
+      employer,
     });
 
     firstOrder.date_of_sale = new Date();
@@ -182,6 +209,7 @@ describe('Lista os pedidos', () => {
       coupon_code: '',
       courtesy_code: '',
       schedule_date: new Date(),
+      employer,
     });
 
     const secundaryOrder = await orderRepository.create({
@@ -195,6 +223,7 @@ describe('Lista os pedidos', () => {
       coupon_code: '',
       courtesy_code: '',
       schedule_date: new Date(),
+      employer,
     });
 
     const delivery = new Delivery();
@@ -233,6 +262,7 @@ describe('Lista os pedidos', () => {
       coupon_code: '',
       courtesy_code: '',
       schedule_date: new Date('2023-07-10T10:00:00Z'),
+      employer,
     });
 
     const secundaryOrder = await orderRepository.create({
@@ -246,6 +276,7 @@ describe('Lista os pedidos', () => {
       coupon_code: '',
       courtesy_code: '',
       schedule_date: new Date(),
+      employer,
     });
 
     firstOrder.date_of_sale = new Date();
@@ -274,6 +305,7 @@ describe('Lista os pedidos', () => {
       coupon_code: '',
       courtesy_code: '',
       schedule_date: new Date('2023-07-10T10:00:00Z'),
+      employer,
     });
     firstOrder.date_of_sale = new Date();
 
@@ -288,6 +320,7 @@ describe('Lista os pedidos', () => {
       coupon_code: '',
       courtesy_code: '',
       schedule_date: new Date(),
+      employer,
     });
 
     const delivery = new Delivery();

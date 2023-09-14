@@ -6,7 +6,18 @@ import { CancelOrderUseCase } from '../useCases/CancelOrder/CancelOrderUseCase';
 
 let orderRepository: IOrderRepository;
 let cancelOrderUseCase: CancelOrderUseCase;
-
+const idEmployer = v4();
+const employer = {
+  id: idEmployer,
+  name: 'user test',
+  cpf: 'xxx.xxx.xxx-xx',
+  email: 'teste@gmail.com',
+  created_at: new Date(),
+  hashToken: v4(),
+  password: '12345',
+  roles: [],
+  situation: true,
+};
 describe('Cancela um pedido', () => {
   beforeEach(() => {
     orderRepository = new OrderRepositoryInMemory();
@@ -24,6 +35,7 @@ describe('Cancela um pedido', () => {
       final_value: 10,
       discount: 0,
       isSchedule: false,
+      employer,
     });
     const order = await cancelOrderUseCase.execute(id);
     expect(order.canceled).toBeTruthy();

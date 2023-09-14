@@ -3,13 +3,15 @@ import 'reflect-metadata';
 import { MockProxy } from 'jest-mock-extended';
 import mock from 'jest-mock-extended/lib/Mock';
 import { container } from 'tsyringe';
-import { v4 } from 'uuid';
+import { v4, v5 } from 'uuid';
 
+import ErrorField from '@errors/ErrorField';
 import ICodeGenerator from '@modules/coupons/providers/interfaces/ICodeGenerator';
 import DebitCouponUseCase from '@modules/coupons/useCases/DebitCoupon/DebitCouponUseCase';
 import ValidCouponUseCase from '@modules/coupons/useCases/ValidCoupon/ValidCouponUseCase';
 import { ICourtesyCardRepository } from '@modules/courtesy/repositories/ICourtesyCardRepository';
 import { UseCourtesyCardUseCase } from '@modules/courtesy/useCases/UseCourtesyCard/UseCourtesyCardUseCase';
+import { EmployerRepository } from '@modules/users/repositories/implementations/EmployerRepository';
 
 import { ITransaction } from '../../../database/transactions/Transaction/ITransaction';
 import { ProductType } from '../entities/Product';
@@ -30,9 +32,11 @@ let orderRepository: IOrderRepository;
 let deliveryRepository: MockProxy<IDeliveryRepository>;
 let codeGenerator: MockProxy<ICodeGenerator>;
 let courtesyCardRepository: MockProxy<ICourtesyCardRepository>;
+let employerRepository: MockProxy<EmployerRepository>;
+
 const productId = v4();
 
-const validCouponExecute = jest.fn(() => {
+const validCouponExecute: jest.Mock | null = jest.fn(() => {
   return { id: v4(), value: 5, minimumValue: 1, code: 'AAC3' };
 });
 const debitCouponExecute = jest.fn();
@@ -79,16 +83,18 @@ jest.mock(
 );
 
 let GetTotalUseCaseMock: jest.Mock<any, any, any>;
+const idEmployer = v4();
 
 describe('Criando pedido', () => {
   beforeEach(() => {
     transactions = mock();
     productRepository = mock();
     orderListRepository = mock();
-    // orderRepository = mock();
     deliveryRepository = mock();
     codeGenerator = mock();
     courtesyCardRepository = mock();
+    employerRepository = mock();
+
     orderRepository = new OrderRepositoryInMemory();
 
     // Esta aqui só para aprendizado, pq não precisa ser feito assim.
@@ -112,6 +118,18 @@ describe('Criando pedido', () => {
       type: ProductType.FRITAS,
     });
 
+    employerRepository.findById.mockResolvedValue({
+      id: idEmployer,
+      name: 'user test',
+      cpf: 'xxx.xxx.xxx-xx',
+      email: 'teste@gmail.com',
+      created_at: new Date(),
+      hashToken: v4(),
+      password: '12345',
+      roles: [],
+      situation: true,
+    });
+
     createOrderUseCase = new CreateOrderUseCase(
       transactions,
       productRepository,
@@ -119,7 +137,8 @@ describe('Criando pedido', () => {
       orderRepository,
       deliveryRepository,
       codeGenerator,
-      courtesyCardRepository
+      courtesyCardRepository,
+      employerRepository
     );
   });
   afterEach(() => {
@@ -138,6 +157,7 @@ describe('Criando pedido', () => {
       isSchedule: false,
       schedule_date: new Date(),
       itens: [{ id: productId, amount: 2 }],
+      employer: idEmployer,
     })) as ICreateOrderResponse;
 
     const order = await orderRepository.getOrder(id_order);
@@ -172,6 +192,7 @@ describe('Criando pedido', () => {
         isSchedule: false,
         schedule_date: new Date(),
         itens: [{ id: productId, amount: 2 }],
+        employer: idEmployer,
       });
     }).rejects.toHaveProperty('msg', 'O total não deve ser menor do que zero');
     expect(transactions.startTransaction).not.toHaveBeenCalled();
@@ -188,6 +209,7 @@ describe('Criando pedido', () => {
       isSchedule: false,
       schedule_date: new Date(),
       itens: [{ id: productId, amount: 2 }],
+      employer: idEmployer,
     })) as ICreateOrderResponse;
 
     const order = await orderRepository.getOrder(id_order);
@@ -195,31 +217,33 @@ describe('Criando pedido', () => {
     expect(id_order).not.toBeNull();
     expect(order?.final_value).toBe(5);
     expect(order?.discount).toBe(5);
-    expect(validCouponExecute).toHaveBeenCalledWith('AAC3');
+    expect(validCouponExecute).toHaveBeenCalledWith({
+      code: 'AAC3',
+      value: 10,
+    });
     expect(debitCouponExecute).toHaveBeenCalledWith('AAC3');
   });
 
   test('Deveria ocorrer um erro quando o total do pedido não alcançar o valor minimo para usar o cupom', async () => {
     await expect(async () => {
-      validCouponExecute.mockImplementationOnce(() => {
-        return { id: v4(), value: 5, minimumValue: 20, code: 'AAC3' };
+      validCouponExecute.mockRejectedValueOnce({
+        msg: 'Valor minimo não atingido',
       });
 
       await createOrderUseCase.execute({
-        coupon_code: 'AAC3',
+        coupon_code: 'AAC4',
         courtesy_code: '',
         isDelivery: false,
         address: '',
         isSchedule: false,
         schedule_date: new Date(),
         itens: [{ id: v4(), amount: 2 }],
+        employer: idEmployer,
       });
-    }).rejects.toHaveProperty(
-      'msg',
-      'A compra não alcançou o valor minimo para usar o cupom'
-    );
-    expect(validCouponExecute).toHaveBeenCalledWith('AAC3');
+    }).rejects.toHaveProperty('msg', 'Valor minimo não atingido');
+
     expect(transactions.startTransaction).toHaveBeenCalled();
+    expect(transactions.commitTransaction).not.toHaveBeenCalled();
   });
 
   test('Deveria ocorrer um erro sendo o pedido para entrega sem um endereço', async () => {
@@ -232,6 +256,7 @@ describe('Criando pedido', () => {
         isSchedule: false,
         schedule_date: new Date(),
         itens: [{ id: v4(), amount: 2 }],
+        employer: idEmployer,
       });
     }).rejects.toHaveProperty('msg', 'Faltou o endereço de entrega');
     expect(transactions.startTransaction).toHaveBeenCalled();
@@ -250,6 +275,7 @@ describe('Criando pedido', () => {
       isSchedule: false,
       schedule_date: new Date(),
       itens: [{ id: productId, amount: 2 }],
+      employer: idEmployer,
     })) as ICreateOrderResponse;
 
     const order = await orderRepository.getOrder(id_order);
@@ -274,6 +300,7 @@ describe('Criando pedido', () => {
       isSchedule: false,
       schedule_date: new Date(),
       itens: [{ id: productId, amount: 2 }],
+      employer: idEmployer,
     })) as ICreateOrderResponse;
 
     const order = await orderRepository.getOrder(id_order);

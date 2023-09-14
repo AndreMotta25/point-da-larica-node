@@ -12,6 +12,18 @@ import { SendOrderUseCase } from '../useCases/SendOrder/SendOrderUseCase';
 let sendOrderUseCase: SendOrderUseCase;
 let deliveryRepository: IDeliveryRepository;
 let orderRepository: IOrderRepository;
+const idEmployer = v4();
+const employer = {
+  id: idEmployer,
+  name: 'user test',
+  cpf: 'xxx.xxx.xxx-xx',
+  email: 'teste@gmail.com',
+  created_at: new Date(),
+  hashToken: v4(),
+  password: '12345',
+  roles: [],
+  situation: true,
+};
 
 describe('Envia um pedido', () => {
   beforeEach(() => {
@@ -31,6 +43,7 @@ describe('Envia um pedido', () => {
       coupon_code: '',
       courtesy_code: '',
       schedule_date: new Date(),
+      employer,
     });
     order.date_of_sale = new Date();
 

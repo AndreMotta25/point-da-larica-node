@@ -21,7 +21,9 @@ class CouponRepository implements ICouponRepository {
   }
 
   async getCoupon(code: string): Promise<Coupon | null> {
-    const coupon = await this.repository.findOneBy({ code });
+    const coupon = await this.repository.findOneBy({
+      code: code.toUpperCase(),
+    });
     return coupon;
   }
 

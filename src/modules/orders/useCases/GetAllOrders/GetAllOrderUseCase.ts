@@ -26,6 +26,8 @@ class GetAllOrderUseCase {
         final_value: order.final_value,
         isDelivery: order.isDelivery,
         situation: order.canceled ? 'cancelado' : 'ativo',
+        isSchedule: order.isSchedule,
+        schedule_date: order.isSchedule ? order.schedule_date : null,
       };
       return orderDTO;
     });

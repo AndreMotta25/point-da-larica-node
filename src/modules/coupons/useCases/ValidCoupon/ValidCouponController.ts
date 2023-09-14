@@ -12,10 +12,11 @@ class ValidCouponController {
       return response.status(400).json({ errors: result.getErrors() });
 
     const { code } = request.params;
+    const { value } = request.query;
 
     const service = container.resolve(ValidCouponUseCase);
 
-    const cupom = await service.execute(code);
+    const cupom = await service.execute({ code, value: Number(value) });
 
     return response.status(200).json(cupom);
   }

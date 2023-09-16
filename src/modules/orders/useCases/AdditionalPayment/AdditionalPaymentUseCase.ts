@@ -22,7 +22,6 @@ class AdditionalPaymentUseCase {
 
     if (!order) throw new AppError('Pedido não encontrado');
 
-    console.log(value);
     order.final_value = Number(order.final_value) + Number(value);
     order.full_value = Number(order.full_value) + Number(value);
 

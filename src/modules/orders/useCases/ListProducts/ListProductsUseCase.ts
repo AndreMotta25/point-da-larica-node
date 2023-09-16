@@ -27,7 +27,7 @@ class ListProductsUseCase {
         name: elem.name,
         image: elem.image,
         type: ProductType[elem.type],
-        price: elem.value,
+        price: Number(elem.value),
       };
       return product;
     });

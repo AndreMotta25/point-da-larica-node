@@ -25,8 +25,8 @@ class GetOrderUseCase {
       order.orderList.map(async (item) => {
         const product = await this.repositoryProduct.findById(item.productId);
         return {
-          total: item.total,
-          amount: item.amount,
+          total: Number(item.total),
+          amount: Number(item.amount),
           name: product?.name as string,
         };
       })
@@ -43,16 +43,16 @@ class GetOrderUseCase {
     return {
       id: order.id,
       code: order.code,
-      full_value: order.full_value,
+      full_value: Number(order.full_value),
       coupon_code: order.coupon_code,
       date_of_sale: order.date_of_sale,
       isDelivery: order.isDelivery,
       delivery: order.isDelivery ? delivery : undefined,
-      discount: order.discount,
-      final_value: order.final_value,
+      discount: Number(order.discount),
+      final_value: Number(order.final_value),
       situation: order.canceled ? 'cancelado' : 'ativo',
       itens,
-      additionalPayment: order.additionalPayment,
+      additionalPayment: Number(order.additionalPayment),
       isSchedule: order.isSchedule,
       schedule_date: order.isSchedule ? order.schedule_date : null,
     };

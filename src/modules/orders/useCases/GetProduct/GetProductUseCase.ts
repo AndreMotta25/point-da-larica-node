@@ -19,7 +19,7 @@ class GetProductUseCase {
       id: product.id,
       description: product.description,
       name: product.name,
-      price: product.value,
+      price: Number(product.value),
       image: product.image,
       type: types[product.type],
     };

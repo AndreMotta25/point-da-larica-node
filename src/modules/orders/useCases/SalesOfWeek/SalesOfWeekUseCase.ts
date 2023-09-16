@@ -103,6 +103,8 @@ class SalesOfWeekUseCase {
             day: groupData.date_trunc.getUTCDay(),
             dayOfWeek: daysOfWeek[groupData.date_trunc.getUTCDay()],
             dayOfMonth: groupData.date_trunc.getUTCDate(),
+            sum: Number(groupData.sum),
+            count: Number(groupData.count),
           },
         ];
       }, [])

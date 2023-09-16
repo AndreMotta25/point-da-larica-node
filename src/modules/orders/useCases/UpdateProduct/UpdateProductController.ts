@@ -12,8 +12,8 @@ class UpdateProductController {
       return response.status(400).json({ errors: result.getErrors() });
 
     const { id } = request.params;
-    const { value, name, description } = request.body;
-    const { file } = request;
+    const { value, name, description, type } = request.body;
+    // const { file } = request;
 
     const updateUseCase = container.resolve(UpdateProductUseCase);
     await updateUseCase.execute({
@@ -21,7 +21,7 @@ class UpdateProductController {
       value,
       name,
       description,
-      image: file?.filename as string,
+      type,
     });
 
     return response.status(204).json();

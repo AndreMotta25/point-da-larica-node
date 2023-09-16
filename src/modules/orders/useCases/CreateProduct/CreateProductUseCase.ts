@@ -14,13 +14,7 @@ class CreateProductUseCase {
     this.repository = repository;
   }
 
-  async execute({
-    name,
-    value,
-    description,
-    image,
-    type,
-  }: ICreateProductRequest) {
+  async execute({ name, value, description, type }: ICreateProductRequest) {
     const productAlreadyExists = await this.repository.findByName(name);
 
     if (productAlreadyExists)
@@ -29,7 +23,7 @@ class CreateProductUseCase {
     if (type && !(type in ProductType))
       throw new ErrorField('tipo', 'Tipo de produto não aceito', 'type', 400);
 
-    await this.repository.create({ name, value, description, image, type });
+    await this.repository.create({ name, value, description, type });
   }
 }
 

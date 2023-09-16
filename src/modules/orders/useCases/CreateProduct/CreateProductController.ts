@@ -11,7 +11,7 @@ class CreateProductController {
     if (result.hasErrors())
       return response.status(400).json({ errors: result.getErrors() });
 
-    const { file } = request;
+    // const { file } = request;
 
     const { name, value, description, type } = request.body;
 
@@ -21,7 +21,6 @@ class CreateProductController {
       name,
       value,
       description,
-      image: file?.filename as string,
       type,
     });
 

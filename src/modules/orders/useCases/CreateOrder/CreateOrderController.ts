@@ -12,8 +12,14 @@ class CreateOrderController {
     if (result.hasErrors())
       return response.status(400).json({ errors: result.getErrors() });
 
-    const { itens, coupon_code, isDelivery, address, courtesy_code } =
-      request.body;
+    const {
+      itens,
+      coupon_code,
+      isDelivery,
+      address,
+      courtesy_code,
+      cpf_client,
+    } = request.body;
 
     const createOrderService = container.resolve(CreateOrderUseCase);
 
@@ -25,6 +31,7 @@ class CreateOrderController {
       isSchedule: false,
       courtesy_code,
       employer: user.id,
+      cpf_client,
     });
 
     return response.status(201).json(order);

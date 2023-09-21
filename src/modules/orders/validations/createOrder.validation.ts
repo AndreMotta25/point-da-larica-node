@@ -1,3 +1,5 @@
+import { isCpf } from '@modules/users/validations/utils.validation';
+
 import { body } from './isDate.validation';
 
 const createOrderValidator = [
@@ -12,6 +14,13 @@ const createOrderValidator = [
     .isString()
     .withMessage('O codigo do cupom deve ser uma string')
     .trim()
+    .escape(),
+  body('cpf_client')
+    .optional()
+    .isString()
+    .withMessage('O codigo do cupom deve ser uma string')
+    .trim()
+    .custom((value: string) => isCpf(value))
     .escape(),
   body('isDelivery')
     .isBoolean()

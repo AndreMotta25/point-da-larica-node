@@ -28,7 +28,6 @@ describe('Create a product', () => {
       name: 'test name',
       value: 5.0,
       description: 'description teste',
-      image: '',
       type: ProductType.LANCHES,
     });
     const product = await productRepository.findByName('test name');
@@ -41,14 +40,12 @@ describe('Create a product', () => {
         name: 'test name',
         value: 5.0,
         description: 'description teste',
-        image: '',
         type: ProductType.LANCHES,
       });
       await createProductUseCase.execute({
         name: 'test name',
         value: 5.0,
         description: 'description teste',
-        image: '',
         type: ProductType.LANCHES,
       });
     };

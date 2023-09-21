@@ -19,7 +19,6 @@ describe('Retorna total de itens', () => {
       name: 'x-burguer',
       value: 10,
       description: 'An Delicius hamburguer',
-      image: '',
       type: ProductType.LANCHES,
     });
     const food1 = (await repositoryProduct.findByName('x-burguer')) as Product;
@@ -28,7 +27,6 @@ describe('Retorna total de itens', () => {
       name: 'cake',
       value: 5,
       description: 'A piece of cake',
-      image: '',
       type: ProductType.LANCHES,
     });
     const food2 = (await repositoryProduct.findByName('cake')) as Product;

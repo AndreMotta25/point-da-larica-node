@@ -21,7 +21,6 @@ describe('Atualizar Produto', () => {
       name: 'x-burguer',
       description: 'An delicious hamburguer',
       value: 5,
-      image: '',
       type: ProductType.COMBO,
     };
     await productRepository.create(product);
@@ -32,7 +31,6 @@ describe('Atualizar Produto', () => {
       name: 'x-burguer',
       description: 'An delicious and beauty hamburguer',
       value: 10,
-      image: '',
       id,
       type: ProductType.COMBO,
     });
@@ -48,7 +46,6 @@ describe('Atualizar Produto', () => {
         name: 'x-burguer',
         description: 'An delicious and beauty hamburguer',
         value: 10,
-        image: '',
         id: v4(),
         type: ProductType.COMBO,
       });
@@ -58,7 +55,6 @@ describe('Atualizar Produto', () => {
         name: 'x-burguer',
         description: 'An delicious and beauty hamburguer',
         value: 10,
-        image: '',
         id: v4(),
         type: ProductType.COMBO,
       });
@@ -70,7 +66,6 @@ describe('Atualizar Produto', () => {
         name: 'x-burguer',
         description: 'An delicious hamburguer',
         value: 5,
-        image: '',
         type: ProductType.COMBO,
       };
       await productRepository.create(product1);
@@ -79,7 +74,6 @@ describe('Atualizar Produto', () => {
         name: 'x-egg',
         description: 'An delicious hamburguer',
         value: 3,
-        image: '',
         type: ProductType.COMBO,
       };
       await productRepository.create(product2);
@@ -92,7 +86,6 @@ describe('Atualizar Produto', () => {
         name: 'x-egg',
         description: 'An delicious and beauty hamburguer',
         value: 10,
-        image: '',
         id,
         type: ProductType.COMBO,
       });

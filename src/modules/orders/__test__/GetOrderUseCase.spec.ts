@@ -40,7 +40,6 @@ describe('Pega uma pedido', () => {
       name: 'x-burguer',
       value: 10,
       description: 'An Delicius hamburguer',
-      image: '',
       type: ProductType.COMBO,
     });
 
@@ -85,7 +84,6 @@ describe('Pega uma pedido', () => {
       name: 'x-burguer',
       value: 10,
       description: 'An Delicius hamburguer',
-      image: '',
       type: ProductType.COMBO,
     });
 

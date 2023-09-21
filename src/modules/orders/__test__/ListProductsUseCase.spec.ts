@@ -16,14 +16,12 @@ describe('Lista Produtos', () => {
     await productRepository.create({
       name: 'x-burguer',
       description: 'A delicious x-burguer',
-      image: '',
       value: 10,
       type: ProductType.FRITAS,
     });
     await productRepository.create({
       name: 'cake',
       description: 'A wonderfull cake',
-      image: '',
       value: 20,
       type: ProductType.FRITAS,
     });
